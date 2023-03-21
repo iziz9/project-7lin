@@ -45,8 +45,8 @@ const Header = () => {
 };
 
 const HeaderContainer = styled.header`
-  border-bottom: 2px solid gray;
-  padding: 20px 30px;
+  border-bottom: 2px solid var(--color-inputGray);
+  padding: 20px 30px 0;
 `;
 
 const TopSection = styled.section`
