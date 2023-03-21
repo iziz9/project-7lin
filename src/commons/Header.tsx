@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router";
 import styled from "styled-components";
+import { BsSearch } from "react-icons/bs";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,16 +17,19 @@ const Header = () => {
   return (
     <HeaderContainer>
       <TopSection>
-        <div className="searchSection">
-          <div>
+        <div className="logo-search">
+          <div className="logo">
             <img src="/logo_text.png" onClick={() => navigate("/")} />
           </div>
-          <input type="text" placeholder="검색어를 입력해주세요" />
+          <div className="searchBar">
+            <input type="text" placeholder="검색어를 입력해주세요" />
+            <BsSearch className="searchButton" />
+          </div>
         </div>
         <ul>
           <li>null/알림</li>
           <li>장바구니</li>
-          <li>로그인/로그아웃</li>
+          <li onClick={() => navigate("/login")}>로그인/로그아웃</li>
           <li>회원가입</li>
         </ul>
       </TopSection>
@@ -49,11 +53,11 @@ const TopSection = styled.section`
   display: flex;
   justify-content: space-between;
 
-  .searchSection {
+  .logo-search {
     display: flex;
     gap: 20px;
 
-    div {
+    .logo {
       img {
         width: 200px;
         :hover {
@@ -62,17 +66,30 @@ const TopSection = styled.section`
       }
     }
 
-    input {
-      width: 300px;
-      height: 30px;
-      padding: 5px;
-      background-color: var(--color-inputGray);
-      border: none;
-      :focus {
-        outline: none;
+    .searchBar {
+      position: relative;
+
+      input {
+        width: 300px;
+        height: 30px;
+        padding: 5px;
+        background-color: var(--color-inputGray);
+        border: none;
+        :focus {
+          outline: none;
+        }
+        ::placeholder {
+          padding-left: 10px;
+        }
       }
-      ::placeholder {
-        padding-left: 10px;
+
+      .searchButton {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        padding-right: 10px;
+        color: gray;
+        cursor: pointer;
       }
     }
   }
@@ -81,6 +98,7 @@ const TopSection = styled.section`
     display: flex;
     gap: 10px;
     font-size: 14px;
+    white-space: nowrap;
   }
   li {
     cursor: pointer;
@@ -91,9 +109,11 @@ const TopSection = styled.section`
 `;
 
 const NavMenu = styled.nav`
+  margin-top: 20px;
   ul {
     display: flex;
     gap: 10px;
+    white-space: nowrap;
   }
 
   li {
