@@ -12,7 +12,9 @@ ${reset}
    
   }
   #root {
-  
+    /* Color */
+    --color-blue: #0D99FF;
+    --color-inputGray: #F5F6F7;
   }
 
 `;
