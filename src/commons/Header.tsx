@@ -52,6 +52,8 @@ const HeaderContainer = styled.header`
 const TopSection = styled.section`
   display: flex;
   justify-content: space-between;
+  width: 1240px;
+  margin: auto;
 
   .logo-search {
     display: flex;
@@ -109,7 +111,9 @@ const TopSection = styled.section`
 `;
 
 const NavMenu = styled.nav`
-  margin-top: 20px;
+  width: 1240px;
+  margin: 20px auto 0;
+
   ul {
     display: flex;
     gap: 10px;

@@ -56,8 +56,16 @@ const BannerSlider = () => {
     <SliderDiv>
       <Slider {...settings}>
         {banners.map((banner) => (
-          <div key={banner}>
+          <div key={banner} className="container">
             <img src={`/${banner}`} />
+            <div className="tags">
+              <span>#시칠리아</span>
+              <span>#5070</span>
+              <span>#골프여행</span>
+            </div>
+            <div className="title">
+              <span>시칠리아 5070 여행</span>
+            </div>
           </div>
         ))}
       </Slider>
@@ -66,7 +74,40 @@ const BannerSlider = () => {
 };
 
 const SliderDiv = styled.div`
-  position: relative;
+  .container {
+    position: relative;
+  }
+
+  .tags {
+    display: flex;
+    gap: 10px;
+    position: absolute;
+    color: white;
+    text-align: center;
+    display: flex;
+    padding: 10px;
+    top: 25%;
+    background-color: #86868666;
+    right: 50%;
+    transform: translateX(50%);
+    white-space: pre;
+  }
+
+  .title {
+    font-size: 50px;
+    position: absolute;
+    top: 35%;
+    display: flex;
+    color: white;
+    right: 50%;
+    transform: translateX(50%);
+    white-space: pre;
+
+    span {
+      background-color: #0d99ff66;
+      padding: 10px 20px;
+    }
+  }
 
   img {
     width: 100%;
