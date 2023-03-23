@@ -46,7 +46,7 @@ const Header = () => {
 
 const HeaderContainer = styled.header`
   border-bottom: 2px solid var(--color-inputGray);
-  padding: 20px 30px 0;
+  padding-top: 20px;
 `;
 
 const TopSection = styled.section`
@@ -131,7 +131,6 @@ const NavMenu = styled.nav`
       left: 0.5rem;
       bottom: -1rem;
       width: 100px;
-      // transform: scaleX(0);
     }
 
     :hover {
