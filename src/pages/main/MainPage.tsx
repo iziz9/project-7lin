@@ -30,8 +30,9 @@ const MainPage = (props: Props) => {
 };
 
 const Main = styled.div`
-  height: 3000px;
+  // height: 3000px;
 `;
+
 const Youtube = styled.div`
   position: relative;
   width: 100%;
@@ -45,13 +46,11 @@ const Youtube = styled.div`
   }
 `;
 const Test = styled.div`
-  // width: 100%;
-  // height: 100%;
-  margin-top: 60px;
+  padding-top: 60px;
 
   img {
     width: 100%;
-    padding-top: 60px;
+    margin-top: 60px;
     cursor: pointer;
   }
 `;

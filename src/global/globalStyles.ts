@@ -26,6 +26,7 @@ ${reset}
     text-decoration: none;
   }
 
+
   main {
     max-width: 1240px;
     margin: auto;
