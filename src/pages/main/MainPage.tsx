@@ -52,6 +52,7 @@ const Test = styled.div`
   img {
     width: 100%;
     padding-top: 60px;
+    cursor: pointer;
   }
 `;
 
