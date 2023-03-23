@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import test from "/test.png";
+import test from "/review.png";
 
 const ReviewItems = () => {
   const data = new Array();
