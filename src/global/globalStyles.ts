@@ -14,6 +14,10 @@ ${reset}
   #root {
   
   }
+  a{
+    color: black;
+    text-decoration: none;
+  }
 
 `;
 
