@@ -32,6 +32,7 @@ const MainPage = (props: Props) => {
 const Main = styled.div`
   // height: 3000px;
 `;
+
 const Youtube = styled.div`
   position: relative;
   width: 100%;

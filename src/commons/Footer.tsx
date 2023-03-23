@@ -27,15 +27,15 @@ const Footer = () => {
         </SocialLink>
         <Information>
           <div className="help">
-            <div>고객지원실</div>
-            <div>02-6105-7711</div>
+            <div className="info-title">고객지원실</div>
+            <div className="phone">02-6105-7711</div>
             <div>
               <div>영업시간 : 09:00 ~ 18:00</div>
               <div>토/일요일 및 공휴일 휴무</div>
             </div>
           </div>
           <div className="bank">
-            <div>입금계좌</div>
+            <div className="info-title">입금계좌</div>
             <span>KEB하나은행</span>
             <span>267-910020-36604</span>
             <span>(주)더샤이니</span>
@@ -76,10 +76,10 @@ const Footer = () => {
 const FooterContainer = styled.footer`
   background-color: #f5f5f5;
   width: 100%;
-  height: 500px;
   margin-top: 60px;
   bottom: 0;
   color: var(--color-blue);
+  line-height: 20px;
 `;
 const Inner = styled.div`
   max-width: 1240px;
@@ -87,6 +87,7 @@ const Inner = styled.div`
   padding: 40px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
 `;
 const FooterNav = styled.section`
   ul {
@@ -100,9 +101,9 @@ const FooterNav = styled.section`
   }
 `;
 const SocialLink = styled.section`
+  width: 100%;
   display: flex;
-  gap: 30px;
-  // padding: 0 20px;
+  justify-content: space-between;
 
   .logo {
     img {
@@ -122,6 +123,7 @@ const Information = styled.section`
 
   .help {
     position: relative;
+    padding-right: 100px;
 
     ::after {
       content: "";
@@ -132,13 +134,26 @@ const Information = styled.section`
       width: 2px;
       background-color: var(--color-blue);
     }
+
+    .phone {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
   }
   .bank {
+    padding-left: 20px;
+  }
+
+  .info-title {
+    margin-bottom: 20px;
   }
 `;
 
 const Policy = styled.section`
-  // padding: 0 20px;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 export default Footer;
