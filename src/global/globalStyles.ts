@@ -21,6 +21,10 @@ ${reset}
     position:relative;
     min-height:100%;
   }
+  a{
+    color: black;
+    text-decoration: none;
+  }
 
   main {
     max-width: 1240px;
