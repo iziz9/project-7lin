@@ -1,8 +1,9 @@
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
-import { axiosInstance } from "../../apis/instance";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
+import Modal from "../../commons/Modal";
+import { useModal } from "../../hooks/useModal";
 
 const Login = () => {
   const isDesktop: boolean = useMediaQuery({
@@ -15,6 +16,58 @@ const Login = () => {
     query: "(max-width:767px)",
   });
 
+  const { openModal } = useModal();
+
+  const NonMemberResvationModalData = {
+    title: "비회원 예약 조회",
+    content: (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ marginBottom: "10px" }}>
+          <BasicInput
+            type="text"
+            placeholder="주문번호"
+            isDeskTop={isDesktop}
+          />
+        </div>{" "}
+        <div style={{ marginBottom: "20px" }}>
+          <BasicInput type="text" placeholder="연락처" isDeskTop={isDesktop} />
+        </div>
+        <BasicBtn type="submit" value="Submit" isDeskTop={isDesktop}>
+          로그인
+        </BasicBtn>
+      </div>
+    ),
+    callback: () => alert("Modal Callback()"),
+  };
+
+  const findIdPasswordModalData = {
+    title: "아이디 찾기",
+    content: (
+      <div>
+        <div style={{ marginBottom: "10px" }}>
+          <BasicInput
+            type="text"
+            placeholder="주문번호"
+            isDeskTop={isDesktop}
+          />
+        </div>{" "}
+        <div style={{ marginBottom: "20px" }}>
+          <BasicInput type="text" placeholder="연락처" isDeskTop={isDesktop} />
+        </div>
+        <BasicBtn type="submit" value="Submit" isDeskTop={isDesktop}>
+          로그인
+        </BasicBtn>
+      </div>
+    ),
+    callback: () => alert("Modal Callback()"),
+  };
+
   const snsArray = [
     { name: "네이버", img: "sns_naver.svg" },
     { name: "카카오", img: "sns_kakao.svg" },
@@ -23,7 +76,7 @@ const Login = () => {
   const socialLogin = snsArray.map((sns) => (
     <div className="social" key={sns.name}>
       <img src={sns.img} alt={sns.name} />
-      {isDesktop ? sns.name : ""}
+      {isDesktop ? sns.name : null}
     </div>
   ));
 
@@ -59,7 +112,10 @@ const Login = () => {
               </BasicBtn>
             </div>
           </LoginForm>
-          <div className="btn-wrapper">
+          <div
+            className="btn-wrapper"
+            onClick={() => openModal(NonMemberResvationModalData)}
+          >
             <BasicBtn
               backgroundColor="#8692A5"
               fontColor="#fff"
@@ -75,6 +131,7 @@ const Login = () => {
           <SocialLogins isDeskTop={isDesktop}>{socialLogin}</SocialLogins>
         </div>
       </LoginContainer>
+      <Modal />
     </>
   );
 };
@@ -83,6 +140,8 @@ const LoginContainer = styled.div<{
   isDeskTop: boolean;
 }>`
   margin: 0 auto;
+  margin-top: ${(props) => (props.isDeskTop ? "60px" : "35px")};
+  margin-bottom: ${(props) => (props.isDeskTop ? "90px" : "0")};
   background: #fafafa;
   width: ${(props) => (props.isDeskTop ? "1000px" : "328px")};
   font-size: ${(props) => (props.isDeskTop ? "23px" : "16px")};
