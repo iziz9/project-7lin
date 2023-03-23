@@ -22,6 +22,7 @@ ${reset}
     min-height:100%;
   }
 
+
   main {
     max-width: 1240px;
     margin: auto;
