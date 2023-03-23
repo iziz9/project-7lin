@@ -66,21 +66,20 @@ const Groups = () => {
 
 // 임시 컴포넌트
 const Container = styled.div`
-  max-width: 1024px;
-  min-width: 768px;
+  width: 1024px;
   margin: 0 auto;
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
 
   .description {
     h2 {
-      font-size: 22px;
-      margin-bottom: 8px;
+      font-size: 35px;
+      margin-bottom: 14px;
     }
     h3 {
-      font-size: 18px;
+      font-size: 30px;
     }
   }
 `;
@@ -88,11 +87,15 @@ const Container = styled.div`
 const GroupsList = styled.ul`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: 70px;
 
   li {
+    height: 100%;
     text-align: center;
-    padding: 10px;
-    font-size: 18px;
+    font-size: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover {
       background-color: #ddd;
@@ -102,25 +105,29 @@ const GroupsList = styled.ul`
 
 const FilterList = styled.ul`
   display: grid;
-  grid-template-columns: repeat(5, 160px);
+  grid-template-columns: repeat(5, 184px);
+  grid-auto-rows: 62px;
   column-gap: 20px;
-  row-gap: 10px;
-  justify-content: center;
+  row-gap: 16px;
+  margin: 0 auto;
 
   li {
-    font-size: 18px;
+    height: 100%;
+    font-size: 23px;
     background-color: #ddd;
-    text-align: center;
-    padding: 12px;
-    border-radius: 16px;
+    border-radius: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
 const ProductList = styled.ul`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, auto));
-  grid-auto-rows: 260px;
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, 330px);
+  grid-auto-rows: 360px;
+  row-gap: 30px;
+  justify-content: space-between;
 `;
 
 const Product = styled.li`
@@ -133,9 +140,9 @@ const Product = styled.li`
 
   svg {
     position: absolute;
-    right: 10px;
-    top: 10px;
-    font-size: 22px;
+    right: 16px;
+    top: 16px;
+    font-size: 25px;
   }
   .image {
     width: 100%;
@@ -143,11 +150,13 @@ const Product = styled.li`
   }
   .title {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 23px;
   }
   .price {
+    font-size: 21px;
   }
   .body {
+    font-size: 20px;
     color: #666666;
   }
 `;
