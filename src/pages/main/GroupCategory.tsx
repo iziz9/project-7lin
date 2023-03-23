@@ -23,14 +23,13 @@ const GroupCategory = (props: Props) => {
 };
 
 const Section = styled.section`
-  background-color: wheat;
-  margin-top: 30px;
+  margin-top: 60px;
   padding-bottom: 30px;
 
   h2 {
     font-size: 30px;
     font-weight: bold;
-    margin-bottom: 30px;
+    margin: 0 20px 30px;
   }
 
   .category-container {
