@@ -16,7 +16,7 @@ const FloatingIcon = (props: Props) => {
 const FloatingDiv = styled.div`
   position: fixed;
   right: 10px;
-  bottom: 00px;
+  bottom: 10px;
   z-index: 99;
   display: flex;
   justify-content: center;
