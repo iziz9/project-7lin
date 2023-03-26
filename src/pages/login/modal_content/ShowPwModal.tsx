@@ -10,8 +10,9 @@ const ShowPwModal = () => {
   return (
     <Container>
       <div className="show-id">
-        <span className="name">7조</span>님의 메일{" "}
-        <span className="id">7lin@gmail.com</span>로 임시 비밀번호를 보냈습니다.
+        <span className="name">7조</span>님의 이메일{" "}
+        <span className="id">7lin@gmail.com</span>로 임시 비밀번호가
+        전송되었습니다.
       </div>
       <div
         onClick={() => {
