@@ -30,5 +30,5 @@ export const useModal = () => {
     [setModalDataState],
   );
 
-  return { modalDataState, closeModal, openModal };
+  return { modalDataState, setModalDataState, closeModal, openModal };
 };

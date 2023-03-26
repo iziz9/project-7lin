@@ -16,12 +16,15 @@ const Modal = () => {
       border: "none",
       borderRadius: "8px",
       positon: "relative",
-      top: "150px",
-      left: "25px",
-      right: "25px",
+      top: "80px",
+      width: "45%",
+      minWidth: "248px",
+      margin: "auto",
+      left: "0",
+      right: "0",
       bottom: "none",
       // display: "flex",
-      // flexDirection: "column"
+      // flexDiretion: "column",
     },
   };
   return (
@@ -52,15 +55,19 @@ const ModalClose = styled.div`
 `;
 const ModalTitle = styled.div`
   font-weight: 700;
-  font-size: 20px;
+  font-size: 48px;
   line-height: 120%;
   text-align: center;
   color: #111111;
   margin-bottom: 40px;
+  @media (max-width: 560px) {
+    font-size: 20px;
+  }
 `;
 const ModalContent = styled.div`
-  /* display: "flex";
-  justify-content: "center"; */
+  display: "flex";
+  justify-content: "center";
+  min-width: 248px;
 `;
 
 export default Modal;

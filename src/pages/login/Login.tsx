@@ -1,71 +1,30 @@
 import { useMediaQuery } from "react-responsive";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
 import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
+import FindIdPasswordModal from "./modal_content/FindIdPasswordModal";
+import NonMemberResvationModal from "./modal_content/NonMemberResvationModal";
 
 const Login = () => {
-  const isDesktop: boolean = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isTablet: boolean = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023px)",
-  });
+  const navigate = useNavigate();
+
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:767px)",
+    query: "(max-width:560px)",
   });
 
   const { openModal } = useModal();
 
-  const NonMemberResvationModalData = {
+  const nonMemberResvationModalData = {
     title: "비회원 예약 조회",
-    content: (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
-          <BasicInput
-            type="text"
-            placeholder="주문번호"
-            isDeskTop={isDesktop}
-          />
-        </div>{" "}
-        <div style={{ marginBottom: "20px" }}>
-          <BasicInput type="text" placeholder="연락처" isDeskTop={isDesktop} />
-        </div>
-        <BasicBtn type="submit" value="Submit" isDeskTop={isDesktop}>
-          로그인
-        </BasicBtn>
-      </div>
-    ),
-    callback: () => alert("Modal Callback()"),
+    content: <NonMemberResvationModal />,
   };
 
   const findIdPasswordModalData = {
     title: "아이디 찾기",
-    content: (
-      <div>
-        <div style={{ marginBottom: "10px" }}>
-          <BasicInput
-            type="text"
-            placeholder="주문번호"
-            isDeskTop={isDesktop}
-          />
-        </div>{" "}
-        <div style={{ marginBottom: "20px" }}>
-          <BasicInput type="text" placeholder="연락처" isDeskTop={isDesktop} />
-        </div>
-        <BasicBtn type="submit" value="Submit" isDeskTop={isDesktop}>
-          로그인
-        </BasicBtn>
-      </div>
-    ),
-    callback: () => alert("Modal Callback()"),
+    content: <FindIdPasswordModal />,
   };
 
   const snsArray = [
@@ -73,32 +32,25 @@ const Login = () => {
     { name: "카카오", img: "sns_kakao.svg" },
     { name: "페이스북", img: "sns_facebook.svg" },
   ];
+
   const socialLogin = snsArray.map((sns) => (
     <div className="social" key={sns.name}>
       <img src={sns.img} alt={sns.name} />
-      {isDesktop ? sns.name : null}
+      {isMobile ? null : sns.name}
     </div>
   ));
 
   return (
     <>
-      <LoginContainer isDeskTop={isDesktop}>
+      <LoginContainer>
         <div className="login-wrapper">
           <div className="title">로그인</div>
           <LoginForm>
             <div className="input_form id">
-              <BasicInput
-                type="text"
-                placeholder="아이디"
-                isDeskTop={isDesktop}
-              />
+              <BasicInput type="text" placeholder="아이디" />
             </div>
             <div className="input_form password">
-              <BasicInput
-                type="password"
-                placeholder="비밀번호"
-                isDeskTop={isDesktop}
-              />
+              <BasicInput type="password" placeholder="비밀번호" />
             </div>
             <div className="label-wrapper">
               <label>
@@ -107,28 +59,31 @@ const Login = () => {
               </label>
             </div>
             <div className="btn-wrapper">
-              <BasicBtn type="submit" value="Submit" isDeskTop={isDesktop}>
+              <BasicBtn type="submit" value="Submit">
                 로그인
               </BasicBtn>
             </div>
           </LoginForm>
           <div
             className="btn-wrapper"
-            onClick={() => openModal(NonMemberResvationModalData)}
+            onClick={() => openModal(nonMemberResvationModalData)}
           >
-            <BasicBtn
-              backgroundColor="#8692A5"
-              fontColor="#fff"
-              isDeskTop={isDesktop}
-            >
+            <BasicBtn backgroundColor="#8692A5" fontColor="#fff">
               비회원 예약 조회
             </BasicBtn>
           </div>
-          <Others isDeskTop={isDesktop}>
-            <div className="option sign_up">회원가입</div>
-            <div className="option find">아이디 / 비밀번호 찾기</div>
+          <Others>
+            <div className="option sign_up" onClick={() => navigate("/signup")}>
+              회원가입
+            </div>
+            <div
+              className="option find"
+              onClick={() => openModal(findIdPasswordModalData)}
+            >
+              아이디 / 비밀번호 찾기
+            </div>
           </Others>
-          <SocialLogins isDeskTop={isDesktop}>{socialLogin}</SocialLogins>
+          <SocialLogins>{socialLogin}</SocialLogins>
         </div>
       </LoginContainer>
       <Modal />
@@ -136,28 +91,45 @@ const Login = () => {
   );
 };
 
-const LoginContainer = styled.div<{
-  isDeskTop: boolean;
-}>`
+const LoginContainer = styled.div`
   margin: 0 auto;
-  margin-top: ${(props) => (props.isDeskTop ? "60px" : "35px")};
-  margin-bottom: ${(props) => (props.isDeskTop ? "90px" : "0")};
+  margin-top: 60px;
+  margin-top: 2rem;
+  margin-bottom: "90px";
   background: #fafafa;
-  width: ${(props) => (props.isDeskTop ? "1000px" : "328px")};
-  font-size: ${(props) => (props.isDeskTop ? "23px" : "16px")};
+  width: 80%;
+  min-width: 328px;
+  font-size: 23px;
   line-height: 100%;
   letter-spacing: -0.02em;
   .login-wrapper {
-    padding: ${(props) => (props.isDeskTop ? "130px 150px" : "50px 40px")};
+    padding: 130px 150px;
   }
   .title {
     font-weight: bold;
-    font-size: ${(props) => (props.isDeskTop ? "55px" : "20px")};
+    font-size: 55px;
     color: #5b5b5b;
-    margin-bottom: ${(props) => (props.isDeskTop ? "55px" : "37px")};
+    margin-bottom: 55px;
   }
   .btn-wrapper {
-    margin-bottom: ${(props) => (props.isDeskTop ? "20px" : "10px")};
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 560px) {
+    margin-top: 35px;
+    margin-bottom: 0;
+    font-size: 16px;
+
+    .login-wrapper {
+      padding: 50px 40px;
+    }
+    .title {
+      font-size: 20px;
+      margin-bottom: 37px;
+    }
+    .btn-wrapper {
+      margin-bottom: 10px;
+    }
   }
 `;
 
@@ -177,25 +149,28 @@ const LoginForm = styled.form`
         width: 25px;
         height: 25px;
         margin-right: 15px;
+        @media (max-width: 560px) {
+          width: 20px;
+          height: 20px;
+        }
       }
     }
   }
 `;
 
-const Others = styled.div<{
-  isDeskTop: boolean;
-}>`
+const Others = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: ${(props) => (props.isDeskTop ? "10px 0 50px 0" : "20px 0")};
+  padding: 10px 0 50px 0;
   .option {
     cursor: pointer;
   }
+  @media (max-width: 560px) {
+    padding: 20px 0;
+  }
 `;
 
-const SocialLogins = styled.div<{
-  isDeskTop: boolean;
-}>`
+const SocialLogins = styled.div`
   display: flex;
   justify-content: center;
   gap: 24px;
@@ -206,8 +181,12 @@ const SocialLogins = styled.div<{
     gap: 19px;
     cursor: pointer;
     img {
-      width: ${(props) => (props.isDeskTop ? "50px" : "30px")};
-      height: ${(props) => (props.isDeskTop ? "50px" : "30px")};
+      width: 50px;
+      height: 50px;
+      @media (max-width: 560px) {
+        width: 30px;
+        height: 30px;
+      }
     }
   }
 `;
