@@ -63,7 +63,12 @@ const CategoryContainer = styled.div`
       border-radius: 10px;
       color: transparent;
 
+      .overlay {
+        display: none;
+      }
+
       :hover .overlay {
+        display: flex;
         background-color: #0d99ff;
         opacity: 0.8;
         color: white;
@@ -73,12 +78,14 @@ const CategoryContainer = styled.div`
         height: 100%;
         top: 0;
         border-radius: 10px;
-        display: flex;
         justify-content: center;
         align-items: center;
         font-size: 30px;
         font-weight: bold;
       }
+    }
+    :hover {
+      cursor: pointer;
     }
 
     img {
@@ -86,10 +93,6 @@ const CategoryContainer = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: 10px;
-
-      :hover {
-        cursor: pointer;
-      }
     }
   }
 
@@ -121,6 +124,10 @@ const CategoryContainer = styled.div`
         font-size: 30px;
         font-weight: bold;
       }
+
+      :hover {
+        cursor: pointer;
+      }
     }
 
     img {
@@ -128,21 +135,7 @@ const CategoryContainer = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: 10px;
-
-      :hover {
-        cursor: pointer;
-      }
     }
-
-    // .overlay {
-    //   position: absolute;
-    //   width: 100%;
-    //   min-height: 150px;
-    //   max-height: 250px;
-    //   border-radius: 10px;
-    //   background-color: #0d99ff;
-    //   opacity: 0.8;
-    // }
   }
 `;
 

@@ -30,6 +30,7 @@ ${reset}
   main {
     max-width: 1240px;
     margin: auto;
+    position: relative;
   }
 `;
 
