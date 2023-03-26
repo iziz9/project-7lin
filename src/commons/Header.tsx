@@ -17,21 +17,23 @@ const Header = () => {
   return (
     <HeaderContainer>
       <TopSection>
-        <div className="logo-search">
-          <div className="logo">
-            <img src="/logo_text.png" onClick={() => navigate("/")} />
+        <div className="inner">
+          <div className="logo-search">
+            <div className="logo">
+              <img src="/logo_text.png" onClick={() => navigate("/")} />
+            </div>
+            <div className="searchBar">
+              <input type="text" placeholder="검색어를 입력해주세요" />
+              <BsSearch className="searchButton" />
+            </div>
           </div>
-          <div className="searchBar">
-            <input type="text" placeholder="검색어를 입력해주세요" />
-            <BsSearch className="searchButton" />
-          </div>
+          <ul>
+            <li>null/알림</li>
+            <li>장바구니</li>
+            <li onClick={() => navigate("/login")}>로그인/로그아웃</li>
+            <li>회원가입</li>
+          </ul>
         </div>
-        <ul>
-          <li>null/알림</li>
-          <li>장바구니</li>
-          <li onClick={() => navigate("/login")}>로그인/로그아웃</li>
-          <li>회원가입</li>
-        </ul>
       </TopSection>
       <NavMenu>
         <ul>
@@ -50,10 +52,14 @@ const HeaderContainer = styled.header`
 `;
 
 const TopSection = styled.section`
-  display: flex;
-  justify-content: space-between;
-  width: 1240px;
+  max-width: 1240px;
+  min-width: 700px;
   margin: auto;
+
+  .inner {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .logo-search {
     display: flex;
@@ -102,6 +108,7 @@ const TopSection = styled.section`
     font-size: 14px;
     white-space: nowrap;
   }
+
   li {
     cursor: pointer;
     :hover {
@@ -111,7 +118,7 @@ const TopSection = styled.section`
 `;
 
 const NavMenu = styled.nav`
-  width: 1240px;
+  max-width: 1240px;
   margin: 20px auto 0;
 
   ul {
