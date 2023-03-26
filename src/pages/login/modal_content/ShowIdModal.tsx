@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BasicBtn } from "../../../commons/Button";
 import { useModal } from "../../../hooks/useModal";
+import { scrollToTop } from "../../../utils/scroll";
 import FindIdPasswordModal from "./FindIdPasswordModal";
 
 type Props = {};
@@ -28,7 +29,12 @@ const ShowIdModal = (props: Props) => {
           비밀번호 찾기
         </BasicBtn>
       </div>
-      <div onClick={closeModal}>
+      <div
+        onClick={() => {
+          scrollToTop();
+          closeModal();
+        }}
+      >
         <BasicBtn>로그인 하러가기</BasicBtn>
       </div>
     </Container>

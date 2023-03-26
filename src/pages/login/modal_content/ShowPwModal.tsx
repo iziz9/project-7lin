@@ -1,18 +1,24 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BasicBtn } from "../../../commons/Button";
 import { useModal } from "../../../hooks/useModal";
+import { scrollToTop } from "../../../utils/scroll";
 
 const ShowPwModal = () => {
   const { closeModal } = useModal();
-
   return (
     <Container>
       <div className="show-id">
         <span className="name">7조</span>님의 메일{" "}
         <span className="id">7lin@gmail.com</span>로 임시 비밀번호를 보냈습니다.
       </div>
-      <div onClick={closeModal}>
+      <div
+        onClick={() => {
+          scrollToTop();
+          closeModal();
+        }}
+      >
         <BasicBtn>로그인 하러가기</BasicBtn>
       </div>
     </Container>

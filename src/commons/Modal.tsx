@@ -9,22 +9,23 @@ const Modal = () => {
 
   const modalStyle = {
     overlay: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
       backgroundColor: "rgba(79, 77, 77, 0.7)",
     },
     content: {
       padding: "50px",
       border: "none",
       borderRadius: "8px",
-      positon: "relative",
-      top: "80px",
       width: "45%",
       minWidth: "248px",
       margin: "auto",
-      left: "0",
-      right: "0",
+      // position: "relative",
+      top: "none",
+      left: "none",
+      right: "none",
       bottom: "none",
-      // display: "flex",
-      // flexDiretion: "column",
     },
   };
   return (
