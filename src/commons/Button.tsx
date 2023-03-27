@@ -6,7 +6,7 @@ export const BasicBtn = styled.button<{
 }>`
   height: 65px;
   width: 100%;
-  min-width: 248px;
+  min-width: 83px;
   border: ${(props) =>
     props.backgroundColor === "#fff" ? "1px solid #9F9F9F" : "none"};
   border-radius: 8px;

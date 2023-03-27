@@ -5,6 +5,7 @@ import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
 import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
+import { scrollToTop } from "../../utils/scroll";
 import FindIdPasswordModal from "./modal_content/FindIdPasswordModal";
 import NonMemberResvationModal from "./modal_content/NonMemberResvationModal";
 
@@ -73,7 +74,13 @@ const Login = () => {
             </BasicBtn>
           </div>
           <Others>
-            <div className="option sign_up" onClick={() => navigate("/signup")}>
+            <div
+              className="option sign_up"
+              onClick={() => {
+                navigate("/signup_type");
+                scrollToTop();
+              }}
+            >
               회원가입
             </div>
             <div
@@ -97,17 +104,19 @@ const LoginContainer = styled.div`
   margin-top: 2rem;
   margin-bottom: "90px";
   background: #fafafa;
-  width: 80%;
+  width: 100%;
   min-width: 328px;
   font-size: 23px;
   line-height: 100%;
   letter-spacing: -0.02em;
   .login-wrapper {
-    padding: 130px 150px;
+    max-width: 700px;
+    padding: 155px 0;
+    margin: 0 auto;
   }
   .title {
     font-weight: bold;
-    font-size: 55px;
+    font-size: 30px;
     color: #5b5b5b;
     margin-bottom: 55px;
   }
@@ -119,7 +128,7 @@ const LoginContainer = styled.div`
     margin-top: 35px;
     margin-bottom: 0;
     font-size: 16px;
-
+    width: 80%;
     .login-wrapper {
       padding: 50px 40px;
     }
@@ -140,7 +149,7 @@ const LoginForm = styled.form`
   .label-wrapper {
     display: flex;
     label {
-      margin: 25px 0;
+      margin: 44px 0;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -153,6 +162,9 @@ const LoginForm = styled.form`
           width: 20px;
           height: 20px;
         }
+      }
+      @media (max-width: 560px) {
+        margin: 22px 0;
       }
     }
   }
@@ -173,7 +185,7 @@ const Others = styled.div`
 const SocialLogins = styled.div`
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 50px;
   color: rgba(132, 132, 132, 0.78);
   .social {
     display: flex;
@@ -188,6 +200,9 @@ const SocialLogins = styled.div`
         height: 30px;
       }
     }
+  }
+  @media (max-width: 560px) {
+    gap: 16px;
   }
 `;
 
