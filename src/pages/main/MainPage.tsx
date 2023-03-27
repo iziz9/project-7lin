@@ -9,28 +9,30 @@ const MainPage = (props: Props) => {
   return (
     <Main>
       <BannerSlider />
-      <GroupCategory />
-      <Youtube>
-        <iframe
-          className="video"
-          width="100%"
-          height="100%"
-          src="https://www.youtube.com/embed/moBgXUPXoHs?autoplay=1&mute=1"
-          title="YouTube video player"
-          // frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          // allowfullscreen
-        ></iframe>
-      </Youtube>
-      <Test>
-        <img src="/test.png" alt="나의 여행 유형 테스트" />
-      </Test>
+      <div className="inner">
+        <GroupCategory />
+        <Youtube>
+          <iframe
+            className="video"
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/moBgXUPXoHs?autoplay=1&mute=1"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          ></iframe>
+        </Youtube>
+        <Test>
+          <img src="/test.png" alt="나의 여행 유형 테스트" />
+        </Test>
+      </div>
     </Main>
   );
 };
 
 const Main = styled.div`
-  // height: 3000px;
+  .inner {
+    margin: 0 100px;
+  }
 `;
 
 const Youtube = styled.div`

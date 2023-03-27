@@ -18,11 +18,21 @@ const Footer = () => {
             <img src="/logo_shiny.png" />
           </div>
           <div className="social">
-            <a>유튜브</a>
-            <a>인스타</a>
-            <a>블로그</a>
-            <a>페이스북</a>
-            <a>링크</a>
+            <div className="icon">
+              <img src="/footer-youtube.png" />
+            </div>
+            <div className="icon">
+              <img src="/footer-insta.png" />
+            </div>
+            <div className="icon">
+              <img src="/footer-blog.png" />
+            </div>
+            <div className="icon">
+              <img src="/footer-facebook.png" />
+            </div>
+            <div className="icon">
+              <img src="/footer-link.png" />
+            </div>
           </div>
         </SocialLink>
         <Information>
@@ -113,6 +123,10 @@ const SocialLink = styled.section`
   .social {
     display: flex;
     gap: 10px;
+
+    .icon {
+      cursor: pointer;
+    }
   }
 `;
 const Information = styled.section`

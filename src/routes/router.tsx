@@ -3,6 +3,7 @@ import App from "../App";
 import Groups from "../pages/groups/Groups";
 import Login from "../pages/login/Login";
 import MainPage from "../pages/main/MainPage";
+import Signup from "../pages/signup/Signup";
 import Review from "./../pages/review/Review";
 import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       },
     ],
   },
