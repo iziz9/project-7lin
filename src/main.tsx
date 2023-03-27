@@ -6,6 +6,7 @@ import router from "./routes/router";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
+import Modal from "react-modal";
 
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -17,3 +18,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     </RecoilRoot>
   </QueryClientProvider>,
 );
+
+Modal.setAppElement("#root");
