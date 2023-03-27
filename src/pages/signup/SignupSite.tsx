@@ -48,13 +48,11 @@ const SignupSite = () => {
       : setTerms(terms.filter((term) => term !== e.target.name));
   };
 
+  const initiallize = () => {};
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
   };
-
-  useEffect(() => {
-    console.log(terms);
-  }, [terms]);
 
   return (
     <Container>
