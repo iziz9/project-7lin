@@ -37,7 +37,6 @@ const MainContents = ({ thumnail }: IMainContentsProps) => {
     </Main>
   );
 };
-
 const Main = styled.div`
   margin-top: 60px;
 `;
