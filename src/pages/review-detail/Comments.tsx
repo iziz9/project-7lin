@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { useState } from "react";
 import { BsChatDots } from "react-icons/bs";
 import { HiOutlineShare } from "react-icons/hi";
+import ReviewModal from "../../commons/ReviewModal";
 
 const Comments = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState("");
 
   return (
     <CommentList>
@@ -17,97 +18,32 @@ const Comments = () => {
         <HiOutlineShare size={30} color="#4a4a4a" />
       </CommentInfo>
 
-      <Comment>
-        <CommentTop>
-          <Texts>
-            <strong>이은****</strong>
-            <span>2023년 12월 12일 13:45 작성</span>
-          </Texts>
-          <Btns>
-            <button onClick={() => setModalOpen(true)}>수정하기</button>
-            <button>삭제하기</button>
-          </Btns>
-          {/* {modalOpen && (
-              <Modal>
-                <h2>수정하시겠습니까?</h2>
-                <p>비밀번호</p>
-                <form>
-                  <input type="text" />
-                  <button type="submit">확인</button>
-                </form>
-                <button>여행 후기 수정하기</button>
-              </Modal>
-            )} */}
-        </CommentTop>
-        <CommentMain>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque
-          suscipit expedita illum iusto neque hic inventore. Possimus voluptatem
-          necessitatibus eveniet facere qui corrupti unde libero, minus autem
-          quae voluptatum ipsa.
-        </CommentMain>
-      </Comment>
-      <Comment>
-        <CommentTop>
-          <Texts>
-            <strong>이은****</strong>
-            <span>2023년 12월 12일 13:45 작성</span>
-          </Texts>
-          <Btns>
-            <button onClick={() => setModalOpen(true)}>수정하기</button>
-            <button>삭제하기</button>
-          </Btns>
-          {/* {modalOpen && (
-              <Modal>
-                <h2>수정하시겠습니까?</h2>
-                <p>비밀번호</p>
-                <form>
-                  <input type="text" />
-                  <button type="submit">확인</button>
-                </form>
-                <button>여행 후기 수정하기</button>
-              </Modal>
-            )} */}
-        </CommentTop>
-        <CommentMain>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque
-          suscipit expedita illum iusto neque hic inventore. Possimus voluptatem
-          necessitatibus eveniet facere qui corrupti unde libero, minus autem
-          quae voluptatum ipsa.
-        </CommentMain>
-      </Comment>
-      <Comment>
-        <CommentTop>
-          <Texts>
-            <strong>정호****</strong>
-            <span>2023년 12월 15일 15:25 작성</span>
-          </Texts>
-          <Btns>
-            <button onClick={() => setModalOpen((prev) => !prev)}>
-              수정하기
-            </button>
-            <button onClick={() => setModalOpen((prev) => !prev)}>
-              삭제하기
-            </button>
-          </Btns>
-          {/* {modalOpen && (
-              <Modal>
-                <h2>수정하시겠습니까?</h2>
-                <p>비밀번호</p>
-                <form>
-                  <input type="text" />
-                  <button type="submit">확인</button>
-                </form>
-                <button>여행 후기 수정하기</button>
-              </Modal>
-            )} */}
-        </CommentTop>
-        <CommentMain>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo
-          consequatur id itaque veniam minima ab? Pariatur recusandae
-          consequatur, quidem fugit repellendus porro dolore laudantium quasi
-          consectetur id numquam. Ab, perspiciatis?
-        </CommentMain>
-      </Comment>
+      {[1, 2, 3].map((item) => (
+        <Comment key={item}>
+          <CommentTop>
+            <Texts>
+              <strong>이은****</strong>
+              <span>2023년 12월 12일 13:45 작성</span>
+            </Texts>
+            <Btns>
+              <button onClick={() => setModalOpen("edit")}>수정하기</button>
+              <button onClick={() => setModalOpen("delete")}>삭제하기</button>
+            </Btns>
+            {modalOpen === "edit" && (
+              <ReviewModal title="수정" setModalOpen={setModalOpen} />
+            )}
+            {modalOpen === "delete" && (
+              <ReviewModal title="삭제" setModalOpen={setModalOpen} />
+            )}
+          </CommentTop>
+          <CommentMain>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque
+            suscipit expedita illum iusto neque hic inventore. Possimus
+            voluptatem necessitatibus eveniet facere qui corrupti unde libero,
+            minus autem quae voluptatum ipsa.
+          </CommentMain>
+        </Comment>
+      ))}
     </CommentList>
   );
 };
