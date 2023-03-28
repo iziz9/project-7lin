@@ -20,7 +20,7 @@ const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
       "자녀를 동반하는 가족",
       "상관없음",
     ],
-    ["하나님과 함께하는 여행", "부처님의 발자취를 찾아", "상관없음"],
+    ["하나님과 함께하는 여행", "상관없음", "부처님의 발자취를 찾아"],
     ["보수적인 그룹", "진보적인 그룹", "상관없음"],
     [
       "문화탐방",
@@ -76,17 +76,19 @@ const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
           }}
         >
           <div className="formInner">
-            {answers[orderNumber].map((answer) => (
-              <div key={answer}>
-                <input
-                  type="checkbox"
-                  id={answer}
-                  name={answer}
-                  value={answer}
-                />
-                <label htmlFor={answer}>{answer}</label>
-              </div>
-            ))}
+            <div className="innerSection">
+              {answers[orderNumber].map((answer) => (
+                <div key={answer}>
+                  <input
+                    type="checkbox"
+                    id={answer}
+                    name={answer}
+                    value={answer}
+                  />
+                  <label htmlFor={answer}>{answer}</label>
+                </div>
+              ))}
+            </div>
           </div>
           <button type="submit">
             <IoIosPaperPlane className="send" />
@@ -118,11 +120,14 @@ const ButtonsForm = styled.form`
   word-break: keep-all;
 
   .formInner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
+    .innerSection {
+      width: 380px;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      display: flex;
+      justify-content: center;
+    }
   }
 
   label {
@@ -156,8 +161,8 @@ const ButtonsForm = styled.form`
     border: none;
     border-radius: 8px;
     position: absolute;
-    bottom: 0;
-    right: 0;
+    top: 5px;
+    right: 5px;
 
     .send {
       cursor: pointer;
