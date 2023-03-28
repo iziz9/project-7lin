@@ -8,6 +8,7 @@ import Review from "./../pages/review/Review";
 import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
 import TripTest from "../pages/trip-test/TripTest";
+import TestResult from "../pages/trip-test/TestResult";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,11 @@ const router = createBrowserRouter([
       {
         path: "/test",
         element: <TripTest />,
+      },
+      {
+        //임시
+        path: "/test-result",
+        element: <TestResult />,
       },
     ],
   },

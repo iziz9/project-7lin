@@ -159,7 +159,7 @@ const Container = styled.div<{ background: string }>`
     border: 20px solid transparent;
     border-radius: 8px;
     background-image: linear-gradient(#fff, #fff),
-      linear-gradient(to right, #ccd4b9, #7cd4e1, #efb2f9);
+      linear-gradient(120deg, #ccd4b9, #7cd4e1, #efb2f9);
     background-origin: border-box;
     background-clip: content-box, border-box;
     opacity: 0.9;
