@@ -156,7 +156,7 @@ const NavMenu = styled.nav`
       }
     }
 
-    :: after {
+    ::after {
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 500ms ease, margin-left 0.5s ease;

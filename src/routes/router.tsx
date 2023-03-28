@@ -3,12 +3,13 @@ import App from "../App";
 import Groups from "../pages/groups/Groups";
 import Login from "../pages/login/Login";
 import MainPage from "../pages/main/MainPage";
-import Signup from "../pages/signup/Signup";
 import Review from "./../pages/review/Review";
 import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
 import TripTest from "../pages/trip-test/TripTest";
 import TestResult from "../pages/trip-test/TestResult";
+import SignupType from "../pages/signup/SignupType";
+import SignupSite from "../pages/signup/SignupSite";
 
 const router = createBrowserRouter([
   {
@@ -34,8 +35,12 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/signup",
-        element: <Signup />,
+        path: "/signup_type",
+        element: <SignupType />,
+      },
+      {
+        path: "/signup_site",
+        element: <SignupSite />,
       },
       {
         path: "/test",

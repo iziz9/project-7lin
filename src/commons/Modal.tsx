@@ -55,8 +55,8 @@ const ModalClose = styled.div`
   }
 `;
 const ModalTitle = styled.div`
-  font-weight: 700;
-  font-size: 48px;
+  font-weight: bold;
+  font-size: 30px;
   line-height: 120%;
   text-align: center;
   color: #111111;
