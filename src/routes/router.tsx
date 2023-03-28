@@ -7,6 +7,7 @@ import Signup from "../pages/signup/Signup";
 import Review from "./../pages/review/Review";
 import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
+import TripTest from "../pages/trip-test/TripTest";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup />,
+      },
+      {
+        path: "/test",
+        element: <TripTest />,
       },
     ],
   },
