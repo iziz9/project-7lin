@@ -21,7 +21,7 @@ const MainPage = (props: Props) => {
             <input type="text" placeholder="검색어를 입력하세요" />
           </div>
           <GroupCategory />
-          <Youtube>
+          {/* <div className="youtube">
             <iframe
               className="video"
               width="100%"
@@ -30,8 +30,10 @@ const MainPage = (props: Props) => {
               title="YouTube video player"
               allow="accelerometer; autoplay; c/lipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             ></iframe>
-          </Youtube>
-          <div>{/* <img src="/test.png" alt="나의 여행 유형 테스트" /> */}</div>
+          </div> */}
+          <div className="test" onClick={() => navigate("test")}>
+            <img src="/test.png" alt="나의 여행 유형 테스트" />
+          </div>
         </MobileMain>
       ) : (
         <PcMain>
@@ -76,6 +78,28 @@ const MobileMain = styled.div`
       :focus {
         outline: none;
       }
+    }
+  }
+
+  .youtube {
+    position: relative;
+    width: 100%;
+    padding: 20px 32px 56.25%;
+    margin: auto;
+
+    .video {
+      position: absolute;
+      width: 70%;
+      height: 100%;
+    }
+  }
+
+  .test {
+    padding: 30px 32px 0;
+
+    img {
+      width: 100%;
+      cursor: pointer;
     }
   }
 `;

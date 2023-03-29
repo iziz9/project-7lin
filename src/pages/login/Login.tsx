@@ -134,7 +134,7 @@ const LoginContainer = styled.div`
     font-size: 16px;
     width: 80%;
     .login-wrapper {
-      padding: 50px 40px;
+      padding: 0px 20px;
     }
     .title {
       font-size: 20px;

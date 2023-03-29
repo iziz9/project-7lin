@@ -56,7 +56,7 @@ const Section = styled.section`
 
     h2 {
       font-size: 20px;
-      margin: 0;
+      margin: 0 0 14px;
     }
   }
 `;

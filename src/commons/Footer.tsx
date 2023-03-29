@@ -134,7 +134,6 @@ const MobileFooterContainer = styled.footer`
   height: 80px;
   background-color: #f5f5f5;
   position: fixed;
-  margin-top: 80px;
   bottom: 0;
 
   ul {
