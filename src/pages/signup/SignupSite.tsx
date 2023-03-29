@@ -493,7 +493,6 @@ const Container = styled.div`
         gap: 20px;
       }
       .agree-wrapper {
-        font-size: 11px;
         .agree {
           padding: 8px 25px;
           .box {
