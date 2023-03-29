@@ -475,7 +475,7 @@ const Container = styled.div`
     font-size: 16px;
     width: 80%;
     .wrapper {
-      padding: 50px 20px;
+      padding: 0 20px;
     }
     .title {
       font-size: 20px;
@@ -483,7 +483,7 @@ const Container = styled.div`
     }
     .sub-title {
       font-size: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .btn-wrapper {
       margin-bottom: 10px;
