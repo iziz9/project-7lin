@@ -32,11 +32,11 @@ ${reset}
     --color-grayscale30: #AEAEB2;
     --color-grayscale40: #8E8E93;
     --color-grayscale50: #636366;
-
-
     position:relative;
     min-height:100%;
   }
+
+
   a{
     color: black;
     text-decoration: none;
