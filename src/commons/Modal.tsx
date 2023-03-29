@@ -18,7 +18,7 @@ const Modal = () => {
       padding: "50px",
       border: "none",
       borderRadius: "8px",
-      width: "45%",
+      width: "30%",
       minWidth: "248px",
       margin: "auto",
       // position: "relative",
@@ -61,7 +61,7 @@ const ModalTitle = styled.div`
   text-align: center;
   color: #111111;
   margin-bottom: 40px;
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 20px;
   }
 `;
