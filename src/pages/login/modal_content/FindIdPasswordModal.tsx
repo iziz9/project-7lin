@@ -105,7 +105,7 @@ const Container = styled.div`
   letter-spacing: -0.02em;
   font-style: normal;
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 14px;
   }
 `;
@@ -153,7 +153,7 @@ const RadioOptions = styled.div`
       width: 25px;
       height: 25px;
 
-      @media (max-width: 560px) {
+      @media (max-width: 850px) {
         width: 15px;
         height: 15px;
       }
@@ -169,7 +169,7 @@ const Description = styled.div`
   color: rgba(98, 98, 98, 0.78);
   line-height: 140%;
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 13.3px;
   }
 `;

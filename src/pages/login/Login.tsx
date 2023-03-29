@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:560px)",
+    query: "(max-width:850px)",
   });
 
   const { openModal } = useModal();
@@ -124,7 +124,7 @@ const LoginContainer = styled.div`
     margin-bottom: 20px;
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     margin-top: 35px;
     margin-bottom: 0;
     font-size: 16px;
@@ -158,12 +158,12 @@ const LoginForm = styled.form`
         width: 25px;
         height: 25px;
         margin-right: 15px;
-        @media (max-width: 560px) {
+        @media (max-width: 850px) {
           width: 20px;
           height: 20px;
         }
       }
-      @media (max-width: 560px) {
+      @media (max-width: 850px) {
         margin: 22px 0;
       }
     }
@@ -177,7 +177,7 @@ const Others = styled.div`
   .option {
     cursor: pointer;
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     padding: 20px 0;
   }
 `;
@@ -195,13 +195,13 @@ const SocialLogins = styled.div`
     img {
       width: 50px;
       height: 50px;
-      @media (max-width: 560px) {
+      @media (max-width: 850px) {
         width: 30px;
         height: 30px;
       }
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     gap: 16px;
   }
 `;

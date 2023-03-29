@@ -25,7 +25,7 @@ export const BasicSelect = styled.select`
   background-color: #fff;
   cursor: pointer;
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 14px;
     height: 42px;
     padding-left: 8px;

@@ -17,7 +17,7 @@ export const BasicBtn = styled.button<{
   background-color: ${(props) => props.backgroundColor || "#0D99FF"};
   cursor: pointer;
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 16px;
     height: 48px;
   }

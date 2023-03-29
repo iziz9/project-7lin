@@ -61,7 +61,7 @@ const ModalTitle = styled.div`
   text-align: center;
   color: #111111;
   margin-bottom: 40px;
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 20px;
   }
 `;

@@ -12,7 +12,7 @@ export const BasicInput = styled.input`
   outline: none;
   padding: 16px 25px;
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 16px;
     height: 48px;
   }
