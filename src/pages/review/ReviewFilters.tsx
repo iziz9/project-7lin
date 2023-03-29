@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { MdKeyboardArrowDown } from "react-icons/md";
-
-interface ReviewSelectState {
-  name: string | undefined;
-  isOpen: boolean;
-}
+import { ReviewSelectState } from "./../../@types/data.d";
 
 const ReviewFilters = () => {
   const [open, setOpen] = useState<ReviewSelectState>({
@@ -17,13 +13,12 @@ const ReviewFilters = () => {
   const handleClick = (event: React.MouseEvent<HTMLLIElement>) => {
     const name = event.currentTarget.dataset.name;
     setOpen((prev: ReviewSelectState) => {
-      if (prev.isOpen && prev.name == name) return { name, isOpen: false };
-      else if (!prev.isOpen) return { name, isOpen: true };
-      else if (prev.name !== name) return { name, isOpen: true };
-      else return { name: "", isOpen: false };
+      return { name, isOpen: !prev.isOpen };
     });
   };
 
+  // 열린 상태로 한번 더 누르면 깜빡거리고 다시 켜짐..?
+  // ref 를 공유하고 있어서 그런 것. 컴포넌트화 해서 반복하면 고쳐질 것 같음
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
@@ -35,6 +30,7 @@ const ReviewFilters = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [selectRef]);
+
   return (
     <Filtering>
       <Left>
@@ -120,20 +116,27 @@ const Items = styled.ul`
     margin-left: 0;
   }
   ul {
+    margin-top: 10px;
     position: absolute;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #636366;
   }
   li {
     cursor: pointer;
   }
 `;
 const SelectTitle = styled.li`
-  background-color: #d9d9d9;
+  display: flex;
+  align-items: center;
   width: 200px;
   padding: 20px 15px;
   box-sizing: border-box;
   position: relative;
-  display: flex;
-  align-items: center;
+  background-color: white;
+  border: 1px solid #636366;
+  border-radius: 10px;
+
   svg {
     position: absolute;
     right: 10px;
@@ -145,12 +148,18 @@ const Item = styled.li`
   width: 200px;
   padding: 20px 15px;
   box-sizing: border-box;
-  border: 1px solid #afafaf;
   background-color: white;
   :hover {
-    background-color: #848484;
-    color: white;
+    background-color: #f5f5f5;
+    color: #48484a;
+    font-weight: bold;
     transition: 0.3s;
+  }
+  :first-child {
+    border-radius: 10px 10px 0 0;
+  }
+  :last-child {
+    border-radius: 0 0 10px 10px;
   }
 `;
 const Right = styled.div``;

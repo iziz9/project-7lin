@@ -1,14 +1,18 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
+import FloatingModal from "./FloatingModal";
 
 type Props = {};
 
 const FloatingIcon = (props: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <FloatingDiv>
-      <div className="face">
+      <div className="face" onClick={() => setIsModalOpen(!isModalOpen)}>
         <img src="/floating.png" />
       </div>
+      {isModalOpen ? <FloatingModal /> : null}
     </FloatingDiv>
   );
 };

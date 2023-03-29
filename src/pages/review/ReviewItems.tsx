@@ -13,7 +13,17 @@ const ReviewItems = () => {
   return (
     <List>
       {data.map((item) => (
-        <Link to={`${item}`} key={item}>
+        <Link
+          to={`${item}`}
+          key={item}
+          state={{
+            thumnail: test,
+            date: "2023.12.12",
+            views: 1234,
+            title: "남미 여행이 어땠냐면",
+            name: "김영***",
+          }}
+        >
           <Content>
             <Img>
               <img src={test} alt="thumnail" />
