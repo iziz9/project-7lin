@@ -23,22 +23,21 @@ const Notice = () => {
   const [page, setPage] = useState("information");
 
   const menuClick = (event: React.MouseEvent<HTMLLIElement>) => {
-    const { id: clickedMenu } = event.currentTarget;
-    setPage(clickedMenu);
+    setPage(event.currentTarget.id);
   };
 
   return (
     <Container>
       <h1>공지사항</h1>
       <MenuList page={page}>
-        {menu.map((props) => (
+        {menu.map((element) => (
           <li
-            key={props.id}
-            id={props.id}
+            key={element.id}
+            id={element.id}
             onClick={menuClick}
-            className={props.id === page ? "selected" : ""}
+            className={element.id === page ? "selected" : ""}
           >
-            {props.title}
+            {element.title}
           </li>
         ))}
       </MenuList>

@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         path: "review/:id",
         element: <ReviewDetail />,
       },
-      { path: "/groups", element: <Groups /> },
+      { path: "groups", element: <Groups /> },
       {
         path: "/login",
         element: <Login />,
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
         element: <TestResult />,
       },
       {
-        path: "/notice",
+        path: "notice",
         element: <Notice />,
       },
     ],
