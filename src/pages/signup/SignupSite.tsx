@@ -381,14 +381,15 @@ const Container = styled.div`
   margin-top: 60px;
   margin-top: 2rem;
   margin-bottom: "90px";
-  background: #fafafa;
+  /* background: #fafafa; */
   width: 100%;
   min-width: 328px;
-  font-size: 23px;
+  font-size: 18px;
   letter-spacing: -0.02em;
   .wrapper {
-    max-width: 700px;
-    padding: 155px 0;
+    max-width: 400px;
+    /* padding: 155px 0; */
+    padding: 50px 0;
     margin: 0 auto;
   }
   .title {
@@ -396,12 +397,14 @@ const Container = styled.div`
     font-size: 30px;
     color: #5b5b5b;
     margin-bottom: 55px;
+    text-align: center;
   }
   .sub-title {
     font-weight: bold;
-    font-size: 25px;
+    font-size: 20px;
     color: rgba(0, 0, 0, 0.8);
-    margin-bottom: 27px;
+    /* margin-bottom: 20px; */
+    margin-bottom: 10px;
     /* span{
       margin-right: 8px;
     } */
@@ -414,11 +417,12 @@ const Container = styled.div`
   }
 
   section {
-    margin-bottom: 42px;
+    /* margin-bottom: 42px; */
+    margin-bottom: 40px;
     .check-birth {
       display: flex;
       justify-content: space-between;
-      gap: 50px;
+      gap: 30px;
     }
     .agree-wrapper {
       border: 1px solid #000;
@@ -448,8 +452,8 @@ const Container = styled.div`
             width: fit-content;
             input {
               margin: 0;
-              width: 30px;
-              height: 30px;
+              width: 25px;
+              height: 25px;
             }
           }
         }
@@ -471,7 +475,7 @@ const Container = styled.div`
     font-size: 16px;
     width: 80%;
     .wrapper {
-      padding: 50px 40px;
+      padding: 50px 20px;
     }
     .title {
       font-size: 20px;
@@ -524,7 +528,8 @@ const Container = styled.div`
 
 const LoginForm = styled.form`
   .id-pw {
-    margin-bottom: 72px;
+    /* margin-bottom: 72px; */
+    margin-bottom: 40px;
     .id-area {
       display: flex;
       gap: 15px;

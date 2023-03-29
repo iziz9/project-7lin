@@ -100,7 +100,7 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
 };
 
 const Container = styled.div`
-  font-size: 23px;
+  font-size: 18px;
   line-height: 140%;
   letter-spacing: -0.02em;
   font-style: normal;
@@ -168,6 +168,7 @@ const Description = styled.div`
   word-break: keep-all;
   color: rgba(98, 98, 98, 0.78);
   line-height: 140%;
+  font-size: 18px;
 
   @media (max-width: 850px) {
     font-size: 13.3px;

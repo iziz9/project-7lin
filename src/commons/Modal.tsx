@@ -18,7 +18,7 @@ const Modal = () => {
       padding: "50px",
       border: "none",
       borderRadius: "8px",
-      width: "45%",
+      width: "30%",
       minWidth: "248px",
       margin: "auto",
       // position: "relative",

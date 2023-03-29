@@ -16,7 +16,7 @@ export const BasicSelect = styled.select`
   height: 49px;
   border-radius: 8px;
   padding-left: 24px;
-  font-size: 23px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 300;
   letter-spacing: -0.02em;

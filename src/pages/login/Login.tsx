@@ -37,7 +37,7 @@ const Login = () => {
   const socialLogin = snsArray.map((sns) => (
     <div className="social" key={sns.name}>
       <img src={sns.img} alt={sns.name} />
-      {isMobile ? null : sns.name}
+      {/* {isMobile ? null : sns.name} */}
     </div>
   ));
 
@@ -103,19 +103,23 @@ const LoginContainer = styled.div`
   margin-top: 60px;
   margin-top: 2rem;
   margin-bottom: "90px";
-  background: #fafafa;
+  /* background: #fafafa; */
   width: 100%;
   min-width: 328px;
-  font-size: 23px;
+  /* font-size: 23px; */
+  font-size: 18px;
   line-height: 100%;
   letter-spacing: -0.02em;
   .login-wrapper {
-    max-width: 700px;
-    padding: 155px 0;
+    /* max-width: 700px; */
+    max-width: 400px;
+    /* padding: 155px 0; */
+    padding: 50px 0;
     margin: 0 auto;
   }
   .title {
     font-weight: bold;
+    text-align: center;
     font-size: 30px;
     color: #5b5b5b;
     margin-bottom: 55px;
@@ -149,7 +153,7 @@ const LoginForm = styled.form`
   .label-wrapper {
     display: flex;
     label {
-      margin: 44px 0;
+      margin: 22px 0;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -196,13 +200,13 @@ const SocialLogins = styled.div`
       width: 50px;
       height: 50px;
       @media (max-width: 850px) {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
       }
     }
   }
   @media (max-width: 850px) {
-    gap: 16px;
+    gap: 30px;
   }
 `;
 
