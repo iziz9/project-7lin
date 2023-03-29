@@ -32,6 +32,7 @@ ${reset}
     --color-grayscale30: #AEAEB2;
     --color-grayscale40: #8E8E93;
     --color-grayscale50: #636366;
+    --color-grayscale60: #48484A;
     position:relative;
     min-height:100%;
   }
@@ -45,7 +46,7 @@ ${reset}
 
   main {
     max-width: 1240px;
-    margin: auto;
+    margin: 0 auto 120px;
     position: relative;
   }
 `;

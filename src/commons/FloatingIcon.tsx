@@ -1,19 +1,27 @@
 import { useState } from "react";
 import styled from "styled-components";
 import FloatingModal from "./FloatingModal";
+import { useMediaQuery } from "react-responsive";
 
 type Props = {};
 
 const FloatingIcon = (props: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:849px)",
+  });
 
   return (
-    <FloatingDiv>
-      <div className="face" onClick={() => setIsModalOpen(!isModalOpen)}>
-        <img src="/floating.png" />
-      </div>
-      {isModalOpen ? <FloatingModal /> : null}
-    </FloatingDiv>
+    <>
+      {isMobile ? null : (
+        <FloatingDiv>
+          <div className="face" onClick={() => setIsModalOpen(!isModalOpen)}>
+            <img src="/floating.png" />
+          </div>
+          {isModalOpen ? <FloatingModal /> : null}
+        </FloatingDiv>
+      )}
+    </>
   );
 };
 
