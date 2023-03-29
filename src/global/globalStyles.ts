@@ -10,6 +10,7 @@ ${reset}
   font-weight: 400;
   font-style: normal;
 }
+
 * {
   font-family: 'Pretendard-Regular', "Inter", sans-serif;
 }
