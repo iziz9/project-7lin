@@ -32,7 +32,7 @@ const Footer = () => {
               <FaSearch />
               <span>검색</span>
             </li>
-            <li onClick={() => navigate("/")}>
+            <li onClick={() => navigate("/groups")}>
               <FaSuitcaseRolling />
               <span>여행</span>
             </li>

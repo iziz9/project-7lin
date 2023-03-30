@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { IoIosPaperPlane } from "react-icons/io";
+import { useMediaQuery } from "react-responsive";
 
 type PropsType = {
   setMyMessage: any;
@@ -8,24 +9,21 @@ type PropsType = {
 };
 
 const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:849px)",
+  });
   // 질문 3번째부터는 text input 대신 button형식으로 변경하기
   // 질문 순서에 따른 버튼목록
   const answers = [
     ["2030", "3040", "4050", "5060", "6070", "모든 연령대"],
     ["여자끼리", "남자끼리", "자녀동반", "상관없음"],
-    [
-      "나홀로 참가",
-      "친구나 동료",
-      "연인이나 부부",
-      "자녀를 동반하는 가족",
-      "상관없음",
-    ],
+    ["나홀로", "친구/동료", "연인/부부", "자녀 동반 가족", "상관없음"],
     ["하나님과 함께하는 여행", "상관없음", "부처님의 발자취를 찾아"],
     ["보수적인 그룹", "진보적인 그룹", "상관없음"],
     [
+      "휴양 및 힐링",
       "문화탐방",
       "골프여행",
-      "리조트 휴양 및 힐링",
       "오지탐험",
       "트레킹",
       "봉사활동",
@@ -45,7 +43,7 @@ const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
 
   return (
     <InputSection>
-      {orderNumber < 2 ? (
+      {orderNumber > 2 ? (
         <TextForm
           onSubmit={(e) => {
             e.preventDefault();
@@ -106,6 +104,10 @@ const InputSection = styled.section`
   position: absolute;
   bottom: 20px;
   border-radius: 8px;
+
+  @media (max-width: 849px) {
+    bottom: 10px;
+  }
 `;
 
 const ButtonsForm = styled.form`
@@ -118,6 +120,9 @@ const ButtonsForm = styled.form`
   background-color: white;
   border-radius: 8px;
   word-break: keep-all;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   .formInner {
     .innerSection {
@@ -176,6 +181,38 @@ const ButtonsForm = styled.form`
       }
     }
   }
+
+  @media (max-width: 849px) {
+    width: 250px;
+    height: 130px;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .formInner {
+      .innerSection {
+        width: 210px;
+        gap: 8px;
+      }
+    }
+
+    label {
+      padding: 8px 10px;
+    }
+
+    button {
+      width: 40px;
+      height: 40px;
+      top: 0px;
+      right: 0px;
+
+      .send {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
 `;
 
 const TextForm = styled.form`
@@ -190,7 +227,6 @@ const TextForm = styled.form`
     border: 1px solid transparent;
     white-space: pre;
     resize: none;
-    rows: 2;
     border-radius: 8px;
 
     :focus {
@@ -217,6 +253,23 @@ const TextForm = styled.form`
       z-index: 99;
       :hover {
         color: var(--color-blue);
+      }
+    }
+  }
+
+  @media (max-width: 849px) {
+    input {
+      width: 250px;
+      height: 50px;
+    }
+
+    button {
+      top: 10px;
+      right: 10px;
+
+      .send {
+        width: 18px;
+        height: 18px;
       }
     }
   }
