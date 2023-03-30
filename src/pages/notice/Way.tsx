@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 interface colorProps {
@@ -16,12 +16,52 @@ const subwayData = [
   { color: "8c1aff", title: "5호선", location: "안국역 6번 출구에서 990m" },
 ];
 
-const Map = () => {
+const Way = () => {
+  const mapElement = useRef(null);
+
+  useEffect(() => {
+    const { naver } = window;
+    if (!mapElement.current || !naver) return;
+
+    // 지도에 표시할 위치의 위도와 경도 좌표를 파라미터로 넣어주기
+    const location = new naver.maps.LatLng(37.5685, 126.9816);
+    const mapOptions: naver.maps.MapOptions = {
+      center: location,
+      zoom: 16,
+      zoomControl: true,
+      zoomControlOptions: {
+        position: naver.maps.Position.TOP_RIGHT,
+      },
+    };
+    const map = new naver.maps.Map(mapElement.current, mapOptions);
+    const marker = new naver.maps.Marker({ position: location, map });
+
+    var contentString = [
+      "<div class='ballon'>",
+      "   <span style='font-weight:bold'>Go Together</span>",
+      "   <span>(주)더샤이니</span>",
+      "</div>",
+    ].join("");
+
+    // 말풍선 커스텀
+    const infowindow = new naver.maps.InfoWindow({
+      content: contentString,
+      maxWidth: 90,
+      borderColor: "var(--color-grayscale60)",
+      borderWidth: 1,
+      anchorSize: new naver.maps.Size(10, 1),
+      anchorSkew: true,
+      pixelOffset: new naver.maps.Point(0, -10),
+    });
+
+    infowindow.open(map, marker);
+  }, []);
+
   return (
     <Container>
       <h2>고투게더 by (주)더샤이니 주소</h2>
       <h3>(04521) 서울특별시 중구 청계천로40, 한국관광공사 서울센터 818호</h3>
-      <div style={{ height: "400px" }}></div>
+      <Map ref={mapElement} />
       <Subway>
         <h4>대중교통 이용 시</h4>
         <ul>
@@ -47,6 +87,20 @@ const Container = styled.div`
     font-size: 18px;
     color: var(--color-grayscale40);
   }
+  .ballon {
+    font-size: 16px;
+    margin: 10px;
+    span:nth-child(1) {
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+`;
+
+const Map = styled.div`
+  max-width: 850px;
+  height: 600px;
+  margin: 20px 0 30px;
 `;
 
 const Subway = styled.div`
@@ -58,10 +112,9 @@ const Subway = styled.div`
     font-weight: 700;
     min-width: 200px;
   }
-
   ul {
     display: flex;
-    width: calc(100% - 200px);
+    width: calc(100% - 300px);
     flex-wrap: wrap;
   }
 `;
@@ -85,4 +138,4 @@ const SubwayLine = styled.li<colorProps>`
   }
 `;
 
-export default Map;
+export default Way;

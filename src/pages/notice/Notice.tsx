@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Information from "./Information";
 import Data from "./Data";
-import Map from "./Map";
+import Way from "./Way";
 
 const menu = [
   {
@@ -14,7 +14,7 @@ const menu = [
     title: "자료실",
   },
   {
-    id: "map",
+    id: "way",
     title: "오시는 길",
   },
 ];
@@ -43,7 +43,7 @@ const Notice = () => {
       </MenuList>
       {page === "information" && <Information />}
       {page === "data" && <Data />}
-      {page === "map" && <Map />}
+      {page === "way" && <Way />}
     </Container>
   );
 };
