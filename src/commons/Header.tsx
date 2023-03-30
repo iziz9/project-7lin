@@ -32,7 +32,7 @@ const Header = () => {
             />
             <div className="iconbox">
               <SlBag className="icons" />
-              <SlLogin className="icons" />
+              <SlLogin className="icons" onClick={() => navigate("/login")} />
             </div>
           </div>
         </MobileHeaderContainer>

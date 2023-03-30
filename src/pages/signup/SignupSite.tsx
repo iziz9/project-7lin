@@ -6,20 +6,7 @@ import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
 import { BasicSelect } from "../../commons/Select";
-
-interface FormValue {
-  email: string;
-  confirmEmail: string;
-  password: string;
-  confirmPassword: string;
-  name: string;
-  phone: string;
-  year: string;
-  month: string;
-  day: string;
-  gender: string;
-  acceptTerms: boolean;
-}
+import { SignupFormValue } from "../../@types/data";
 
 const SignupSite = () => {
   const validationSchema = Yup.object().shape({
@@ -70,7 +57,7 @@ const SignupSite = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<FormValue>({
+  } = useForm<SignupFormValue>({
     resolver: yupResolver(validationSchema),
     mode: "onBlur",
   });
@@ -128,9 +115,8 @@ const SignupSite = () => {
     });
   };
 
-  const onSubmitHandler: SubmitHandler<FormValue> = (data) => {
+  const onSubmitHandler: SubmitHandler<SignupFormValue> = (data) => {
     console.log(JSON.stringify(data, null, 2));
-    alert;
   };
 
   useEffect(() => {
