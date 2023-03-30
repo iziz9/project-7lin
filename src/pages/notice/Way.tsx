@@ -137,11 +137,13 @@ const Map = styled.div`
 
 const Subway = styled.div`
   display: flex;
+  gap: 50px;
+  justify-content: space-between;
 
   h4 {
+    width: 200px;
     font-size: 22px;
     font-weight: 700;
-    min-width: 190px;
     margin-bottom: 20px;
   }
   ul {
@@ -154,7 +156,6 @@ const Subway = styled.div`
 
   @media (max-width: 850px) {
     flex-direction: column;
-
     h4 {
       font-size: 18px;
       margin-bottom: 14px;

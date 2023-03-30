@@ -78,7 +78,6 @@ const List = styled.ul`
     background-color: var(--color-grayscale10);
     border-top: 1px solid var(--color-grayscale20);
   }
-
   li:not(li:nth-child(1)) {
     .title {
       justify-content: left;
@@ -96,6 +95,10 @@ const List = styled.ul`
       border-bottom: none;
       border-top: 1px solid var(--color-grayscale20);
     }
+    li:last-child {
+      border-bottom: 1px solid var(--color-grayscale20);
+    }
+
     .name {
       position: absolute;
       left: 0;
