@@ -59,63 +59,109 @@ const Way = () => {
 
   return (
     <Container>
-      <h2>고투게더 by (주)더샤이니 주소</h2>
-      <h3>(04521) 서울특별시 중구 청계천로40, 한국관광공사 서울센터 818호</h3>
-      <Map ref={mapElement} />
-      <Subway>
-        <h4>대중교통 이용 시</h4>
-        <ul>
-          {subwayData.map((element) => (
-            <SubwayLine key={element.color} bgColor={element.color}>
-              <span>{element.title}</span>
-              <p>{element.location}</p>
-            </SubwayLine>
-          ))}
-        </ul>
-      </Subway>
+      <Address>
+        <h2>고투게더 by (주)더샤이니 주소</h2>
+        <h3>(04521) 서울특별시 중구 청계천로40, 한국관광공사 서울센터 818호</h3>
+      </Address>
+      <div className="map">
+        <Map ref={mapElement} />
+        <Subway>
+          <h4>대중교통 이용 시</h4>
+          <ul>
+            {subwayData.map((element) => (
+              <SubwayLine key={element.color} bgColor={element.color}>
+                <span>{element.title}</span>
+                <p>{element.location}</p>
+              </SubwayLine>
+            ))}
+          </ul>
+        </Subway>
+      </div>
     </Container>
   );
 };
 
 const Container = styled.div`
+  // 대중교통 이용 시를 맵 상단에 표기
+  @media (max-width: 850px) {
+    .map {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
+`;
+
+const Address = styled.div`
+  margin-bottom: 30px;
   h2 {
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
   h3 {
     font-size: 18px;
     color: var(--color-grayscale40);
+    line-height: 1.3;
   }
-  .ballon {
-    font-size: 16px;
-    margin: 10px;
-    span:nth-child(1) {
-      display: block;
-      margin-bottom: 8px;
+
+  @media (max-width: 850px) {
+    h2 {
+      font-size: 20px;
+    }
+    h3 {
+      font-size: 16px;
+      @media (max-width: 500px) {
+        width: 260px;
+      }
     }
   }
 `;
 
 const Map = styled.div`
-  max-width: 850px;
-  height: 600px;
-  margin: 20px 0 30px;
+  height: 700px;
+  margin: 30px 0;
+
+  .ballon {
+    font-size: 16px;
+    margin: 8px;
+    span:nth-child(1) {
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+
+  @media (max-width: 850px) {
+    height: 500px;
+  }
 `;
 
 const Subway = styled.div`
   display: flex;
-  color: var(--color-grayscale50);
 
   h4 {
     font-size: 22px;
     font-weight: 700;
-    min-width: 200px;
+    min-width: 190px;
+    margin-bottom: 20px;
   }
   ul {
+    color: var(--color-grayscale50);
     display: flex;
-    width: calc(100% - 300px);
     flex-wrap: wrap;
+    column-gap: 32px;
+    row-gap: 20px;
+  }
+
+  @media (max-width: 850px) {
+    flex-direction: column;
+
+    h4 {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    ul {
+      gap: 8px;
+    }
   }
 `;
 
@@ -123,7 +169,6 @@ const SubwayLine = styled.li<colorProps>`
   display: flex;
   gap: 20px;
   align-items: center;
-  padding-bottom: 20px;
 
   span {
     width: 60px;
@@ -134,7 +179,7 @@ const SubwayLine = styled.li<colorProps>`
     background-color: #${(props) => props.bgColor};
   }
   p {
-    width: 240px;
+    width: 220px;
   }
 `;
 

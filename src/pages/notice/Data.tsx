@@ -54,6 +54,8 @@ const List = styled.ul`
     display: flex;
     justify-content: center;
     align-items: center;
+    border-bottom: 1px solid var(--color-grayscale20);
+    position: relative;
     span {
       display: flex;
       justify-content: center;
@@ -64,7 +66,7 @@ const List = styled.ul`
     min-width: 80px;
   }
   .title {
-    margin-left: 30px;
+    margin-left: 20px;
     width: 100%;
   }
   .name {
@@ -75,13 +77,40 @@ const List = styled.ul`
   li:nth-child(1) {
     background-color: var(--color-grayscale10);
     border-top: 1px solid var(--color-grayscale20);
-    border-bottom: 1px solid var(--color-grayscale20);
   }
 
   li:not(li:nth-child(1)) {
-    border-bottom: 1px solid var(--color-grayscale20);
     .title {
       justify-content: left;
+    }
+  }
+
+  @media (max-width: 850px) {
+    // 게시글 항목
+    li:nth-child(1),
+    .index {
+      display: none;
+    }
+    li {
+      height: 100%;
+      border-bottom: none;
+      border-top: 1px solid var(--color-grayscale20);
+    }
+    .name {
+      position: absolute;
+      left: 0;
+      top: 22px;
+      min-width: 0;
+      color: var(--color-grayscale60);
+      font-size: 14px;
+    }
+    .title {
+      margin-left: 0;
+      margin: 58px 0 22px;
+      font-weight: 700;
+      font-size: 18px;
+      flex-wrap: wrap;
+      line-height: 1.2;
     }
   }
 `;

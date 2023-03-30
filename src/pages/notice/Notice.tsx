@@ -29,7 +29,7 @@ const Notice = () => {
   return (
     <Container>
       <h1>공지사항</h1>
-      <MenuList page={page}>
+      <Menu page={page}>
         {menu.map((element) => (
           <li
             key={element.id}
@@ -40,7 +40,7 @@ const Notice = () => {
             {element.title}
           </li>
         ))}
-      </MenuList>
+      </Menu>
       {page === "information" && <Information />}
       {page === "data" && <Data />}
       {page === "way" && <Way />}
@@ -49,24 +49,41 @@ const Notice = () => {
 };
 
 const Container = styled.div`
+  margin: 0 20px;
+  min-width: 330px;
+
   h1 {
     margin-top: 60px;
     margin-bottom: 40px;
     font-size: 28px;
     font-weight: 700;
   }
+
+  @media (max-width: 850px) {
+    h1 {
+      margin: 40px 0 30px;
+      font-size: 22px;
+    }
+  }
 `;
 
-const MenuList = styled.ul<{ page: string }>`
+const Menu = styled.ul<{ page: string }>`
   color: #4f4f4f;
   display: flex;
   gap: 26px;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 
   .selected {
     color: var(--color-blue);
     border-bottom: 3px solid var(--color-blue);
     padding-bottom: 5px;
+  }
+
+  @media (max-width: 850px) {
+    gap: 24px;
+    .selected {
+      padding-bottom: 3px;
+    }
   }
 `;
 
