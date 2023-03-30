@@ -58,7 +58,6 @@ const Container = styled.div`
 `;
 
 const MenuList = styled.ul<{ page: string }>`
-  font-weight: 700;
   color: #4f4f4f;
   display: flex;
   gap: 26px;

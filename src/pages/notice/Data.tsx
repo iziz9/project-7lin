@@ -73,7 +73,6 @@ const List = styled.ul`
 
   // 게시글 항목
   li:nth-child(1) {
-    font-weight: 700;
     background-color: var(--color-grayscale10);
     border-top: 1px solid var(--color-grayscale20);
     border-bottom: 1px solid var(--color-grayscale20);
