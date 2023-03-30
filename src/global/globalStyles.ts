@@ -46,7 +46,7 @@ ${reset}
 
   main {
     max-width: 1240px;
-    margin: 0 auto 120px;
+    margin: 0 auto 100px;
     position: relative;
   }
 `;

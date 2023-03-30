@@ -52,7 +52,6 @@ const Section = styled.section`
 
   @media (max-width: 849px) {
     margin-top: 0;
-    padding: 0 32px;
 
     h2 {
       font-size: 20px;
@@ -65,6 +64,10 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
+
+  @media (max-width: 849px) {
+    gap: 10px;
+  }
 
   .category-first {
     display: flex;
@@ -113,6 +116,7 @@ const CategoryContainer = styled.div`
       li {
         .overlay {
           font-size: 16px;
+          text-align: center;
         }
       }
     }
@@ -162,8 +166,14 @@ const CategoryContainer = styled.div`
 
     @media (max-width: 849px) {
       li {
+        min-height: 82px;
+
+        img {
+          min-height: 82px;
+        }
         .overlay {
           font-size: 16px;
+          min-height: 82px;
         }
       }
     }
