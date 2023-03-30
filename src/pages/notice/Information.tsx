@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
+// 목업데이터
 const infoData = [
   {
     number: 123, // 글번호
@@ -60,7 +61,7 @@ const Container = styled.div``;
 
 const List = styled.ul`
   li {
-    height: 60px;
+    height: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,20 +75,19 @@ const List = styled.ul`
     min-width: 80px;
   }
   .category {
-    min-width: 100px;
+    min-width: 110px;
     padding: 8px;
     border-radius: 10px;
   }
   .title {
     margin-left: 30px;
     width: 100%;
-    justify-content: left;
   }
   .name {
     min-width: 90px;
   }
   .date {
-    min-width: 120px;
+    min-width: 130px;
   }
 
   // 게시글 항목
@@ -100,6 +100,10 @@ const List = styled.ul`
 
   // 게시글 리스트
   li:not(li:nth-child(1)) {
+    border-bottom: 1px solid var(--color-grayscale20);
+    .title {
+      justify-content: left;
+    }
     .category {
       color: #ffffff;
     }

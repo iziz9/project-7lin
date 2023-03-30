@@ -50,14 +50,14 @@ const Notice = () => {
 
 const Container = styled.div`
   h1 {
-    margin: 30px 0;
+    margin-top: 60px;
+    margin-bottom: 40px;
     font-size: 28px;
     font-weight: 700;
   }
 `;
 
 const MenuList = styled.ul<{ page: string }>`
-  font-size: 18px;
   font-weight: 700;
   color: #4f4f4f;
   display: flex;
