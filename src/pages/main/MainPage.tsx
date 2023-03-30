@@ -102,19 +102,17 @@ const MobileMain = styled.div`
         border-radius: 8px;
         background-color: var(--color-inputGray);
         margin: auto;
+        padding-left: 15px;
 
         :focus {
           outline: none;
-        }
-
-        ::placeholder {
-          padding-left: 10px;
         }
       }
       .search-icon {
         position: absolute;
         top: 10px;
-        right: 10px;
+        right: 0px;
+        cursor: pointer;
       }
     }
   }
