@@ -13,7 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:560px)",
+    query: "(max-width:850px)",
   });
 
   const { openModal } = useModal();
@@ -37,7 +37,7 @@ const Login = () => {
   const socialLogin = snsArray.map((sns) => (
     <div className="social" key={sns.name}>
       <img src={sns.img} alt={sns.name} />
-      {isMobile ? null : sns.name}
+      {/* {isMobile ? null : sns.name} */}
     </div>
   ));
 
@@ -103,19 +103,23 @@ const LoginContainer = styled.div`
   margin-top: 60px;
   margin-top: 2rem;
   margin-bottom: "90px";
-  background: #fafafa;
+  /* background: #fafafa; */
   width: 100%;
   min-width: 328px;
-  font-size: 23px;
+  /* font-size: 23px; */
+  font-size: 18px;
   line-height: 100%;
   letter-spacing: -0.02em;
   .login-wrapper {
-    max-width: 700px;
-    padding: 155px 0;
+    /* max-width: 700px; */
+    max-width: 400px;
+    /* padding: 155px 0; */
+    padding: 50px 0;
     margin: 0 auto;
   }
   .title {
     font-weight: bold;
+    text-align: center;
     font-size: 30px;
     color: #5b5b5b;
     margin-bottom: 55px;
@@ -124,13 +128,13 @@ const LoginContainer = styled.div`
     margin-bottom: 20px;
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     margin-top: 35px;
     margin-bottom: 0;
     font-size: 16px;
     width: 80%;
     .login-wrapper {
-      padding: 50px 40px;
+      padding: 0px 20px;
     }
     .title {
       font-size: 20px;
@@ -149,7 +153,7 @@ const LoginForm = styled.form`
   .label-wrapper {
     display: flex;
     label {
-      margin: 44px 0;
+      margin: 22px 0;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -158,12 +162,12 @@ const LoginForm = styled.form`
         width: 25px;
         height: 25px;
         margin-right: 15px;
-        @media (max-width: 560px) {
+        @media (max-width: 850px) {
           width: 20px;
           height: 20px;
         }
       }
-      @media (max-width: 560px) {
+      @media (max-width: 850px) {
         margin: 22px 0;
       }
     }
@@ -177,7 +181,7 @@ const Others = styled.div`
   .option {
     cursor: pointer;
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     padding: 20px 0;
   }
 `;
@@ -195,14 +199,14 @@ const SocialLogins = styled.div`
     img {
       width: 50px;
       height: 50px;
-      @media (max-width: 560px) {
-        width: 30px;
-        height: 30px;
+      @media (max-width: 850px) {
+        width: 40px;
+        height: 40px;
       }
     }
   }
-  @media (max-width: 560px) {
-    gap: 16px;
+  @media (max-width: 850px) {
+    gap: 30px;
   }
 `;
 

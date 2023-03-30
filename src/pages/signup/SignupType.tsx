@@ -5,11 +5,11 @@ import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { scrollToTop } from "../../utils/scroll";
 
-const Signup = () => {
+const SignupType = () => {
   const navigate = useNavigate();
 
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:560px)",
+    query: "(max-width:850px)",
   });
 
   const snsArray = [
@@ -75,6 +75,7 @@ const SignupContainer = styled.div`
     width: 100%;
     height: 100%;
     z-index: -1;
+    object-fit: cover;
   }
   .signup-wrapper {
     max-width: 700px;
@@ -104,7 +105,7 @@ const SignupContainer = styled.div`
     margin-bottom: 50px;
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     width: 80%;
     margin-top: 35px;
     margin-bottom: 0;
@@ -152,16 +153,16 @@ const SocialLogins = styled.div`
     img {
       width: 50px;
       height: 50px;
-      @media (max-width: 560px) {
+      @media (max-width: 850px) {
         width: 30px;
         height: 30px;
       }
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     gap: 16px;
     color: rgba(132, 132, 132, 0.78);
   }
 `;
 
-export default Signup;
+export default SignupType;

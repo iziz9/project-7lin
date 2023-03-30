@@ -44,7 +44,7 @@ const Container = styled.div`
       font-weight: 600;
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 16px;
   }
 `;

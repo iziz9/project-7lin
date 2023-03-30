@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.0.0",
     "@types/react-responsive": "^8.0.5",
     "@types/react-slick": "^0.23.10",
     "@types/styled-components": "^5.1.26",
@@ -28,7 +29,8 @@
     "recoil": "^0.7.7",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.8",
-    "styled-reset": "^4.4.5"
+    "styled-reset": "^4.4.5",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

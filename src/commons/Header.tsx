@@ -1,10 +1,16 @@
 import React from "react";
 import { Navigate, useNavigate } from "react-router";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 import { BsSearch } from "react-icons/bs";
+import { SlBag, SlLogin, SlLogout } from "react-icons/sl";
 
 const Header = () => {
   const navigate = useNavigate();
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:849px)",
+  });
+
   const navMenu = [
     "여행추천",
     "그룹별여행",
@@ -15,38 +21,88 @@ const Header = () => {
   ];
 
   return (
-    <HeaderContainer>
-      <TopSection>
-        <div className="inner">
-          <div className="logo-search">
-            <div className="logo">
-              <img src="/logo_text.png" onClick={() => navigate("/")} />
-            </div>
-            <div className="searchBar">
-              <input type="text" placeholder="검색어를 입력해주세요" />
-              <BsSearch className="searchButton" />
+    <>
+      {isMobile ? (
+        <MobileHeaderContainer>
+          <div className="inner">
+            <img
+              src="/logo_text.png"
+              alt="로고"
+              onClick={() => navigate("/")}
+            />
+            <div className="iconbox">
+              <SlBag className="icons" />
+              <SlLogin className="icons" />
             </div>
           </div>
-          <ul>
-            <li>null/알림</li>
-            <li>장바구니</li>
-            <li onClick={() => navigate("/login")}>로그인/로그아웃</li>
-            <li>회원가입</li>
-          </ul>
-        </div>
-      </TopSection>
-      <NavMenu>
-        <ul>
-          {navMenu.map((menu) => (
-            <li key={menu}>{menu}</li>
-          ))}
-        </ul>
-      </NavMenu>
-    </HeaderContainer>
+        </MobileHeaderContainer>
+      ) : (
+        <PcHeaderContainer>
+          <TopSection>
+            <div className="inner">
+              <div className="logo-search">
+                <div className="logo">
+                  <img src="/logo_text.png" onClick={() => navigate("/")} />
+                </div>
+                <div className="searchBar">
+                  <input type="text" placeholder="검색어를 입력해주세요" />
+                  <BsSearch className="searchButton" />
+                </div>
+              </div>
+              <ul>
+                <li>알림</li>
+                <li>장바구니</li>
+                <li onClick={() => navigate("/login")}>로그아웃</li>
+                <li>회원가입</li>
+              </ul>
+            </div>
+          </TopSection>
+          <NavMenu>
+            <ul>
+              {navMenu.map((menu) => (
+                <li key={menu}>{menu}</li>
+              ))}
+            </ul>
+          </NavMenu>
+        </PcHeaderContainer>
+      )}
+    </>
   );
 };
 
-const HeaderContainer = styled.header`
+const MobileHeaderContainer = styled.div`
+  width: 100%;
+  height: 60px;
+  background-color: aliceblue;
+
+  .inner {
+    padding: 16px 25px;
+    display: flex;
+    justify-content: space-between;
+
+    img {
+      width: 119px;
+      height: 20px;
+      padding-top: 10px;
+      cursor: pointer;
+    }
+
+    .iconbox {
+      display: flex;
+      gap: 20px;
+      text-align: center;
+      margin: auto 0;
+
+      .icons {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+      }
+    }
+  }
+`;
+
+const PcHeaderContainer = styled.header`
   border-bottom: 2px solid var(--color-inputGray);
   padding-top: 20px;
 `;
