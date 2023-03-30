@@ -7,6 +7,10 @@ import { useModal } from "../../../hooks/useModal";
 import { modalState } from "../../../store/modalAtom";
 import ShowIdModal from "./ShowIdModal";
 import ShowPwModal from "./ShowPwModal";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { FindIdFormValue, FindPwFormValue } from "../../../@types/data";
 
 interface Props {
   findPw?: boolean;
@@ -39,6 +43,55 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
     content: <ShowPwModal />,
   };
 
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+
+  const validationIdSchema = Yup.object().shape({
+    name: Yup.string().required("이름을 입력해주세요!").trim(),
+    phone: Yup.string()
+      .required("전화번호를 입력해주세요!")
+      .trim()
+      .matches(
+        /^\d{2,3}-?\d{3,4}-?\d{4}$/,
+        "전화번호 형식이 올바르지 않습니다!",
+      ),
+  });
+
+  const validationPwSchema = Yup.object().shape({
+    email: Yup.string()
+      .required("이메일을 입력해주세요!")
+      .trim()
+      .matches(
+        /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+        "이메일 형식이 올바르지 않습니다!",
+      ),
+    phone: Yup.string()
+      .required("전화번호를 입력해주세요!")
+      .trim()
+      .matches(
+        /^\d{2,3}-?\d{3,4}-?\d{4}$/,
+        "전화번호 형식이 올바르지 않습니다!",
+      ),
+  });
+
+  const findIdForm = useForm<FindIdFormValue>({
+    resolver: yupResolver(validationIdSchema),
+    mode: "onBlur",
+  });
+
+  const findPwForm = useForm<FindPwFormValue>({
+    resolver: yupResolver(validationPwSchema),
+    mode: "onBlur",
+  });
+
+  const onSubmitHandler: SubmitHandler<FindIdFormValue | FindPwFormValue> = (
+    data,
+  ) => {
+    console.log(JSON.stringify(data, null, 2));
+    isFindId ? openModal(showIdModalData) : openModal(showPwModalData);
+  };
+
   return (
     <Container>
       <FindOptions>
@@ -46,6 +99,8 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
           className={isFindId ? "find-option active" : "find-option"}
           onClick={() => {
             setIsFindId(true);
+            findIdForm.clearErrors("name");
+            // findIdForm.clearErrors("phone");
             setModalDataState((prev) => {
               return { ...prev, title: "아이디 찾기" };
             });
@@ -57,6 +112,8 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
           className={!isFindId ? "find-option active" : "find-option"}
           onClick={() => {
             setIsFindId(false);
+            findPwForm.clearErrors("email");
+            // findPwForm.clearErrors("phone");
             setModalDataState((prev) => {
               return { ...prev, title: "비밀번호 찾기" };
             });
@@ -65,36 +122,76 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
           <div>비밀번호 찾기</div>
         </div>
       </FindOptions>
-      {/* <RadioOptions>
-        <div>
-          <label onClick={() => setIsFindByPhone(true)}>
-            <input type="radio" name="chk-info" defaultChecked={true} />
-            연락처로 찾기
-          </label>
-        </div>
-        <div>
-          <label onClick={() => setIsFindByPhone(false)}>
-            <input type="radio" name="chk-info" />
-            이메일로 찾기
-          </label>
-        </div>
-      </RadioOptions> */}
       <Description>{description}</Description>
-      <div style={{ marginBottom: "10px" }}>
-        <BasicInput type="text" placeholder={isFindId ? "이름" : "아이디"} />
-      </div>{" "}
-      <div style={{ marginBottom: "20px" }}>
-        <BasicInput type="text" placeholder="연락처" />
-      </div>
-      <BasicBtn
-        type="submit"
-        value="Submit"
-        onClick={() =>
-          isFindId ? openModal(showIdModalData) : openModal(showPwModalData)
+      <form
+        onSubmit={
+          isFindId
+            ? findIdForm.handleSubmit(onSubmitHandler)
+            : findPwForm.handleSubmit(onSubmitHandler)
         }
       >
-        {isFindId ? "아이디 찾기" : "비밀번호 찾기"}
-      </BasicBtn>
+        <div style={{ marginBottom: "10px" }}>
+          {isFindId ? (
+            <>
+              {findIdForm.formState.errors.name ? (
+                <div className="invalid">
+                  {findIdForm.formState.errors.name.message}
+                </div>
+              ) : null}
+              <BasicInput
+                type="text"
+                placeholder="이름"
+                {...findIdForm.register("name")}
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  findIdForm.setValue("name", e.target.value);
+                }}
+              />
+            </>
+          ) : (
+            <>
+              {findPwForm.formState.errors.email ? (
+                <div className="invalid">
+                  {findPwForm.formState.errors.email.message}
+                </div>
+              ) : null}
+              <BasicInput
+                type="text"
+                placeholder="아이디"
+                {...findPwForm.register("email")}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  findPwForm.setValue("email", e.target.value);
+                }}
+              />
+            </>
+          )}
+        </div>{" "}
+        <div style={{ marginBottom: "20px" }}>
+          {findIdForm.formState.errors.phone ||
+          findPwForm.formState.errors.phone ? (
+            <div className="invalid">전화번호 형식이 올바르지 않습니다!</div>
+          ) : null}
+          <BasicInput
+            type="text"
+            placeholder="연락처"
+            {...(isFindId
+              ? findIdForm.register("phone")
+              : findPwForm.register("phone"))}
+            value={phone}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              findIdForm.setValue("phone", e.target.value);
+              findPwForm.setValue("phone", e.target.value);
+            }}
+          />
+        </div>
+        <BasicBtn type="submit" value="Submit">
+          {isFindId ? "아이디 찾기" : "비밀번호 찾기"}
+        </BasicBtn>
+      </form>
     </Container>
   );
 };
@@ -105,7 +202,21 @@ const Container = styled.div`
   letter-spacing: -0.02em;
   font-style: normal;
 
+  .warning {
+    border: 1px solid #dc3545;
+  }
+  .invalid {
+    width: 100%;
+    padding-bottom: 0.4rem;
+    font-size: 16px;
+    font-weight: bold;
+    color: #dc3545;
+  }
+
   @media (max-width: 850px) {
+    .invalid {
+      font-size: 14px;
+    }
     font-size: 14px;
   }
 `;
@@ -137,30 +248,6 @@ const FindOptions = styled.div`
   }
 `;
 
-const RadioOptions = styled.div`
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  color: #757575;
-  font-weight: 500;
-  label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    input {
-      margin: 0;
-      margin-right: 10px;
-      width: 25px;
-      height: 25px;
-
-      @media (max-width: 850px) {
-        width: 15px;
-        height: 15px;
-      }
-    }
-  }
-`;
-
 const Description = styled.div`
   margin-top: 26px;
   margin-bottom: 20px;
@@ -171,7 +258,7 @@ const Description = styled.div`
   font-size: 18px;
 
   @media (max-width: 850px) {
-    font-size: 13.3px;
+    font-size: 14px;
   }
 `;
 

@@ -1,5 +1,8 @@
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
@@ -8,6 +11,7 @@ import { useModal } from "../../hooks/useModal";
 import { scrollToTop } from "../../utils/scroll";
 import FindIdPasswordModal from "./modal_content/FindIdPasswordModal";
 import NonMemberResvationModal from "./modal_content/NonMemberResvationModal";
+import { LoginFormValue } from "../../@types/data";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +19,34 @@ const Login = () => {
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .required("이메일을 입력해주세요!")
+      .trim()
+      .matches(
+        /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+        "이메일 형식이 올바르지 않습니다!",
+      ),
+    password: Yup.string()
+      .required("비밀번호를 입력해주세요!")
+      .trim()
+      .min(8, "비밀번호는 8 ~ 16자 길이여야 합니다!")
+      .max(16, "비밀번호는 8 ~ 16자 길이여야 합니다!"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValue>({
+    resolver: yupResolver(validationSchema),
+    mode: "onBlur",
+  });
+
+  const onSubmitHandler: SubmitHandler<LoginFormValue> = (data) => {
+    console.log(JSON.stringify(data, null, 2));
+  };
 
   const { openModal } = useModal();
 
@@ -46,12 +78,28 @@ const Login = () => {
       <LoginContainer>
         <div className="login-wrapper">
           <div className="title">로그인</div>
-          <LoginForm>
+          <LoginForm onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="input_form id">
-              <BasicInput type="text" placeholder="아이디" />
+              {errors.email ? (
+                <div className="invalid">{errors.email?.message}</div>
+              ) : null}
+              <BasicInput
+                className={errors.email ? "warning" : ""}
+                type="text"
+                placeholder="아이디"
+                {...register("email")}
+              />
             </div>
             <div className="input_form password">
-              <BasicInput type="password" placeholder="비밀번호" />
+              {errors.password ? (
+                <div className="invalid">{errors.password?.message}</div>
+              ) : null}
+              <BasicInput
+                className={errors.password ? "warning" : ""}
+                type="password"
+                placeholder="비밀번호"
+                {...register("password")}
+              />
             </div>
             <div className="label-wrapper">
               <label>
@@ -127,6 +175,16 @@ const LoginContainer = styled.div`
   .btn-wrapper {
     margin-bottom: 20px;
   }
+  .invalid {
+    width: 100%;
+    padding-bottom: 0.8rem;
+    font-size: 18px;
+    font-weight: bold;
+    color: #dc3545;
+  }
+  .warning {
+    border: 1px solid #dc3545;
+  }
 
   @media (max-width: 850px) {
     margin-top: 35px;
@@ -142,6 +200,9 @@ const LoginContainer = styled.div`
     }
     .btn-wrapper {
       margin-bottom: 10px;
+    }
+    .invalid {
+      font-size: 16px;
     }
   }
 `;
