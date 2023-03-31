@@ -13,11 +13,8 @@ const TripTest = (props: Props) => {
   }, []);
 
   const goPrev = () => {
-    // 배경사진, 문항번호, 타이틀, 버튼내용 바꾸기
     setOrderNumber(orderNumber - 1);
   };
-
-  console.log(orderNumber);
 
   const goNext = () => {
     setOrderNumber(orderNumber + 1);

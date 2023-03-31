@@ -43,7 +43,7 @@ const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
 
   return (
     <InputSection>
-      {orderNumber > 2 ? (
+      {orderNumber < 2 ? (
         <TextForm
           onSubmit={(e) => {
             e.preventDefault();

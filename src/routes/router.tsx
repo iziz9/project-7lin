@@ -10,6 +10,7 @@ import TripTest from "../pages/trip-test/TripTest";
 import TestResult from "../pages/trip-test/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
+import Reservation from "../pages/reservation/Reservation";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
         //임시
         path: "/test-result",
         element: <TestResult />,
+      },
+      {
+        path: "/reservation",
+        element: <Reservation />,
       },
     ],
   },
