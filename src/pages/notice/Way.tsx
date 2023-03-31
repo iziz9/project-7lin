@@ -137,7 +137,7 @@ const Map = styled.div`
 
 const Subway = styled.div`
   display: flex;
-  gap: 50px;
+  column-gap: 50px;
   justify-content: space-between;
 
   h4 {
