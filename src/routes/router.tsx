@@ -6,6 +6,7 @@ import MainPage from "../pages/main/MainPage";
 import Review from "./../pages/review/Review";
 import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
+import Notice from "../pages/notice/Notice";
 import TripTest from "../pages/trip-test/TripTest";
 import TestResult from "../pages/trip-test/TestResult";
 import SignupType from "../pages/signup/SignupType";
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
         path: "review/:id",
         element: <ReviewDetail />,
       },
-      { path: "/groups", element: <Groups /> },
+      { path: "groups", element: <Groups /> },
       {
         path: "/login",
         element: <Login />,
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
         //임시
         path: "/test-result",
         element: <TestResult />,
+      },
+      {
+        path: "notice",
+        element: <Notice />,
       },
     ],
   },
