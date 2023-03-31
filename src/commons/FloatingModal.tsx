@@ -84,7 +84,7 @@ const MobileModal = styled.div`
   z-index: -99;
   position: absolute;
   right: 30px;
-  bottom: 50px;
+  bottom: 70px;
   background-color: #f5f5f5;
   opacity: 0.95;
   display: flex;
@@ -96,7 +96,6 @@ const MobileModal = styled.div`
     width: 250px;
     height: 300px;
     margin: 15px auto;
-    background-color: #fff;
     border-radius: 8px;
   }
 `;
