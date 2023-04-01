@@ -1,11 +1,24 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useModal } from "../../../hooks/useModal";
+import ChangeInfoModal from "./ChangeInfoModal";
+import WithdrawlModal from "./WithdrawlModal";
 
 const SideBar = () => {
   const { pathname } = useLocation();
 
-  console.log(pathname);
+  const { openModal } = useModal();
+
+  const changeInfoModalData = {
+    title: "정보 수정",
+    content: <ChangeInfoModal />,
+  };
+
+  const withdrawalModalData = {
+    title: "회원탈퇴",
+    content: <WithdrawlModal />,
+  };
 
   return (
     <SideBarStyle>
@@ -34,8 +47,18 @@ const SideBar = () => {
         >
           포인트
         </NavLink>
-        {/* <NavLink>정보수정</NavLink> */}
-        {/* <NavLink>회원탈퇴</NavLink> */}
+        <li
+          className="link"
+          onClick={() => {
+            console.log("hi");
+            openModal(changeInfoModalData);
+          }}
+        >
+          정보수정
+        </li>
+        <li className="link" onClick={() => openModal(withdrawalModalData)}>
+          회원탈퇴
+        </li>
       </ul>
     </SideBarStyle>
   );
@@ -48,6 +71,7 @@ const SideBarStyle = styled.div`
       display: block;
       padding: 11px 0;
       word-break: keep-all;
+      cursor: pointer;
 
       &.active {
         color: #0d99ff;

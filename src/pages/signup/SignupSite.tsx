@@ -7,8 +7,16 @@ import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
 import { BasicSelect } from "../../commons/Select";
 import { SignupFormValue } from "../../@types/data";
+import { useModal } from "../../hooks/useModal";
+import NonMemberResvationModal from "../login/modal_content/NonMemberResvationModal";
 
 const SignupSite = () => {
+  const { openModal } = useModal();
+
+  const changeInfoModalData = {
+    title: "정보 수정",
+    content: <NonMemberResvationModal />,
+  };
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .required("이메일을 입력해주세요!")
@@ -152,6 +160,10 @@ const SignupSite = () => {
                   type="button"
                   style={{ height: "49px" }}
                   {...register("confirmEmail")}
+                  // onClick={() => {
+                  //   console.log("789456");
+                  //   openModal(changeInfoModalData);
+                  // }}
                 >
                   중복확인
                 </BasicBtn>

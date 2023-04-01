@@ -61,28 +61,28 @@ const router = createBrowserRouter([
         path: "notice",
         element: <Notice />,
       },
-      {
-        path: "/mypage",
-        element: <MyPage />,
-        children: [
-          {
-            index: true,
-            element: <Reservation />,
-          },
-          {
-            path: "reservation",
-            element: <Reservation />,
-          },
-          {
-            path: "favor",
-            element: <Favor />,
-          },
-          {
-            path: "point",
-            element: <Point />,
-          },
-        ],
-      },
+      // {
+      //   path: "/mypage",
+      //   element: <MyPage />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <Reservation />,
+      //     },
+      //     {
+      //       path: "reservation",
+      //       element: <Reservation />,
+      //     },
+      //     {
+      //       path: "favor",
+      //       element: <Favor />,
+      //     },
+      //     {
+      //       path: "point",
+      //       element: <Point />,
+      //     },
+      //   ],
+      // },
     ],
   },
 ]);
