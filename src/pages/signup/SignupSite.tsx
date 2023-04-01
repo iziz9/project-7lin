@@ -461,7 +461,7 @@ const Container = styled.div`
     font-size: 16px;
     width: 80%;
     .wrapper {
-      padding: 0 20px;
+      padding: 0px;
     }
     .title {
       font-size: 20px;
