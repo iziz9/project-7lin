@@ -10,22 +10,22 @@ const Reservation = () => {
       case 0:
         return (
           <>
-            <ProductCard tab={tab} />
-            <ProductCard tab={tab} />
-            <ProductCard tab={tab} />
+            <ProductCard tab={tab} reservation={true} />
+            <ProductCard tab={tab} reservation={true} />
+            <ProductCard tab={tab} reservation={true} />
           </>
         );
       case 1:
         return (
           <>
-            <ProductCard tab={tab} />
-            <ProductCard tab={tab} />
+            <ProductCard tab={tab} reservation={true} />
+            <ProductCard tab={tab} reservation={true} />
           </>
         );
       case 2:
         return (
           <>
-            <ProductCard tab={tab} />
+            <ProductCard tab={tab} reservation={true} />
           </>
         );
     }

@@ -3,11 +3,13 @@ import styled from "styled-components";
 import { BasicBtn } from "../../../commons/Button";
 
 interface Props {
-  tab: number;
+  reservation?: boolean;
+  favor?: boolean;
+  tab?: number;
 }
 
-const ProductCard = ({ tab }: Props) => {
-  const getButtonElement = () => {
+const ProductCard = ({ tab, reservation, favor }: Props) => {
+  const getReservationButtonElement = () => {
     switch (tab) {
       case 0:
         return (
@@ -31,7 +33,18 @@ const ProductCard = ({ tab }: Props) => {
     }
   };
 
-  const buttonElement = getButtonElement();
+  const getFavorButtonElement = () => {
+    return (
+      <>
+        <BasicBtn>예약하기</BasicBtn>
+        <BasicBtn backgroundColor="#b5b4b4">취소하기</BasicBtn>
+      </>
+    );
+  };
+
+  const buttonElement = reservation
+    ? getReservationButtonElement()
+    : getFavorButtonElement();
 
   return (
     <Container>
@@ -40,9 +53,13 @@ const ProductCard = ({ tab }: Props) => {
           <img src="/product_img.png" />
         </div>
         <div className="info">
-          <div className="date">2023. 04. 15</div>
+          <div className="date">
+            {reservation ? "2023. 04. 15" : "# 자연 친화"}
+          </div>
           <div className="title">제주도 이호등대</div>
-          <div className="num">예약번호: 364927 예약 인원: 2인</div>
+          <div className="num">
+            {reservation ? "예약번호: 364927 예약 인원: 2인" : "394,204원"}
+          </div>
         </div>
         <div className="button-wrapper">{buttonElement}</div>
       </div>
@@ -69,7 +86,7 @@ const Container = styled.div`
       display: flex;
       flex-direction: column;
       /* justify-content: center; */
-      gap: 20px;
+      gap: 25px;
       width: 65%;
 
       .date {
