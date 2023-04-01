@@ -4,6 +4,7 @@ import { useMediaQuery } from "react-responsive";
 import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
 import PaymentModal from "./PaymentModal";
+import TermsModal from "./TermsModal";
 
 type Props = {};
 
@@ -13,6 +14,11 @@ const Reservation = (props: Props) => {
   const PaymentModalData = {
     title: "입금 계좌 안내",
     content: <PaymentModal />,
+  };
+
+  const TermsModalData = {
+    title: "개인정보 수집 및 이용",
+    content: <TermsModal />,
   };
 
   const onSubmit = () => {
@@ -111,7 +117,12 @@ const Reservation = (props: Props) => {
         <div>
           <input type="checkbox" id="agree1" required />
           <label htmlFor="agree1">
-            <span onClick={() => console.log("이용동의 모달 띄우기")}>
+            <span
+              onClick={(e) => {
+                e.preventDefault();
+                openModal(TermsModalData);
+              }}
+            >
               개인정보 수집 및 이용{" "}
             </span>
             동의
@@ -163,7 +174,6 @@ const Container = styled.form`
 
   section {
     width: 100%;
-    background-color: white;
     background-color: var(--color-grayscale10);
     display: flex;
     flex-direction: column;
