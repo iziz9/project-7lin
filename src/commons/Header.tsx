@@ -12,12 +12,30 @@ const Header = () => {
   });
 
   const navMenu = [
-    "여행추천",
-    "그룹별여행",
-    "지역별여행",
-    "테마별여행",
-    "여행후기",
-    "공지사항",
+    {
+      title: "여행추천",
+      pathname: "/",
+    },
+    {
+      title: "그룹별여행",
+      pathname: "/groups",
+    },
+    {
+      title: "지역별여행",
+      pathname: "/",
+    },
+    {
+      title: "테마별여행",
+      pathname: "/",
+    },
+    {
+      title: "여행후기",
+      pathname: "/review",
+    },
+    {
+      title: "공지사항",
+      pathname: "/notice",
+    },
   ];
 
   return (
@@ -53,14 +71,16 @@ const Header = () => {
                 <li>알림</li>
                 <li>장바구니</li>
                 <li onClick={() => navigate("/login")}>로그아웃</li>
-                <li>회원가입</li>
+                <li onClick={() => navigate("/signup_type")}>회원가입</li>
               </ul>
             </div>
           </TopSection>
           <NavMenu>
             <ul>
               {navMenu.map((menu) => (
-                <li key={menu}>{menu}</li>
+                <li key={menu.title} onClick={() => navigate(menu.pathname)}>
+                  {menu.title}
+                </li>
               ))}
             </ul>
           </NavMenu>
@@ -76,7 +96,7 @@ const MobileHeaderContainer = styled.div`
   background-color: aliceblue;
 
   .inner {
-    padding: 16px 25px;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
 
@@ -104,7 +124,7 @@ const MobileHeaderContainer = styled.div`
 
 const PcHeaderContainer = styled.header`
   border-bottom: 2px solid var(--color-inputGray);
-  padding-top: 20px;
+  padding: 20px 20px 0;
 `;
 
 const TopSection = styled.section`
@@ -185,15 +205,16 @@ const NavMenu = styled.nav`
 
   li {
     cursor: pointer;
-    padding: 1rem;
+    /* margin-top: 16px; */
+    /* padding: 1rem; */
+    padding: 16px 16px 16px 0;
     position: relative;
 
     ::after {
       content: "";
       position: absolute;
-      left: 0.5rem;
-      bottom: -1rem;
-      width: 100px;
+      left: -8px;
+      width: 100%;
     }
 
     :hover {

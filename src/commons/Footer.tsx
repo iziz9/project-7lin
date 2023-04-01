@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import { useLocation, useNavigate } from "react-router";
@@ -16,34 +16,66 @@ const Footer = () => {
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:849px)",
   });
-  const darkGray = "var(--color-grayscale60)";
-  const blue = "var(--color-blue)";
+
+  const navMenu = [
+    {
+      title: "홈",
+      pathname: "/",
+      color: location === "/" ? "blue" : "darkGray",
+      icon: <FaHome className={location === "/" ? "blue" : "darkGray"} />,
+    },
+    {
+      title: "검색",
+      pathname: "/search",
+      color: location === "/search" ? "blue" : "darkGray",
+      icon: (
+        <FaSearch className={location === "/search" ? "blue" : "darkGray"} />
+      ),
+    },
+    {
+      title: "여행",
+      pathname: "/groups",
+      color: location === "/groups" ? "blue" : "darkGray",
+      icon: (
+        <FaSuitcaseRolling
+          className={location === "/groups" ? "blue" : "darkGray"}
+        />
+      ),
+    },
+    {
+      title: "공지사항",
+      pathname: "/notice",
+      color: location === "/notice" ? "blue" : "darkGray",
+      icon: (
+        <FaBullhorn className={location === "/notice" ? "blue" : "darkGray"} />
+      ),
+    },
+    {
+      title: "마이페이지",
+      pathname: "/mypage",
+      color: location === "/mypage" ? "blue" : "darkGray",
+      icon: (
+        <FaUserAlt className={location === "/mypage" ? "blue" : "darkGray"} />
+      ),
+    },
+  ];
 
   return (
     <>
       {isMobile ? (
         <MobileFooterContainer>
           <ul>
-            <li onClick={() => navigate("/")}>
-              <FaHome />
-              <span>홈</span>
-            </li>
-            <li onClick={() => navigate("/")}>
-              <FaSearch />
-              <span>검색</span>
-            </li>
-            <li onClick={() => navigate("/groups")}>
-              <FaSuitcaseRolling />
-              <span>여행</span>
-            </li>
-            <li onClick={() => navigate("/")}>
-              <FaBullhorn />
-              <span>공지사항</span>
-            </li>
-            <li onClick={() => navigate("/")}>
-              <FaUserAlt />
-              <span>마이페이지</span>
-            </li>
+            {navMenu.map((menu) => (
+              <li
+                onClick={() => {
+                  navigate(menu.pathname);
+                }}
+                key={menu.pathname}
+              >
+                {menu.icon}
+                <span className={menu.color}>{menu.title}</span>
+              </li>
+            ))}
           </ul>
         </MobileFooterContainer>
       ) : (
@@ -135,6 +167,10 @@ const MobileFooterContainer = styled.footer`
   background-color: #f5f5f5;
   position: fixed;
   bottom: 0;
+
+  .blue {
+    color: var(--color-blue);
+  }
 
   ul {
     padding: 15px 30px;
