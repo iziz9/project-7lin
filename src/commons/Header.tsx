@@ -124,7 +124,7 @@ const MobileHeaderContainer = styled.div`
 
 const PcHeaderContainer = styled.header`
   border-bottom: 2px solid var(--color-inputGray);
-  padding-top: 20px;
+  padding: 20px 20px 0;
 `;
 
 const TopSection = styled.section`
@@ -205,15 +205,16 @@ const NavMenu = styled.nav`
 
   li {
     cursor: pointer;
-    padding: 1rem;
+    /* margin-top: 16px; */
+    /* padding: 1rem; */
+    padding: 16px 16px 16px 0;
     position: relative;
 
     ::after {
       content: "";
       position: absolute;
-      left: 0.5rem;
-      bottom: -1rem;
-      width: 100px;
+      left: -8px;
+      width: 100%;
     }
 
     :hover {

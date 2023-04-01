@@ -53,7 +53,7 @@ const Footer = () => {
     {
       title: "마이페이지",
       pathname: "/mypage",
-      color: location === "/notice" ? "blue" : "darkGray",
+      color: location === "/mypage" ? "blue" : "darkGray",
       icon: (
         <FaUserAlt className={location === "/mypage" ? "blue" : "darkGray"} />
       ),
