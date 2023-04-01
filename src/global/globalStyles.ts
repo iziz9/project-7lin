@@ -48,6 +48,10 @@ ${reset}
     max-width: 1240px;
     margin: 0 auto 100px;
     position: relative;
+
+    @media (max-width: 850px) {
+      padding: 0 20px;
+    }
   }
 `;
 
