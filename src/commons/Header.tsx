@@ -96,7 +96,7 @@ const MobileHeaderContainer = styled.div`
   background-color: aliceblue;
 
   .inner {
-    padding: 16px 25px;
+    padding: 16px 20px;
     display: flex;
     justify-content: space-between;
 

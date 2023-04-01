@@ -140,12 +140,11 @@ const Reservation = (props: Props) => {
 
 const Container = styled.form`
   height: 100%;
-  padding: 32px 32px;
+  padding-top: 32px;
   display: flex;
   flex-direction: column;
   gap: 22px;
   word-break: keep-all;
-  background-color: var(--color-grayscale10);
 
   h1 {
     font-size: 20px;
@@ -165,7 +164,7 @@ const Container = styled.form`
   section {
     width: 100%;
     background-color: white;
-    /* background-color: var(--color-grayscale10); */
+    background-color: var(--color-grayscale10);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -193,7 +192,7 @@ const Container = styled.form`
 
 const ProductInfo = styled.section`
   width: 100%;
-  /* background-color: white; */
+  background-color: white;
   display: flex;
   flex-direction: column;
 
@@ -235,8 +234,7 @@ const ProductInfo = styled.section`
 
     .back-gray {
       font-size: 14px;
-      background-color: var(--color-grayscale10);
-      /* background-color: white; */
+      background-color: white;
       padding: 12px;
       display: flex;
       gap: 7px;
