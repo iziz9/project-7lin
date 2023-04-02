@@ -179,7 +179,7 @@ const MobileMain = styled.div`
 
 const PcMain = styled.div`
   .inner {
-    margin: 0 100px;
+    margin: 0 60px;
   }
 `;
 
