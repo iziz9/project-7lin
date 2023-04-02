@@ -36,3 +36,9 @@ export interface FindPwFormValue {
   email: string;
   phone: string;
 }
+
+export interface ChangeInfoFormValue {
+  password: string;
+  confirmPassword: string;
+  phone: string;
+}
