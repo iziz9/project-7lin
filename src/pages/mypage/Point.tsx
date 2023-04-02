@@ -1,9 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-type Props = {};
-
-const Point = (props: Props) => {
+const Point = () => {
   return (
     <Container>
       <div className="title">적립현황</div>

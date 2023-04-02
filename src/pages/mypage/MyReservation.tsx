@@ -13,6 +13,9 @@ const Reservation = () => {
             <ProductCard tab={tab} reservation={true} />
             <ProductCard tab={tab} reservation={true} />
             <ProductCard tab={tab} reservation={true} />
+            <ProductCard tab={tab} reservation={true} />
+            <ProductCard tab={tab} reservation={true} />
+            <ProductCard tab={tab} reservation={true} />
           </>
         );
       case 1:
@@ -46,7 +49,6 @@ const Reservation = () => {
         <div className="type cancel" onClick={() => setTab(2)}>
           취소된 예약 (1)
         </div>
-        <div className="blank"></div>
       </div>
       <div className="list">{listElement}</div>
     </Container>
@@ -66,7 +68,10 @@ const Container = styled.div<{ tab: number }>`
     /* border: 1px solid red; */
 
     .type {
+      flex-grow: 1;
       font-size: 18px;
+      text-align: center;
+      word-break: keep-all;
       padding: 15px 38px;
       border: 1px solid var(--color-grayscale10);
       border-bottom: none;
@@ -95,15 +100,26 @@ const Container = styled.div<{ tab: number }>`
           props.tab === 2 ? "none" : "1px solid var(--color-grayscale20)"};
       }
     }
-    .blank {
-      flex-grow: 1;
-      border-bottom: 1px solid var(--color-grayscale20);
-    }
   }
   .list {
     display: flex;
     flex-direction: column;
     /* gap: 15px; */
+  }
+
+  @media (max-width: 850px) {
+    font-size: 16px;
+
+    .title {
+      font-size: 20px;
+    }
+    .type-wrapper {
+      .type {
+        font-size: 16px;
+        padding: 15px 20px;
+        flex-grow: 1;
+      }
+    }
   }
 `;
 

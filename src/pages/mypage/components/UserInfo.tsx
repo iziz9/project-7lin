@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-type Props = {};
-
-const UserInfo = (props: Props) => {
+const UserInfo = () => {
   return (
     <Container>
       <div className="wrapper">
@@ -12,6 +10,7 @@ const UserInfo = (props: Props) => {
         <div className="info">
           <div className="hi">7lin'님 안녕하세요.</div>
           <div className="money">누적 결제 금액: 3,244,000원</div>
+          <div className="point-mobile">포인트: 0</div>
         </div>
         <div className="point-wrapper">
           <div className="point">포인트</div>
@@ -54,6 +53,9 @@ const Container = styled.div`
         font-size: 23px;
         font-weight: 600;
       }
+      .point-mobile {
+        display: none;
+      }
     }
 
     .point-wrapper {
@@ -72,6 +74,27 @@ const Container = styled.div`
       .number {
         font-size: 30px;
         font-weight: 600;
+      }
+    }
+  }
+
+  @media (max-width: 850px) {
+    font-size: 16px;
+
+    .wrapper {
+      padding-bottom: 30px;
+      .info {
+        border-right: none;
+        .hi {
+          font-size: 20px;
+        }
+        .point-mobile {
+          display: block;
+        }
+      }
+
+      .point-wrapper {
+        display: none;
       }
     }
   }

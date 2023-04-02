@@ -7,13 +7,12 @@ const WithdrawlModal = () => {
     <Container>
       <div className="info">
         <div>
-          <p>가입된 회원정보가 모두 삭제됩니다.</p>
-          <p>작성하신 게시물은 삭제되지 않습니다.</p>
+          가입된 회원정보가 모두 삭제됩니다. 작성하신 게시물은 삭제되지
+          않습니다.
         </div>
         <div>
-          <p>탈퇴 후 같은 계정으로 재가입 시 </p>
-          <p>기존에 가지고 있던 적립금은 복원되지 않으며,</p>
-          <p>사용 및 다운로드했던 쿠폰도 사용 불가능합니다.</p>
+          탈퇴 후 같은 계정으로 재가입 시 기존에 가지고 있던 적립금은 복원되지
+          않으며, 사용 및 다운로드했던 쿠폰도 사용 불가능합니다.
         </div>
         <div>회원탈퇴를 진행하시겠습니까?</div>
       </div>
@@ -31,7 +30,8 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
+    word-break: keep-all;
   }
 `;
 

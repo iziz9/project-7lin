@@ -179,7 +179,7 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
             </div>
           ) : null}
           <BasicInput
-            type="text"
+            type="tel"
             placeholder="연락처"
             {...(isFindId
               ? findIdForm.register("phone")
@@ -219,9 +219,9 @@ const Container = styled.div`
 
   @media (max-width: 850px) {
     .invalid {
-      font-size: 14px;
+      font-size: 16px;
     }
-    font-size: 14px;
+    font-size: 16px;
   }
 `;
 
@@ -262,7 +262,7 @@ const Description = styled.div`
   font-size: 18px;
 
   @media (max-width: 850px) {
-    font-size: 14px;
+    font-size: 15px;
   }
 `;
 

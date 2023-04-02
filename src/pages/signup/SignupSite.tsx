@@ -208,7 +208,7 @@ const SignupSite = () => {
             <div>
               <BasicInput
                 className={errors.phone ? "warning" : ""}
-                type="text"
+                type="tel"
                 placeholder="전화번호를 입력하세요."
                 {...register("phone")}
               />

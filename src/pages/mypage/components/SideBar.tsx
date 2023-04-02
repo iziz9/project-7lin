@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
@@ -25,7 +25,7 @@ const SideBar = () => {
     <SideBarStyle>
       <ul>
         <NavLink
-          to={"/mypage/reservation"}
+          to={"/mypage/myreservation"}
           className={({ isActive }) => {
             return isActive || pathname === "/mypage" ? "link active" : "link";
           }}
@@ -80,6 +80,35 @@ const SideBarStyle = styled.div`
 
       &:first-child {
         padding-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: 850px) {
+    position: absolute;
+    top: 0px;
+    background: #fff;
+    display: flex;
+    font-size: 16px;
+    width: 100%;
+    ul {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      white-space: nowrap;
+
+      .link {
+        padding: 12px 12px;
+        /* width: 20%; */
+        flex-grow: 1;
+        text-align: center;
+
+        &:first-child {
+          padding-top: 12px;
+        }
+        &.active {
+          border-bottom: 2px solid #0d99ff;
+        }
       }
     }
   }

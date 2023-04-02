@@ -2,12 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import ProductCard from "./components/ProductCard";
 
-type Props = {};
-
-const Favor = (props: Props) => {
+const Favor = () => {
   return (
     <Container>
-      <div className="title">예약 내역</div>
+      <div className="title">찜</div>
       <div className="list">
         <ProductCard favor={true} />
         <ProductCard favor={true} />
@@ -21,17 +19,21 @@ const Container = styled.div`
     font-style: normal;
     font-weight: 600;
     font-size: 23px;
+    margin-bottom: 5px;
   }
 
-  .type-wrapper {
-    margin-top: 25px;
-    display: flex;
-    /* border: 1px solid red; */
-  }
   .list {
     display: flex;
     flex-direction: column;
     /* gap: 15px; */
+  }
+
+  @media (max-width: 850px) {
+    font-size: 16px;
+
+    .title {
+      font-size: 20px;
+    }
   }
 `;
 
