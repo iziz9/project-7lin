@@ -1,9 +1,38 @@
 import React from "react";
+import styled from "styled-components";
+import { BasicBtn } from "../../../commons/Button";
 
-type Props = {};
-
-const WithdrawlModal = (props: Props) => {
-  return <div>WithdrawlModal</div>;
+const WithdrawlModal = () => {
+  return (
+    <Container>
+      <div className="info">
+        <div>
+          <p>가입된 회원정보가 모두 삭제됩니다.</p>
+          <p>작성하신 게시물은 삭제되지 않습니다.</p>
+        </div>
+        <div>
+          <p>탈퇴 후 같은 계정으로 재가입 시 </p>
+          <p>기존에 가지고 있던 적립금은 복원되지 않으며,</p>
+          <p>사용 및 다운로드했던 쿠폰도 사용 불가능합니다.</p>
+        </div>
+        <div>회원탈퇴를 진행하시겠습니까?</div>
+      </div>
+      <div className="btn-wrapper">
+        <BasicBtn>탈퇴하기</BasicBtn>
+      </div>
+    </Container>
+  );
 };
+
+const Container = styled.div`
+  text-align: center;
+  font-size: 18px;
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 50px;
+  }
+`;
 
 export default WithdrawlModal;

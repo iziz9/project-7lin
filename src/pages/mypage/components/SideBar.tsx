@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useModal } from "../../../hooks/useModal";
 import ChangeInfoModal from "./ChangeInfoModal";
 import WithdrawlModal from "./WithdrawlModal";
+import Modal from "../../../commons/Modal";
 
 const SideBar = () => {
   const { pathname } = useLocation();
@@ -50,7 +51,6 @@ const SideBar = () => {
         <li
           className="link"
           onClick={() => {
-            console.log("hi");
             openModal(changeInfoModalData);
           }}
         >
@@ -60,6 +60,7 @@ const SideBar = () => {
           회원탈퇴
         </li>
       </ul>
+      <Modal />
     </SideBarStyle>
   );
 };

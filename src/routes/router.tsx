@@ -11,6 +11,11 @@ import TripTest from "../pages/trip-test/TripTest";
 import TestResult from "../pages/trip-test/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
+import Reservation from "../pages/reservation/Reservation";
+import MyPage from "../pages/mypage/MyPage";
+import MyReservation from "../pages/mypage/MyReservation";
+import Favor from "../pages/mypage/Favor";
+import Point from "../pages/mypage/Point";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +60,32 @@ const router = createBrowserRouter([
       {
         path: "notice",
         element: <Notice />,
+      },
+      {
+        path: "/reservation",
+        element: <Reservation />,
+      },
+      {
+        path: "/mypage",
+        element: <MyPage />,
+        children: [
+          {
+            path: "",
+            element: <MyReservation />,
+          },
+          {
+            path: "reservation",
+            element: <MyReservation />,
+          },
+          {
+            path: "favor",
+            element: <Favor />,
+          },
+          {
+            path: "point",
+            element: <Point />,
+          },
+        ],
       },
     ],
   },
