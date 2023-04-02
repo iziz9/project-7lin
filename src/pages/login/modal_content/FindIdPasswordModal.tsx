@@ -172,10 +172,14 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
         <div style={{ marginBottom: "20px" }}>
           {findIdForm.formState.errors.phone ||
           findPwForm.formState.errors.phone ? (
-            <div className="invalid">전화번호 형식이 올바르지 않습니다!</div>
+            <div className="invalid">
+              {findIdForm.formState.errors.phone
+                ? findIdForm.formState.errors.phone.message
+                : findPwForm.formState.errors.phone!.message}
+            </div>
           ) : null}
           <BasicInput
-            type="text"
+            type="tel"
             placeholder="연락처"
             {...(isFindId
               ? findIdForm.register("phone")
@@ -215,9 +219,9 @@ const Container = styled.div`
 
   @media (max-width: 850px) {
     .invalid {
-      font-size: 14px;
+      font-size: 16px;
     }
-    font-size: 14px;
+    font-size: 16px;
   }
 `;
 
@@ -258,7 +262,7 @@ const Description = styled.div`
   font-size: 18px;
 
   @media (max-width: 850px) {
-    font-size: 14px;
+    font-size: 15px;
   }
 `;
 

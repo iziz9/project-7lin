@@ -5,9 +5,7 @@ import { useModal } from "../../../hooks/useModal";
 import { scrollToTop } from "../../../utils/scroll";
 import FindIdPasswordModal from "./FindIdPasswordModal";
 
-type Props = {};
-
-const ShowIdModal = (props: Props) => {
+const ShowIdModal = () => {
   const { openModal, closeModal } = useModal();
 
   const findIdPasswordModalData = {
