@@ -46,7 +46,7 @@ const Container = styled.div`
     justify-content: center;
     margin: -20px auto 10px;
     padding: 20px;
-    font-size: 18px;
+    font-size: 23px;
 
     h2 {
       color: gray;
@@ -54,6 +54,7 @@ const Container = styled.div`
 
     span {
       color: orange;
+      font-weight: bold;
     }
   }
 
@@ -74,9 +75,13 @@ const Container = styled.div`
       font-size: 20px;
     }
   }
+
   @media (max-width: 850px) {
     font-size: 16px;
 
+    .price {
+      font-size: 20px;
+    }
     .account {
       font-size: 18px;
     }
