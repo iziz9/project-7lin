@@ -208,7 +208,7 @@ const SignupSite = () => {
             <div>
               <BasicInput
                 className={errors.phone ? "warning" : ""}
-                type="text"
+                type="tel"
                 placeholder="전화번호를 입력하세요."
                 {...register("phone")}
               />
@@ -461,7 +461,7 @@ const Container = styled.div`
     font-size: 16px;
     width: 80%;
     .wrapper {
-      padding: 0 20px;
+      padding: 0px;
     }
     .title {
       font-size: 20px;

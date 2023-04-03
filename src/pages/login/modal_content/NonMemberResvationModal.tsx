@@ -51,7 +51,7 @@ const NonMemberResvationModal = () => {
         ) : null}
         <BasicInput
           className={errors.phone ? "warning" : ""}
-          type="text"
+          type="tel"
           placeholder="연락처"
           {...register("phone")}
         />

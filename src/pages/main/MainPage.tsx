@@ -84,8 +84,6 @@ const MainPage = (props: Props) => {
 };
 
 const MobileMain = styled.div`
-  padding: 0 32px;
-
   .searchbar {
     display: flex;
     margin: 30px auto;
@@ -181,7 +179,7 @@ const MobileMain = styled.div`
 
 const PcMain = styled.div`
   .inner {
-    margin: 0 100px;
+    margin: 0 60px;
   }
 `;
 
