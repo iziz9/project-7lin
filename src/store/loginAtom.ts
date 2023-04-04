@@ -8,6 +8,6 @@ interface LoginState {
 export const loginState = atom<LoginState>({
   key: "loginState",
   default: {
-    isLogin: getLocalStorage("loginStatus").isLogin || false,
+    isLogin: getLocalStorage("loginStatus")?.isLogin || false,
   },
 });

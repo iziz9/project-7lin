@@ -47,12 +47,14 @@ const Header = () => {
   ];
 
   const handleLogout = () => {
-    setLoginStatus({ isLogin: false });
-    setUserInfo({ email: "", name: "", gender: "", age: 0 });
-    removeLocalStorage("loginStatus");
-    removeLocalStorage("userInfo");
-    removeCookie("accessToken");
-    removeCookie("refreshToken");
+    if (confirm("정말로 로그아웃 하시겠습니까?")) {
+      setLoginStatus({ isLogin: false });
+      setUserInfo({ email: "", name: "", gender: "", age: 0 });
+      removeLocalStorage("loginStatus");
+      removeLocalStorage("userInfo");
+      removeCookie("accessToken");
+      removeCookie("refreshToken");
+    }
   };
 
   return (

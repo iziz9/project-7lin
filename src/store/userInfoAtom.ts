@@ -11,9 +11,9 @@ interface UserInfoState {
 export const userInfoState = atom<UserInfoState>({
   key: "userInfoState",
   default: {
-    name: getLocalStorage("userInfo").name || "",
-    email: getLocalStorage("userInfo").email || "",
-    gender: getLocalStorage("userInfo").gender || "",
-    age: getLocalStorage("userInfo").age || 0,
+    name: getLocalStorage("userInfo")?.name || "",
+    email: getLocalStorage("userInfo")?.email || "",
+    gender: getLocalStorage("userInfo")?.gender || "",
+    age: getLocalStorage("userInfo")?.age || 0,
   },
 });
