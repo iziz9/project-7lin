@@ -72,7 +72,7 @@ const Login = () => {
         setUserInfo({ email, name, age, gender });
         setLocalStorage("userInfo", { email, name, age, gender });
         alert("로그인 성공");
-        navigate("/");
+        navigate("/", { replace: true });
       }
     },
     onError: (error) => {
@@ -144,7 +144,7 @@ const Login = () => {
             </div>
             <div className="label-wrapper">
               <label>
-                <input type="checkbox" />
+                <input type="checkbox" defaultChecked={true} />
                 로그인 상태 저장
               </label>
             </div>

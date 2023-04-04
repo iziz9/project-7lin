@@ -16,6 +16,7 @@ import MyPage from "../pages/mypage/MyPage";
 import MyReservation from "../pages/mypage/MyReservation";
 import Favor from "../pages/mypage/Favor";
 import Point from "../pages/mypage/Point";
+import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 
 const router = createBrowserRouter([
@@ -39,15 +40,27 @@ const router = createBrowserRouter([
       { path: "groups", element: <Groups /> },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <PrivateRoute onlyAuth={false}>
+            <Login />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/signup_type",
-        element: <SignupType />,
+        element: (
+          <PrivateRoute onlyAuth={false}>
+            <SignupType />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/signup_site",
-        element: <SignupSite />,
+        element: (
+          <PrivateRoute onlyAuth={false}>
+            <SignupSite />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/test",
@@ -67,7 +80,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <MyPage />,
+        element: (
+          <PrivateRoute onlyAuth={true}>
+            <MyPage />
+          </PrivateRoute>
+        ),
         children: [
           {
             path: "",
