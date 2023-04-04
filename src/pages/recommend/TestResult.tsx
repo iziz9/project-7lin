@@ -99,11 +99,13 @@ const TestResult = ({ result }: { result: string }) => {
             </div>
             <div className="textbox">
               <div className="name">{product.productName}</div>
-              <div className="desc">{product.briefExplanation}</div>
+              <div className="desc">
+                {product.briefExplanation.replaceAll("</br>", "\n")}
+              </div>
             </div>
           </ResultProducts>
         ))}
-        <button>추천상품 더보기</button>
+        <button onClick={() => navigate("/recommend")}>추천상품 더보기</button>
       </section>
     </Container>
   );
@@ -126,9 +128,10 @@ const Container = styled.div`
     color: var(--color-blue);
     width: 200px;
     height: 40px;
-    font-size: 23px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
+    margin: auto;
   }
 
   .product-section {
@@ -136,6 +139,12 @@ const Container = styled.div`
     flex-direction: column;
     gap: 10px;
     justify-content: center;
+  }
+
+  @media (max-width: 850px) {
+    background-image: none;
+    display: block;
+    height: fit-content;
   }
 `;
 
@@ -235,7 +244,7 @@ const ShareLink = styled.div`
 const ResultProducts = styled.div`
   display: flex;
   gap: 30px;
-  background-color: #c0bdbd92;
+  background-color: #90c8d196;
   padding: 10px;
   border-radius: 8px;
 
@@ -256,14 +265,17 @@ const ResultProducts = styled.div`
     gap: 15px;
     white-space: pre-wrap;
     word-break: keep-all;
+    color: white;
+
     .name {
       font-size: 20px;
-      color: white;
       text-shadow: 2px 2px 3px black;
     }
     .desc {
       color: black;
       /* text-shadow: 2px 2px 3px gray; */
+      white-space: pre-line;
+      line-height: 20px;
     }
   }
 `;

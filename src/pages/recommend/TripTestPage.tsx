@@ -77,7 +77,7 @@ const TripTest = (props: Props) => {
         "이날을 위해 스크린에서 연습했지. 라운딩 가자!", //+골프 [스크린]
         "멋진 풍경을 배경삼아 한번 걸어볼까?", //+ 트레킹 [걸어]
         "따뜻한 햇볕 아래 해변을 산책하고 싶어!", //+휴양지 [해변]
-        "이번에도 남들이 안 가본 새로운 곳을 찾아", //+문화탐방 [새로운]
+        "남들이 안 가본 새로운 곳을 찾아", //+문화탐방 [새로운]
       ],
     },
   ];
@@ -167,6 +167,25 @@ const Container = styled.div<{ background: string }>`
       left: 20px;
     }
   }
+
+  @media (max-width: 850px) {
+    background-image: none;
+    height: 100%;
+
+    section {
+      position: relative;
+      width: 80%;
+      height: 380px;
+      margin-top: 40px;
+
+      img {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        width: 40px;
+      }
+    }
+  }
 `;
 
 const Title = styled.div`
@@ -186,6 +205,20 @@ const Title = styled.div`
     font-size: 30px;
     font-weight: bold;
   }
+
+  @media (max-width: 850px) {
+    margin-top: 80px;
+    gap: 8px;
+
+    .desc {
+      font-size: 15px;
+    }
+
+    .question {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
 `;
 
 const Buttons = styled.div`
@@ -196,7 +229,7 @@ const Buttons = styled.div`
 
   button {
     width: 75%;
-    height: 41px;
+    padding: 8px 5px;
     margin: 0 auto;
     border: 2px solid var(--color-blue);
     border-radius: 8px;
@@ -207,6 +240,18 @@ const Buttons = styled.div`
     :hover {
       background-color: var(--color-blue);
       color: white;
+    }
+  }
+
+  @media (max-width: 850px) {
+    margin-top: 40px;
+    gap: 10px;
+
+    button {
+      width: 80%;
+      height: fit-content;
+      font-size: 13px;
+      word-break: keep-all;
     }
   }
 `;
