@@ -48,12 +48,14 @@ const Header = () => {
 
   const handleLogout = () => {
     if (confirm("정말로 로그아웃 하시겠습니까?")) {
+      // logout api 추가
       setLoginStatus({ isLogin: false });
       setUserInfo({ email: "", name: "", gender: "", age: 0 });
       removeLocalStorage("loginStatus");
       removeLocalStorage("userInfo");
       removeCookie("accessToken");
       removeCookie("refreshToken");
+      navigate("/");
     }
   };
 
@@ -94,7 +96,11 @@ const Header = () => {
                 ) : (
                   <li onClick={() => navigate("/login")}>로그인</li>
                 )}
-                <li onClick={() => navigate("/signup_type")}>회원가입</li>
+                {loginStatus.isLogin ? (
+                  <li onClick={() => navigate("/mypage")}>마이페이지</li>
+                ) : (
+                  <li onClick={() => navigate("/signup_type")}>회원가입</li>
+                )}
               </ul>
             </div>
           </TopSection>
