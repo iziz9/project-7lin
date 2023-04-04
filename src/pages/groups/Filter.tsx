@@ -77,20 +77,22 @@ const Filter = () => {
               </CloseButton>
               {filterData.map((element, index) => (
                 <section className={element.category} key={index}>
-                  <h5>{element.title}</h5>
-                  {element.content.map((item, itemIndex) => (
-                    <label
-                      htmlFor={`${element.category}${itemIndex}`}
-                      key={itemIndex}
-                    >
-                      <input
-                        type={element.type}
-                        id={`${element.category}${itemIndex}`}
-                        name={element.category}
-                      />
-                      {item}
-                    </label>
-                  ))}
+                  <h5 className="optionTitle">{element.title}</h5>{" "}
+                  <div className="optionItems">
+                    {element.content.map((item, itemIndex) => (
+                      <label
+                        htmlFor={`${element.category}${itemIndex}`}
+                        key={itemIndex}
+                      >
+                        <input
+                          type={element.type}
+                          id={`${element.category}${itemIndex}`}
+                          name={element.category}
+                        />
+                        {item}
+                      </label>
+                    ))}{" "}
+                  </div>
                 </section>
               ))}
             </div>
