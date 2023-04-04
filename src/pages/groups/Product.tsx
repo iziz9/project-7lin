@@ -80,10 +80,7 @@ const Container = styled.ul`
 
   // 모바일 환경
   @media (max-width: 850px) {
-    grid-template-columns: repeat(2, minmax(auto, 310px));
-  }
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(1, minmax(auto, 310px));
+    grid-template-columns: repeat(2, 1fr);
   }
 `;
 

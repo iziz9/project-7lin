@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { GrPowerReset } from "react-icons/gr";
+import { GrPowerReset, GrClose } from "react-icons/gr";
+import { useMediaQuery } from "react-responsive";
 
 const checkboxData = [
   {
@@ -43,53 +44,180 @@ const radioData = [
 ];
 
 const Filter = () => {
-  const resetClicked = (event: React.FormEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  // 반응형
+  const isMobile = useMediaQuery({ query: "(max-width:850px)" });
 
-    const resetForm = event.target as HTMLFormElement;
-    resetForm.reset();
+  const [isFilterOpened, setIsFilterOpened] = useState(false);
+
+  // X 버튼 클릭
+  const closeClicked = (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsFilterOpened(false);
+  };
+
+  // 필터 버튼 클릭
+  const filterClicked = () => {
+    setIsFilterOpened(true);
   };
 
   return (
-    <Container id="filterForm">
-      <h4>필터</h4>
-      <button type="reset" onClick={() => resetClicked}>
-        초기화
-        <GrPowerReset />
-      </button>
-      {/* 추후 Component로 변경 가능성 있음 */}
-      {checkboxData.map((element, index) => (
-        <section className={element.category} key={index}>
-          <h5>{element.title}</h5>
-          {element.content.map((c_element, c_index) => (
-            <label htmlFor={`${element.category}${c_index}`} key={c_index}>
-              <input type="checkbox" id={`${element.category}${c_index}`} />
-              {c_element}
-            </label>
+    <>
+      {isMobile ? (
+        <MobileContainer>
+          <h4 onClick={filterClicked}>필터</h4>
+          {isFilterOpened && (
+            <div className="modal">
+              <ResetButton type="reset">
+                초기화
+                <GrPowerReset />
+              </ResetButton>
+              <CloseButton onClick={closeClicked}>
+                <GrClose />
+              </CloseButton>
+              {/* 추후 Component로 변경 가능성 있음 */}
+              {checkboxData.map((element, index) => (
+                <section className={element.category} key={index}>
+                  <h5 className="optionTitle">{element.title}</h5>
+                  <div className="optionItems">
+                    {element.content.map((c_element, c_index) => (
+                      <label
+                        htmlFor={`${element.category}${c_index}`}
+                        key={c_index}
+                      >
+                        <input
+                          type="checkbox"
+                          id={`${element.category}${c_index}`}
+                        />
+                        {c_element}
+                      </label>
+                    ))}
+                  </div>
+                </section>
+              ))}
+              {radioData.map((element, index) => (
+                <section className={element.category} key={index}>
+                  <h5 className="optionTitle">{element.title}</h5>
+                  <div className="optionItems">
+                    {element.content.map((c_element, c_index) => (
+                      <label
+                        htmlFor={`${element.category}${c_index}`}
+                        key={c_index}
+                      >
+                        <input
+                          type="radio"
+                          id={`${element.category}${c_index}`}
+                          name={element.category}
+                        />
+                        {c_element}
+                      </label>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </MobileContainer>
+      ) : (
+        <PCContainer>
+          <h4>필터</h4>
+          <ResetButton type="reset">
+            초기화
+            <GrPowerReset />
+          </ResetButton>
+          {/* 추후 Component로 변경 가능성 있음 */}
+          {checkboxData.map((element, index) => (
+            <section className={element.category} key={index}>
+              <h5>{element.title}</h5>
+              {element.content.map((c_element, c_index) => (
+                <label htmlFor={`${element.category}${c_index}`} key={c_index}>
+                  <input type="checkbox" id={`${element.category}${c_index}`} />
+                  {c_element}
+                </label>
+              ))}
+            </section>
           ))}
-        </section>
-      ))}
-      {radioData.map((element, index) => (
-        <section className={element.category} key={index}>
-          <h5>{element.title}</h5>
-          {element.content.map((c_element, c_index) => (
-            <label htmlFor={`${element.category}${c_index}`} key={c_index}>
-              <input
-                type="radio"
-                id={`${element.category}${c_index}`}
-                name={element.category}
-              />
-              {c_element}
-            </label>
+          {radioData.map((element, index) => (
+            <section className={element.category} key={index}>
+              <h5>{element.title}</h5>
+              {element.content.map((c_element, c_index) => (
+                <label htmlFor={`${element.category}${c_index}`} key={c_index}>
+                  <input
+                    type="radio"
+                    id={`${element.category}${c_index}`}
+                    name={element.category}
+                  />
+                  {c_element}
+                </label>
+              ))}
+            </section>
           ))}
-        </section>
-      ))}
-    </Container>
+        </PCContainer>
+      )}
+    </>
   );
 };
 
-const Container = styled.form`
-  /* background-color: pink; */
+const MobileContainer = styled.form`
+  /* background-color: #eb7185; */
+  position: sticky;
+  background-color: #fff;
+
+  @supports (position: sticky) or (position: -webkit-sticky) {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
+
+  .modal {
+    height: 100vh;
+  }
+
+  // 필터
+  h4 {
+    font-weight: 700;
+    font-size: 18px;
+    padding: 16px 20px;
+    margin: 0px -20px;
+    border-bottom: 1px solid var(--color-grayscale10);
+  }
+
+  // 필터 상세
+  section {
+    display: flex;
+    gap: 10px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--color-grayscale20);
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .optionTitle {
+      min-width: 70px;
+    }
+
+    .optionItems {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, auto));
+      grid-auto-rows: 30px;
+    }
+
+    label {
+      font-size: 14px;
+      color: var(--color-grayscale60);
+      /* color: blue; */
+      display: flex;
+      align-items: center;
+      column-gap: 3px;
+      margin-right: 16px;
+
+      input {
+        zoom: 1.2;
+      }
+    }
+  }
+`;
+
+const PCContainer = styled.form`
   display: flex;
   flex-direction: column;
   min-width: 200px;
@@ -101,21 +229,6 @@ const Container = styled.form`
     font-weight: 700;
     font-size: 20px;
     margin-bottom: 24px;
-  }
-
-  // 초기화
-  button {
-    position: absolute;
-    right: 0;
-    top: 6px;
-    display: flex;
-    gap: 3px;
-    align-items: center;
-    padding: 5px 7px;
-    font-size: 15px;
-    background-color: #fff;
-    border: 1px solid var(--color-grayscale20);
-    border-radius: 3px;
   }
 
   // 필터별 섹션
@@ -142,6 +255,36 @@ const Container = styled.form`
       }
     }
   }
+`;
+
+const ResetButton = styled.button`
+  // 초기화 버튼
+  position: absolute;
+  right: 0;
+  top: 6px;
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  padding: 5px 7px;
+  font-size: 15px;
+  background-color: #fff;
+  border: 1px solid var(--color-grayscale20);
+  border-radius: 3px;
+
+  @media (max-width: 850px) {
+    top: 10px;
+    right: 40px;
+  }
+`;
+
+const CloseButton = styled.button`
+  background-color: #fff;
+  border: none;
+  position: absolute;
+  top: 10px;
+  right: -10px;
+  font-size: 26px;
+  opacity: 0.7;
 `;
 
 export default Filter;
