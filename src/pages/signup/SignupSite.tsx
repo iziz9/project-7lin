@@ -148,17 +148,13 @@ const SignupSite = () => {
   const signupMutation = useMutation(signUp, {
     onSuccess: (res) => {
       if (res) {
-        // const { email, phoneNumber, name, birthDate, productType, job, bankName } = res.data;
-        // setToken('accessToken', res.data.tokenDto.accessToken, { maxAge: 60 * 30 });
-        // setToken('refreshToken', res.data.tokenDto.refreshToken, { maxAge: 60 * 60 * 24 * 14 });
-        // setIsLogIn(true);
-        // setUserInfo({ email, phoneNumber, name, birthDate, productType, job, bankName });
         console.log(res);
+        // 자동 로그인 시도해보기
         navigate("/login");
       }
     },
     onError: (error) => {
-      alert(error);
+      alert("회원가입 실패" + error);
     },
   });
 
@@ -191,7 +187,6 @@ const SignupSite = () => {
       gender: data.gender,
       age: age.toString(),
     };
-    console.log(signupPayload);
     signupMutation.mutate(signupPayload);
   };
 

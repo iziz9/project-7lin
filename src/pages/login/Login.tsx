@@ -12,9 +12,19 @@ import { scrollToTop } from "../../utils/scroll";
 import FindIdPasswordModal from "./modal_content/FindIdPasswordModal";
 import NonMemberResvationModal from "./modal_content/NonMemberResvationModal";
 import { LoginFormValue } from "../../@types/data";
+import { useMutation } from "react-query";
+import { login } from "../../apis/auth";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../store/userInfoAtom";
+import { loginState } from "../../store/loginAtom";
+import { setCookie } from "../../utils/cookie";
+import { setLocalStorage } from "../../utils/localStorage";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
 
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
@@ -44,8 +54,39 @@ const Login = () => {
     mode: "onBlur",
   });
 
+  const loginMutation = useMutation(login, {
+    onSuccess: (res: any) => {
+      if (res) {
+        console.log(res);
+        const { email, name, age, gender, tokenDto } = res.data;
+        setCookie("accessToken", tokenDto.accessToken, {
+          path: "/",
+          maxAge: 1800,
+        });
+        setCookie("refreshToken", tokenDto.refreshToken, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+        setLoginStatus({ isLogin: true });
+        setLocalStorage("loginStatus", { isLogin: true });
+        setUserInfo({ email, name, age, gender });
+        setLocalStorage("userInfo", { email, name, age, gender });
+        alert("로그인 성공");
+        navigate("/");
+      }
+    },
+    onError: (error) => {
+      alert("로그인 실패" + error);
+    },
+  });
+
   const onSubmitHandler: SubmitHandler<LoginFormValue> = (data) => {
     console.log(JSON.stringify(data, null, 2));
+    const loginPayload: LoginFormValue = {
+      email: data.email,
+      password: data.password,
+    };
+    loginMutation.mutate(loginPayload);
   };
 
   const { openModal } = useModal();
