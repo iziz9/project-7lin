@@ -14,7 +14,7 @@ const Footer = () => {
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width: 850px)",
   });
 
   const navMenu = [
