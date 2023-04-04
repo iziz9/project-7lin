@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { GrPowerReset, GrClose } from "react-icons/gr";
 import { useMediaQuery } from "react-responsive";
 
-const checkboxData = [
+const filterData = [
   {
     category: "theme",
+    type: "checkbox",
     title: "여행 테마",
     content: [
       "골프여행",
@@ -18,6 +19,7 @@ const checkboxData = [
   },
   {
     category: "destination",
+    type: "checkbox",
     title: "여행 지역",
     content: [
       "동남아/태평양",
@@ -28,16 +30,15 @@ const checkboxData = [
       "대만/중국/일본",
     ],
   },
-];
-
-const radioData = [
   {
     category: "period",
+    type: "radio",
     title: "여행 기간",
     content: ["5일 미만", "5일~14일", "15일 이상"],
   },
   {
     category: "price",
+    type: "radio",
     title: "가격",
     content: ["~200만원", "200~500만원", "500~1000만원", "1000만원~"],
   },
@@ -74,44 +75,22 @@ const Filter = () => {
               <CloseButton onClick={closeClicked}>
                 <GrClose />
               </CloseButton>
-              {/* 추후 Component로 변경 가능성 있음 */}
-              {checkboxData.map((element, index) => (
+              {filterData.map((element, index) => (
                 <section className={element.category} key={index}>
-                  <h5 className="optionTitle">{element.title}</h5>
-                  <div className="optionItems">
-                    {element.content.map((c_element, c_index) => (
-                      <label
-                        htmlFor={`${element.category}${c_index}`}
-                        key={c_index}
-                      >
-                        <input
-                          type="checkbox"
-                          id={`${element.category}${c_index}`}
-                        />
-                        {c_element}
-                      </label>
-                    ))}
-                  </div>
-                </section>
-              ))}
-              {radioData.map((element, index) => (
-                <section className={element.category} key={index}>
-                  <h5 className="optionTitle">{element.title}</h5>
-                  <div className="optionItems">
-                    {element.content.map((c_element, c_index) => (
-                      <label
-                        htmlFor={`${element.category}${c_index}`}
-                        key={c_index}
-                      >
-                        <input
-                          type="radio"
-                          id={`${element.category}${c_index}`}
-                          name={element.category}
-                        />
-                        {c_element}
-                      </label>
-                    ))}
-                  </div>
+                  <h5>{element.title}</h5>
+                  {element.content.map((item, itemIndex) => (
+                    <label
+                      htmlFor={`${element.category}${itemIndex}`}
+                      key={itemIndex}
+                    >
+                      <input
+                        type={element.type}
+                        id={`${element.category}${itemIndex}`}
+                        name={element.category}
+                      />
+                      {item}
+                    </label>
+                  ))}
                 </section>
               ))}
             </div>
@@ -124,29 +103,20 @@ const Filter = () => {
             초기화
             <GrPowerReset />
           </ResetButton>
-          {/* 추후 Component로 변경 가능성 있음 */}
-          {checkboxData.map((element, index) => (
+          {filterData.map((element, index) => (
             <section className={element.category} key={index}>
               <h5>{element.title}</h5>
-              {element.content.map((c_element, c_index) => (
-                <label htmlFor={`${element.category}${c_index}`} key={c_index}>
-                  <input type="checkbox" id={`${element.category}${c_index}`} />
-                  {c_element}
-                </label>
-              ))}
-            </section>
-          ))}
-          {radioData.map((element, index) => (
-            <section className={element.category} key={index}>
-              <h5>{element.title}</h5>
-              {element.content.map((c_element, c_index) => (
-                <label htmlFor={`${element.category}${c_index}`} key={c_index}>
+              {element.content.map((item, itemIndex) => (
+                <label
+                  htmlFor={`${element.category}${itemIndex}`}
+                  key={itemIndex}
+                >
                   <input
-                    type="radio"
-                    id={`${element.category}${c_index}`}
+                    type={element.type}
+                    id={`${element.category}${itemIndex}`}
                     name={element.category}
                   />
-                  {c_element}
+                  {item}
                 </label>
               ))}
             </section>
