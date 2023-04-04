@@ -225,8 +225,8 @@ const SignupSite = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isCheckDuplicate && !isIdDuplicate) {
-      setIsCheckDuplicate(false);
+    setIsCheckDuplicate(false);
+    if (!isIdDuplicate) {
       setIsIdDuplicate(true);
       clearErrors([
         "password",
