@@ -13,7 +13,7 @@ export interface ChatListType {
 
 const FloatingModal = () => {
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width:850px)",
   });
   const questions = [
     "안녕하세요. 고투게더 여행 그룹 추천 상담봇입니다. 정확한 결과 발송을 위해 연락처를 남겨주세요. <br /> ex) 01012345678",

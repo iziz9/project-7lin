@@ -12,7 +12,7 @@ export const BasicBtn = styled.button<{
   border-radius: 8px;
   /* font-size: 23px; */
   font-size: 18px;
-  font-weight: bold;
+  /* font-weight: bold; */
   text-align: center;
   color: ${(props) => props.fontColor || "#fff"};
   background-color: ${(props) => props.backgroundColor || "#0D99FF"};

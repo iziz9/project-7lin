@@ -8,7 +8,7 @@ type Props = {};
 const FloatingIcon = (props: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width:850px)",
   });
 
   return (
