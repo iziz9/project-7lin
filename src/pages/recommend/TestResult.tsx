@@ -99,11 +99,13 @@ const TestResult = ({ result }: { result: string }) => {
             </div>
             <div className="textbox">
               <div className="name">{product.productName}</div>
-              <div className="desc">{product.briefExplanation}</div>
+              <div className="desc">
+                {product.briefExplanation.replaceAll("</br>", "\n")}
+              </div>
             </div>
           </ResultProducts>
         ))}
-        <button>추천상품 더보기</button>
+        <button onClick={() => navigate("/recommend")}>추천상품 더보기</button>
       </section>
     </Container>
   );
@@ -114,9 +116,9 @@ const Container = styled.div`
   background-image: url("/trip-test1.png");
   height: 730px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 50px;
   padding: 0 40px 0;
 
   button {
@@ -126,9 +128,10 @@ const Container = styled.div`
     color: var(--color-blue);
     width: 200px;
     height: 40px;
-    font-size: 23px;
+    font-size: 20px;
     font-weight: 600;
     cursor: pointer;
+    margin: auto;
   }
 
   .product-section {
@@ -136,6 +139,24 @@ const Container = styled.div`
     flex-direction: column;
     gap: 10px;
     justify-content: center;
+  }
+
+  @media (max-width: 850px) {
+    background-image: none;
+    display: block;
+    height: fit-content;
+    padding: 0;
+
+    button {
+      margin-top: 20px;
+      background-color: var(--color-blue);
+      color: white;
+    }
+
+    .product-section {
+      max-width: 600px;
+      margin: auto;
+    }
   }
 `;
 
@@ -150,7 +171,7 @@ const ResultContent = styled.div`
     color: white;
     text-shadow: 2px 2px 2px gray;
     font-size: 25px;
-    margin-bottom: 100px;
+    margin-bottom: 80px;
   }
 
   .content {
@@ -166,7 +187,6 @@ const ResultContent = styled.div`
     opacity: 0.9;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     align-items: center;
     gap: 30px;
     padding-top: 20px;
@@ -196,10 +216,77 @@ const ResultContent = styled.div`
       width: 300px;
       color: white;
       font-size: 20px;
-      text-shadow: 2px 2px 2px gray;
+      color: black;
+      font-weight: bold;
       white-space: pre-wrap;
       word-break: keep-all;
       line-height: 26px;
+    }
+  }
+
+  @media (max-width: 850px) {
+    flex-direction: column;
+    margin-top: 32px;
+
+    .title {
+      width: 100%;
+      writing-mode: horizontal-tb;
+      font-size: 20px;
+      position: absolute;
+      top: 15px;
+      z-index: 99;
+      right: 50%;
+      transform: translateX(50%);
+    }
+
+    .content {
+      width: 450px;
+      height: 450px;
+      padding-top: 50px;
+
+      .result {
+        width: 350px;
+        height: 250px;
+
+        .result-img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .desc {
+        width: 350px;
+        font-size: 16px;
+        line-height: 20px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  @media (max-width: 500px) {
+    .content {
+      width: 290px;
+      height: 400px;
+      padding-top: 50px;
+
+      .result {
+        width: 250px;
+        height: 200px;
+
+        .result-img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .desc {
+        width: 250px;
+        font-size: 16px;
+        line-height: 20px;
+        color: black;
+        text-shadow: none;
+        font-weight: bold;
+      }
     }
   }
 `;
@@ -235,9 +322,10 @@ const ShareLink = styled.div`
 const ResultProducts = styled.div`
   display: flex;
   gap: 30px;
-  background-color: #c0bdbd92;
+  background-color: #dddddd7f;
   padding: 10px;
   border-radius: 8px;
+  cursor: pointer;
 
   .imagebox {
     width: 120px;
@@ -256,14 +344,54 @@ const ResultProducts = styled.div`
     gap: 15px;
     white-space: pre-wrap;
     word-break: keep-all;
+    color: white;
+    padding: 10px;
+
     .name {
       font-size: 20px;
-      color: white;
       text-shadow: 2px 2px 3px black;
     }
     .desc {
       color: black;
-      /* text-shadow: 2px 2px 3px gray; */
+      white-space: pre-line;
+      line-height: 20px;
+    }
+  }
+
+  @media (max-width: 850px) {
+    gap: 10px;
+
+    .imagebox {
+      width: fit-content;
+      height: fit-content;
+      margin: auto auto;
+
+      img {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .textbox {
+      .name {
+        font-size: 20px;
+        color: black;
+        font-weight: bold;
+        text-shadow: none;
+      }
+    }
+  }
+
+  @media (max-width: 560px) {
+    .imagebox {
+      width: fit-content;
+      height: fit-content;
+      margin: auto auto;
+
+      img {
+        width: 70px;
+        height: 70px;
+      }
     }
   }
 `;
