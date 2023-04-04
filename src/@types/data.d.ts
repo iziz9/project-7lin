@@ -53,3 +53,19 @@ export interface SignUpRequest {
   gender: string;
   age: string;
 }
+
+export interface ResultPackageType {
+  title: string;
+  image: string;
+  desc: string;
+  category: string;
+}
+
+export interface TestResultProductType {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  period: number;
+  briefExplanation: string;
+  thumbnail: string;
+}

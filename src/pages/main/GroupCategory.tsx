@@ -6,7 +6,7 @@ type Props = {};
 
 const GroupCategory = (props: Props) => {
   // const isMobile: boolean = useMediaQuery({
-  //   query: "(max-width:849px)",
+  //   query: "(max-width:850px)",
   // });
   return (
     <Section>
@@ -50,7 +50,7 @@ const Section = styled.section`
     margin: 0 20px 10px;
   }
 
-  @media (max-width: 849px) {
+  @media (max-width: 850px) {
     margin-top: 0;
 
     h2 {
@@ -65,7 +65,7 @@ const CategoryContainer = styled.div`
   flex-direction: column;
   gap: 30px;
 
-  @media (max-width: 849px) {
+  @media (max-width: 850px) {
     gap: 10px;
   }
 
@@ -112,7 +112,7 @@ const CategoryContainer = styled.div`
       border-radius: 10px;
     }
 
-    @media (max-width: 849px) {
+    @media (max-width: 850px) {
       li {
         .overlay {
           font-size: 16px;
@@ -164,7 +164,7 @@ const CategoryContainer = styled.div`
       border-radius: 10px;
     }
 
-    @media (max-width: 849px) {
+    @media (max-width: 850px) {
       li {
         min-height: 82px;
 

@@ -10,7 +10,7 @@ type Props = {};
 
 const Reservation = (props: Props) => {
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width:850px)",
   });
   const { openModal } = useModal();
   const PaymentModalData = {
@@ -90,7 +90,7 @@ const Reservation = (props: Props) => {
             <h2>결제 수단</h2>
             <ul>
               <li>
-                <input type="radio" id="payment2" name="payment" />
+                <input type="radio" id="payment2" name="payment" checked />
                 <label htmlFor="payment2">계좌 이체</label>
               </li>
               <li>
@@ -236,7 +236,7 @@ const Reservation = (props: Props) => {
                 <h2>결제 수단</h2>
                 <ul>
                   <li>
-                    <input type="radio" id="payment2" name="payment" />
+                    <input type="radio" id="payment2" name="payment" checked />
                     <label htmlFor="payment2">계좌 이체</label>
                   </li>
                   <li>
@@ -371,10 +371,12 @@ const Container = styled.div`
     border: none;
     cursor: pointer;
     font-size: 16px;
+    border-radius: 8px;
   }
 
   @media (min-width: 851px) {
-    padding: 32px 20px;
+    padding: 32px 0px 0;
+    /* padding: 32px 20px 0; */
 
     h1 {
       font-size: 30px;
@@ -412,7 +414,6 @@ const Container = styled.div`
     .pc-container {
       display: flex;
       justify-content: space-between;
-      /* gap: 30px; */
 
       .pc-col {
         display: flex;
@@ -469,8 +470,8 @@ const ProductInfo = styled.section`
 
     @media (min-width: 851px) {
       img {
-        width: 150px;
-        height: 150px;
+        width: 120px;
+        height: 120px;
       }
 
       .product-info {

@@ -7,8 +7,8 @@ import Review from "./../pages/review/Review";
 import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
 import Notice from "../pages/notice/Notice";
-import TripTest from "../pages/trip-test/TripTest";
-import TestResult from "../pages/trip-test/TestResult";
+import TripTest from "../pages/recommend/TripTestPage";
+import TestResult from "../pages/recommend/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
 import Reservation from "../pages/reservation/Reservation";
@@ -16,6 +16,7 @@ import MyPage from "../pages/mypage/MyPage";
 import MyReservation from "../pages/mypage/MyReservation";
 import Favor from "../pages/mypage/Favor";
 import Point from "../pages/mypage/Point";
+import RecommendPage from "../pages/recommend/RecommendPage";
 
 const router = createBrowserRouter([
   {
@@ -53,9 +54,8 @@ const router = createBrowserRouter([
         element: <TripTest />,
       },
       {
-        //임시
-        path: "/test-result",
-        element: <TestResult />,
+        path: "/recommend",
+        element: <RecommendPage />,
       },
       {
         path: "notice",

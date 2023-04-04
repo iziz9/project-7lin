@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import { BsSearch } from "react-icons/bs";
@@ -12,8 +12,9 @@ import { removeCookie } from "../utils/cookie";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation().pathname;
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width:850px)",
   });
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
@@ -22,27 +23,33 @@ const Header = () => {
   const navMenu = [
     {
       title: "여행추천",
-      pathname: "/",
+      pathname: "/recommend",
+      color: location === "/recommend" || location === "/test" ? "on-page" : "",
     },
     {
       title: "그룹별여행",
       pathname: "/groups",
+      color: location === "/groups" ? "on-page" : "",
     },
     {
       title: "지역별여행",
       pathname: "/",
+      color: location === "/" ? "on-page" : "",
     },
     {
       title: "테마별여행",
       pathname: "/",
+      color: location === "/" ? "on-page" : "",
     },
     {
       title: "여행후기",
       pathname: "/review",
+      color: location === "/review" ? "on-page" : "",
     },
     {
       title: "공지사항",
       pathname: "/notice",
+      color: location === "/notice" ? "on-page" : "",
     },
   ];
 
@@ -101,7 +108,11 @@ const Header = () => {
           <NavMenu>
             <ul>
               {navMenu.map((menu) => (
-                <li key={menu.title} onClick={() => navigate(menu.pathname)}>
+                <li
+                  key={menu.title}
+                  onClick={() => navigate(menu.pathname)}
+                  className={menu.color}
+                >
                   {menu.title}
                 </li>
               ))}
@@ -228,8 +239,6 @@ const NavMenu = styled.nav`
 
   li {
     cursor: pointer;
-    /* margin-top: 16px; */
-    /* padding: 1rem; */
     padding: 16px 16px 16px 0;
     position: relative;
 
@@ -260,6 +269,22 @@ const NavMenu = styled.nav`
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 500ms ease, margin-left 0.5s ease;
+    }
+  }
+
+  .on-page {
+    color: var(--color-blue);
+
+    ::after {
+      transform: scaleX(1);
+      margin-left: 0;
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      height: 3px;
+      background-color: var(--color-blue);
+      transition: transform 500ms ease;
+      transform-origin: left;
     }
   }
 `;
