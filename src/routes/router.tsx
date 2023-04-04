@@ -18,6 +18,7 @@ import Favor from "../pages/mypage/Favor";
 import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
+import Search from "../pages/search/Search";
 
 const router = createBrowserRouter([
   {
@@ -103,6 +104,10 @@ const router = createBrowserRouter([
             element: <Point />,
           },
         ],
+      },
+      {
+        path: "search",
+        element: <Search />,
       },
     ],
   },
