@@ -5,6 +5,7 @@ import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
 import PaymentModal from "./PaymentModal";
 import { PersonalData } from "../../commons/Terms";
+import EditUserInfoModal from "./EditUserInfoModal";
 
 type Props = {};
 
@@ -21,6 +22,21 @@ const Reservation = (props: Props) => {
     title: "개인정보 수집 및 이용",
     content: <PersonalData />,
   };
+  const EditUserModalData = {
+    title: "예약자 정보 수정",
+    content: <EditUserInfoModal />,
+  };
+
+  const [terms, setTerms] = useState<string[]>([]);
+  const checkAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.checked ? setTerms(["agree1", "agree2"]) : setTerms([]);
+  };
+  const check = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.checked
+      ? setTerms([...terms, e.target.name])
+      : setTerms(terms.filter((term) => term !== e.target.name));
+  };
+
   const onSubmit = () => {
     console.log("api 연결");
     openModal(PaymentModalData);
@@ -62,7 +78,7 @@ const Reservation = (props: Props) => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                console.log("수정 모달, api 연결");
+                openModal(EditUserModalData);
               }}
             >
               수정하기
@@ -130,11 +146,25 @@ const Reservation = (props: Props) => {
           <CheckTerms>
             <h2>약관 동의</h2>
             <div className="all-agree">
-              <input type="checkbox" id="all" required />
+              <input
+                type="checkbox"
+                id="all"
+                name="all"
+                checked={terms.length === 2 ? true : false}
+                required
+                onChange={checkAll}
+              />
               <label htmlFor="all">전체동의</label>
             </div>
             <div>
-              <input type="checkbox" id="agree1" required />
+              <input
+                type="checkbox"
+                id="agree1"
+                name="agree1"
+                checked={terms.includes("agree1") ? true : false}
+                required
+                onChange={check}
+              />
               <label htmlFor="agree1">
                 <span
                   onClick={(e) => {
@@ -148,7 +178,14 @@ const Reservation = (props: Props) => {
               </label>
             </div>
             <div>
-              <input type="checkbox" id="agree2" required />
+              <input
+                type="checkbox"
+                id="agree2"
+                name="agree2"
+                checked={terms.includes("agree2") ? true : false}
+                required
+                onChange={check}
+              />
               <label htmlFor="agree2">예약조건 확인 및 결제진행에 동의</label>
             </div>
           </CheckTerms>
@@ -208,7 +245,7 @@ const Reservation = (props: Props) => {
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log("수정 모달, api 연결");
+                    openModal(EditUserModalData);
                   }}
                 >
                   수정하기
@@ -236,11 +273,23 @@ const Reservation = (props: Props) => {
                 <h2>결제 수단</h2>
                 <ul>
                   <li>
-                    <input type="radio" id="payment2" name="payment" checked />
+                    <input
+                      type="radio"
+                      id="payment2"
+                      name="payment"
+                      checked
+                      readOnly
+                    />
                     <label htmlFor="payment2">계좌 이체</label>
                   </li>
                   <li>
-                    <input type="radio" id="payment3" name="payment" disabled />
+                    <input
+                      type="radio"
+                      id="payment3"
+                      name="payment"
+                      disabled
+                      readOnly
+                    />
                     <label htmlFor="payment3">
                       <span>신용/체크카드</span>
                       <span className="red">⚠️ 서비스 준비중입니다.</span>
@@ -278,11 +327,24 @@ const Reservation = (props: Props) => {
               <CheckTerms>
                 <h2>약관 동의</h2>
                 <div className="all-agree">
-                  <input type="checkbox" id="all" required />
+                  <input
+                    type="checkbox"
+                    id="all"
+                    required
+                    onChange={checkAll}
+                    checked={terms.length === 2 ? true : false}
+                  />
                   <label htmlFor="all">전체동의</label>
                 </div>
                 <div>
-                  <input type="checkbox" id="agree1" required />
+                  <input
+                    type="checkbox"
+                    id="agree1"
+                    name="agree1"
+                    required
+                    checked={terms.includes("agree1") ? true : false}
+                    onChange={check}
+                  />
                   <label htmlFor="agree1">
                     <span
                       onClick={(e) => {
@@ -296,7 +358,14 @@ const Reservation = (props: Props) => {
                   </label>
                 </div>
                 <div>
-                  <input type="checkbox" id="agree2" required />
+                  <input
+                    type="checkbox"
+                    id="agree2"
+                    name="agree2"
+                    required
+                    checked={terms.includes("agree2") ? true : false}
+                    onChange={check}
+                  />
                   <label htmlFor="agree2">
                     예약조건 확인 및 결제진행에 동의
                   </label>

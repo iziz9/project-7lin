@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { getTestResult } from "../../apis/request";
 import { TestResultProductType, ResultPackageType } from "../../@types/data";
+import { setLocalStorage } from "../../utils/localStorage";
 
 const TestResult = ({ result }: { result: string }) => {
   const [productsData, setProductsData] = useState<TestResultProductType[]>([]);
@@ -31,11 +32,10 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
-      const saveItemObject = JSON.stringify({
+      setLocalStorage("testResult", {
         category: "골프여행",
         title: "나이스샷 - 골프패키지",
       });
-      localStorage.setItem("testResult", saveItemObject);
     } else if (result.includes("걸어")) {
       setResultPackage({
         title: "여유롭게 - 트레킹",
@@ -49,11 +49,10 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
-      const saveItemObject = JSON.stringify({
+      setLocalStorage("testResult", {
         category: "트레킹",
         title: "여유롭게 - 트레킹",
       });
-      localStorage.setItem("testResult", saveItemObject);
     } else if (result.includes("해변")) {
       setResultPackage({
         title: "바다를 보는 여유 - 오션뷰",
@@ -67,11 +66,10 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
-      const saveItemObject = JSON.stringify({
+      setLocalStorage("testResult", {
         category: "휴양지",
         title: "바다를 보는 여유 - 오션뷰",
       });
-      localStorage.setItem("testResult", saveItemObject);
     } else {
       setResultPackage({
         title: "힐링타임 - 유적지",
@@ -85,11 +83,10 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
-      const saveItemObject = JSON.stringify({
+      setLocalStorage("testResult", {
         category: "문화탐방",
         title: "힐링타임 - 유적지",
       });
-      localStorage.setItem("testResult", saveItemObject);
     }
   }, [result]);
 
