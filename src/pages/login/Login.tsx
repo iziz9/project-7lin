@@ -19,6 +19,9 @@ import { userInfoState } from "../../store/userInfoAtom";
 import { loginState } from "../../store/loginAtom";
 import { setCookie } from "../../utils/cookie";
 import { setLocalStorage } from "../../utils/localStorage";
+import KakaoBtn from "./components/KakaoBtn";
+import NaverBtn from "./components/NaverBtn";
+import GoogleBtn from "./components/GoogleBtn";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -101,18 +104,18 @@ const Login = () => {
     content: <FindIdPasswordModal />,
   };
 
-  const snsArray = [
-    { name: "네이버", img: "sns_naver.svg" },
-    { name: "카카오", img: "sns_kakao.svg" },
-    { name: "페이스북", img: "sns_facebook.svg" },
-  ];
+  // const snsArray = [
+  //   { name: "네이버", img: "sns_naver.svg" },
+  //   { name: "카카오", img: "sns_kakao.svg" },
+  //   { name: "페이스북", img: "sns_facebook.svg" },
+  // ];
 
-  const socialLogin = snsArray.map((sns) => (
-    <div className="social" key={sns.name}>
-      <img src={sns.img} alt={sns.name} />
-      {/* {isMobile ? null : sns.name} */}
-    </div>
-  ));
+  // const socialLogin = snsArray.map((sns) => (
+  //   <div className="social" key={sns.name}>
+  //     <img src={sns.img} alt={sns.name} />
+  //     {/* {isMobile ? null : sns.name} */}
+  //   </div>
+  // ));
 
   return (
     <>
@@ -179,7 +182,11 @@ const Login = () => {
               아이디 / 비밀번호 찾기
             </div>
           </Others>
-          <SocialLogins>{socialLogin}</SocialLogins>
+          <SocialLogins>
+            <KakaoBtn />
+            <NaverBtn />
+            <GoogleBtn />
+          </SocialLogins>
         </div>
       </LoginContainer>
       <Modal />

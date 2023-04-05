@@ -21,6 +21,7 @@ import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
+import KakaoLogin from "../pages/kakaologin/KakaoLogin";
 
 const router = createBrowserRouter([
   {
@@ -120,6 +121,10 @@ const router = createBrowserRouter([
         element: <ProductDetail />,
       },
     ],
+  },
+  {
+    path: "/kakaologin",
+    element: <KakaoLogin />,
   },
 ]);
 
