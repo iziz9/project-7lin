@@ -11,13 +11,16 @@ import TripTest from "../pages/recommend/TripTestPage";
 import TestResult from "../pages/recommend/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
-import Reservation from "../pages/reservation/Reservation";
+import ReviewWrite from "./../pages/review-write/ReviewWrite";
+import ProductDetail from "./../pages/product-detail/ProductDetail";
+import Reservation from "../pages/reservation/ReservationPage";
 import MyPage from "../pages/mypage/MyPage";
 import MyReservation from "../pages/mypage/MyReservation";
 import Favor from "../pages/mypage/Favor";
 import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
+import Search from "../pages/search/Search";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "review/:id",
         element: <ReviewDetail />,
+      },
+      {
+        path: "review/write",
+        element: <ReviewWrite />,
       },
       { path: "groups", element: <Groups /> },
       {
@@ -103,6 +110,14 @@ const router = createBrowserRouter([
             element: <Point />,
           },
         ],
+      },
+      {
+        path: "search",
+        element: <Search />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail />,
       },
     ],
   },

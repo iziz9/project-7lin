@@ -1,9 +1,47 @@
 import { BsSearch } from "react-icons/bs";
 import styled from "styled-components";
-import ReviewFilters from "./ReviewFilters";
 import ReviewItems from "./ReviewItems";
 import { useState } from "react";
-import Footer from "./../../commons/Footer";
+import ReviewFilterItem from "./ReviewFilterItem";
+import { ReviewFilterData } from "../../@types/data";
+
+const reviewFilterData: ReviewFilterData = {
+  group: {
+    content: [
+      "그룹별 여행 전체",
+      "5070끼리",
+      "남자끼리",
+      "여자끼리",
+      "가족끼리",
+      "누구든지",
+    ],
+  },
+  location: {
+    content: [
+      "지역별 여행 전체",
+      "동남아/태평양",
+      "인도/중앙아시아",
+      "아프리카/중동",
+      "유럽/코카서스",
+      "중남미/북미",
+      "대만/중국/일본",
+    ],
+  },
+  theme: {
+    content: [
+      "테마별 여행 전체",
+      "문화탐방",
+      "골프여행",
+      "휴양지",
+      "트레킹",
+      "성지순례",
+      "볼론투어",
+    ],
+  },
+  sort: {
+    content: ["최신순", "조회순", "평점높은순", "평점낮은순"],
+  },
+};
 
 const Review = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -38,7 +76,7 @@ const Review = () => {
         <Contents>
           <Search>
             <input
-              type="search"
+              type="text"
               name="review"
               placeholder="검색어를 입력하세요"
             />
@@ -59,8 +97,15 @@ const Review = () => {
           </Modal>
         )}
       </Head>
-
-      <ReviewFilters />
+      <Filtering>
+        {Object.keys(reviewFilterData).map((key: string) => (
+          <ReviewFilterItem
+            key={key}
+            title={key}
+            content={reviewFilterData[key].content}
+          />
+        ))}
+      </Filtering>
 
       <ReviewItems />
 
@@ -102,6 +147,14 @@ const Head = styled.div`
   justify-content: space-between;
   position: relative;
 `;
+
+const Filtering = styled.div`
+  width: 100%;
+  display: flex;
+  margin-top: 50px;
+  position: relative;
+`;
+
 const Title = styled.h1`
   font-size: 40px;
   color: #111111;
