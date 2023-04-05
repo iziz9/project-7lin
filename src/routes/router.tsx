@@ -20,6 +20,7 @@ import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
+import KakaoLogin from "../pages/kakaologin/KakaoLogin";
 import NotFoundPage from "../pages/not-found/NotFoundPage";
 
 const router = createBrowserRouter([
@@ -124,6 +125,10 @@ const router = createBrowserRouter([
         element: <NotFoundPage />,
       },
     ],
+  },
+  {
+    path: "/kakaologin",
+    element: <KakaoLogin />,
   },
 ]);
 
