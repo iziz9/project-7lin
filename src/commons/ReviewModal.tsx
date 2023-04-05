@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { GrClose } from "react-icons/gr";
-
-interface IReviewModalProps {
-  title: string;
-  setModalOpen: React.Dispatch<React.SetStateAction<string>>;
-}
+import { IReviewModalProps } from "./../@types/props.d";
 
 const ReviewModal = ({ setModalOpen, title }: IReviewModalProps) => {
   return (

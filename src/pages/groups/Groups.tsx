@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useMediaQuery } from "react-responsive";
+import { Link } from "react-router-dom";
 
 const Groups = () => {
   // 반응형
@@ -83,15 +84,26 @@ const Groups = () => {
       {/* 상품 리스트 */}
       <ProductList isMobile={isMobile}>
         {mockupData.map((props) => (
-          <Product isMobile={isMobile} key={props.id}>
-            <img className="image" src={props.image} alt={props.title} />
-            <AiOutlineHeart />
-            <h3 className="title">{props.title}</h3>
-            <span className="price">
-              {props.price.toLocaleString("ko-KR")}원
-            </span>
-            <p className="body">{props.discription}</p>
-          </Product>
+          <Link
+            key={props.id}
+            to={`/product/${props.id}`}
+            state={{
+              image: props.image,
+              title: props.title,
+              price: props.price,
+              discription: props.discription,
+            }}
+          >
+            <Product isMobile={isMobile}>
+              <img className="image" src={props.image} alt={props.title} />
+              <AiOutlineHeart />
+              <h3 className="title">{props.title}</h3>
+              <span className="price">
+                {props.price.toLocaleString("ko-KR")}원
+              </span>
+              <p className="body">{props.discription}</p>
+            </Product>
+          </Link>
         ))}
       </ProductList>
       <Pages isMobile={isMobile}>

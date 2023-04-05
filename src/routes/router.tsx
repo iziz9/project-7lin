@@ -8,6 +8,8 @@ import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
+import ReviewWrite from "./../pages/review-write/ReviewWrite";
+import ProductDetail from "./../pages/product-detail/ProductDetail";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
         path: "review/:id",
         element: <ReviewDetail />,
       },
+      {
+        path: "review/write",
+        element: <ReviewWrite />,
+      },
       { path: "/groups", element: <Groups /> },
       {
         path: "/login",
@@ -39,6 +45,10 @@ const router = createBrowserRouter([
       {
         path: "/signup_site",
         element: <SignupSite />,
+      },
+      {
+        path: "/product/:id",
+        element: <ProductDetail />,
       },
     ],
   },

@@ -1,10 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ProductInfosCard from "./../../commons/ProductInfosCard";
-
-interface IMainContentsProps {
-  thumnail: string;
-}
+import { IMainContentsProps } from "./../../@types/props.d";
 
 const MainContents = ({ thumnail }: IMainContentsProps) => {
   return (
