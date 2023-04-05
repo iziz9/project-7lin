@@ -1,6 +1,10 @@
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { userInfoState } from "../../../store/userInfoAtom";
 
 const UserInfo = () => {
+  const userInfo = useRecoilValue(userInfoState);
+
   return (
     <Container>
       <div className="wrapper">
@@ -8,8 +12,8 @@ const UserInfo = () => {
           <img src="/default_profile.png" />
         </div>
         <div className="info">
-          <div className="hi">7lin'님 안녕하세요.</div>
-          <div className="money">누적 결제 금액: 3,244,000원</div>
+          <div className="hi">{userInfo.name}님 안녕하세요.</div>
+          <div className="money">누적 결제 금액: 0원</div>
           <div className="point-mobile">포인트: 0</div>
         </div>
         <div className="point-wrapper">
