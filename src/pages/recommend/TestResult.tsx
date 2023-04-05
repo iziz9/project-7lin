@@ -7,6 +7,9 @@ import { TestResultProductType, ResultPackageType } from "../../@types/data";
 const TestResult = ({ result }: { result: string }) => {
   const [productsData, setProductsData] = useState<TestResultProductType[]>([]);
   const navigate = useNavigate();
+  const [backgroundImg, setBackgroundImg] = useState(
+    "url('/background-culture.png')",
+  );
   const [resultPackage, setResultPackage] = useState<ResultPackageType>({
     title: "힐링타임 - 유적지",
     image: "/result-culture.jpg",
@@ -22,6 +25,7 @@ const TestResult = ({ result }: { result: string }) => {
         desc: "스크린에서만 라운딩 돌던 나는 안녕~ 이제 골프여행 가서 리얼필드를 만나보자. 골프카트 타고 Go Go!",
         category: "골프여행",
       });
+      setBackgroundImg("url('/background-golf.png')");
       const getResultProducts = async () => {
         const res = await getTestResult("골프여행");
         setProductsData(res.products);
@@ -34,6 +38,7 @@ const TestResult = ({ result }: { result: string }) => {
         desc: "푸른 숲 속 피톤치드를 느끼면서 같이 한 번 걸어볼래? 이게 바로 진짜 힐링이지!",
         category: "트레킹",
       });
+      setBackgroundImg("url('/background-trekking.png')");
       const getResultProducts = async () => {
         const res = await getTestResult("트레킹");
         setProductsData(res.products);
@@ -46,6 +51,7 @@ const TestResult = ({ result }: { result: string }) => {
         desc: "수영장 딸린 해안가 호텔에서 조식 뷔페 먹고, 탁 트인 해변가에서 바다내음 풀풀 나는 산책 즐기기!",
         category: "휴양지",
       });
+      setBackgroundImg("url('/background-ocean.png')");
       const getResultProducts = async () => {
         const res = await getTestResult("휴양지");
         setProductsData(res.products);
@@ -58,6 +64,7 @@ const TestResult = ({ result }: { result: string }) => {
         desc: "각 나라별 역사와 문화를 배우며 마음의 양식을 든든하게 쌓아보세요! 몸도 마음도 든든한 힐링과 지식 타임",
         category: "문화탐방",
       });
+      setBackgroundImg("url('/background-culture.png')");
       const getResultProducts = async () => {
         const res = await getTestResult("문화탐방");
         setProductsData(res.products);
@@ -67,7 +74,7 @@ const TestResult = ({ result }: { result: string }) => {
   }, [result]);
 
   return (
-    <Container>
+    <Container background={backgroundImg}>
       <section>
         <ResultContent>
           <span className="title">{resultPackage.title}</span>
@@ -111,9 +118,10 @@ const TestResult = ({ result }: { result: string }) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ background: string }>`
   position: relative;
-  background-image: url("/trip-test1.png");
+  background-image: ${(props) =>
+    props.background || 'url("/background-culture.png")'};
   height: 730px;
   display: flex;
   justify-content: center;
@@ -323,7 +331,7 @@ const ResultProducts = styled.div`
   display: flex;
   gap: 30px;
   background-color: #dddddd7f;
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
   cursor: pointer;
 
@@ -360,6 +368,7 @@ const ResultProducts = styled.div`
 
   @media (max-width: 850px) {
     gap: 10px;
+    padding: 10px;
 
     .imagebox {
       width: fit-content;
@@ -378,6 +387,12 @@ const ResultProducts = styled.div`
         color: black;
         font-weight: bold;
         text-shadow: none;
+      }
+      .desc {
+        color: black;
+        white-space: pre-line;
+        font-size: 14px;
+        line-height: 16px;
       }
     }
   }

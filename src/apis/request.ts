@@ -11,6 +11,7 @@ export const getTestResult = async (category: string) => {
       },
     ],
   });
+  console.log(res);
   return res.data;
 };
 

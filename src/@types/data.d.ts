@@ -3,6 +3,11 @@ export interface ReviewSelectState {
   isOpen: boolean;
 }
 
+export interface ReviewFilterData {
+  [key: string]: {
+    content: string[];
+  };
+}
 export interface SignupFormValue {
   email: string;
   confirmEmail: string;
