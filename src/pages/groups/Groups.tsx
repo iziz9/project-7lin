@@ -28,6 +28,31 @@ const Groups = () => {
           </FilterList>
         )} */}
       {/* 상품 리스트 */}
+      {/* <ProductList isMobile={isMobile}>
+        {mockupData.map((props) => (
+          <Link
+            key={props.id}
+            to={`/product/${props.id}`}
+            state={{
+              image: props.image,
+              title: props.title,
+              price: props.price,
+              discription: props.discription,
+            }}
+          >
+            <Product isMobile={isMobile}>
+              <img className="image" src={props.image} alt={props.title} />
+              <AiOutlineHeart />
+              <h3 className="title">{props.title}</h3>
+              <span className="price">
+                {props.price.toLocaleString("ko-KR")}원
+              </span>
+              <p className="body">{props.discription}</p>
+            </Product>
+          </Link>
+        ))}
+      </ProductList>
+      <Pages isMobile={isMobile}> */}
       <div className="body">
         <Filter />
         <div>

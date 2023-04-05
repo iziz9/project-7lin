@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
-import { MdKeyboardArrowRight } from "react-icons/md";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import Comments from "./Comments";
-import RecommendSlider from "../review/RecommendSlider";
+import RecommendSlider from "./RecommendSlider";
 import MainContents from "./MainContents";
 import ReviewModal from "../../commons/ReviewModal";
+import BreadCrumb from "./../../commons/Breadcrumb";
 
 const ReviewDetail = () => {
   const { id } = useParams();
@@ -18,13 +18,22 @@ const ReviewDetail = () => {
 
   return (
     <Wrap>
-      <Breadcrumb>
-        <span>HOME</span>
-        <MdKeyboardArrowRight size={20} />
-        <span>여행 후기</span>
-        <MdKeyboardArrowRight size={20} />
-        <span>{title}</span>
-      </Breadcrumb>
+      <BreadCrumb
+        data={[
+          {
+            title: "HOME",
+            link: "/",
+          },
+          {
+            title: "여행 후기",
+            link: "/review",
+          },
+          {
+            title,
+            link: `/review/${id}`,
+          },
+        ]}
+      />
 
       <Title>여행후기</Title>
 
@@ -67,7 +76,15 @@ const ReviewDetail = () => {
 
       <Comments />
 
-      <RecommendSlider />
+      <Recommend>
+        <RecommendHead>
+          <h2>다른 상품 후기 보기</h2>
+          <span>전체 후기 목록 보기</span>
+        </RecommendHead>
+        <RecommendSlider>
+          <strong>후기 글 제목</strong>
+        </RecommendSlider>
+      </Recommend>
     </Wrap>
   );
 };
@@ -76,16 +93,7 @@ const Wrap = styled.div`
   width: 1225px;
   margin: 80px auto;
 `;
-const Breadcrumb = styled.div`
-  display: flex;
-  align-items: center;
-  span {
-    margin-right: 10px;
-  }
-  svg {
-    margin-right: 10px;
-  }
-`;
+
 const Title = styled.h1`
   margin-top: 50px;
   font-size: 22px;
@@ -160,5 +168,22 @@ const Right = styled.div`
     }
   }
 `;
-
+const Recommend = styled.div`
+  margin-top: 70px;
+`;
+const RecommendHead = styled.div`
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #5b5b5b;
+  }
+  span {
+    font-size: 18px;
+    color: #5b5b5b;
+  }
+`;
 export default ReviewDetail;
