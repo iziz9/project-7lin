@@ -20,8 +20,10 @@ import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
-import KakaoLogin from "../pages/kakaologin/KakaoLogin";
+import KakaoLogin from "../pages/sociallogin/KakaoLogin";
 import NotFoundPage from "../pages/not-found/NotFoundPage";
+import NaverLogin from "../pages/sociallogin/NaverLogin";
+import GoogleLogin from "../pages/sociallogin/GoogleLogin";
 
 const router = createBrowserRouter([
   {
@@ -129,6 +131,14 @@ const router = createBrowserRouter([
   {
     path: "/kakaologin",
     element: <KakaoLogin />,
+  },
+  {
+    path: "/naverlogin",
+    element: <NaverLogin />,
+  },
+  {
+    path: "/googlelogin",
+    element: <GoogleLogin />,
   },
 ]);
 
