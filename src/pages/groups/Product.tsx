@@ -56,10 +56,7 @@ const Product = () => {
           key={props.id}
           to={`/product/${props.id}`}
           state={{
-            image: props.image,
-            title: props.title,
-            price: props.price,
-            discription: props.discription,
+            ...props,
           }}
         >
           <Item key={props.id}>
