@@ -31,6 +31,11 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
+      const saveItemObject = JSON.stringify({
+        category: "골프여행",
+        title: "나이스샷 - 골프패키지",
+      });
+      localStorage.setItem("testResult", saveItemObject);
     } else if (result.includes("걸어")) {
       setResultPackage({
         title: "여유롭게 - 트레킹",
@@ -44,6 +49,11 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
+      const saveItemObject = JSON.stringify({
+        category: "트레킹",
+        title: "여유롭게 - 트레킹",
+      });
+      localStorage.setItem("testResult", saveItemObject);
     } else if (result.includes("해변")) {
       setResultPackage({
         title: "바다를 보는 여유 - 오션뷰",
@@ -57,6 +67,11 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
+      const saveItemObject = JSON.stringify({
+        category: "휴양지",
+        title: "바다를 보는 여유 - 오션뷰",
+      });
+      localStorage.setItem("testResult", saveItemObject);
     } else {
       setResultPackage({
         title: "힐링타임 - 유적지",
@@ -70,6 +85,11 @@ const TestResult = ({ result }: { result: string }) => {
         setProductsData(res.products);
       };
       getResultProducts();
+      const saveItemObject = JSON.stringify({
+        category: "문화탐방",
+        title: "힐링타임 - 유적지",
+      });
+      localStorage.setItem("testResult", saveItemObject);
     }
   }, [result]);
 
@@ -134,10 +154,8 @@ const Container = styled.div<{ background: string }>`
     border: none;
     border-radius: 8px;
     color: var(--color-blue);
-    width: 200px;
-    height: 40px;
+    padding: 15px 25px;
     font-size: 20px;
-    font-weight: 600;
     cursor: pointer;
     margin: auto;
   }
