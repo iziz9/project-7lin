@@ -11,8 +11,22 @@ const RecommendPage = (props: Props) => {
     <Container>
       {/* 저장된 테스트 결과 없을 때 */}
       <NoResult onClick={() => navigate("/test")}>
-        <h2>테스트 후 추천받을 수 있음</h2>
-        <section>테스트 시작하기</section>
+        <section className="title-section">
+          <div className="page-title">
+            <div>
+              <span className="blue">여행유형 테스트 </span>
+              <span className="black">를 완료하면</span>
+            </div>
+            <span className="black">맞춤 상품을 추천받을 수 있어요!</span>
+          </div>
+          <div className="test" onClick={() => navigate("/test")}>
+            <img src="/test.png" alt="나의 여행 유형 테스트" />
+          </div>
+        </section>
+        <section className="content-section">
+          <h1>이런 상품은 어떠세요?</h1>
+          <Product />
+        </section>
       </NoResult>
 
       {/* 로컬스토리지에 저장된 테스트 결과 있을 때 / 테스트화면에서 더보기 누르면 여기로 이동*/}
@@ -33,43 +47,121 @@ const RecommendPage = (props: Props) => {
 };
 
 const Container = styled.div`
-  padding: 32px 20px;
-
+  padding-top: 32px;
   h1 {
-    font-size: 24px;
+    font-size: 35px;
     font-weight: bold;
-  }
-
-  @media (min-width: 851px) {
-    h1 {
-      font-size: 30px;
-    }
   }
 `;
 
 const NoResult = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   width: 100%;
-  /* height: 730px; */
   background-size: cover;
   cursor: pointer;
 
-  section {
-    position: relative;
-    width: 50%;
-    height: 58px;
-    margin: auto;
-    border: 20px solid transparent;
-    border-radius: 8px;
-    background-image: linear-gradient(#fff, #fff),
-      linear-gradient(120deg, #ccd4b9, #7cd4e1, #efb2f9);
-    background-origin: border-box;
-    background-clip: content-box, border-box;
-    opacity: 0.9;
-    margin: auto auto;
-    color: v;
-    font-size: 50px;
+  .title-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 30px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--color-grayscale30);
+
+    .page-title {
+      font-weight: bold;
+      line-height: 40px;
+      margin: auto auto;
+
+      .blue {
+        color: var(--color-blue);
+        font-size: 40px;
+      }
+
+      .black {
+        font-size: 28px;
+      }
+    }
+
+    .test {
+      width: 50%;
+      img {
+        width: 100%;
+        margin: auto;
+      }
+    }
+  }
+
+  .content-section {
+    margin: 50px auto;
+
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+  }
+
+  @media (max-width: 950px) {
+    .title-section {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .test {
+        margin: auto;
+        width: 100%;
+
+        img {
+          width: 100%;
+          margin: auto;
+        }
+      }
+
+      .page-title {
+        line-height: 35px;
+        .blue {
+          color: var(--color-blue);
+          font-size: 30px;
+        }
+
+        .black {
+          font-size: 25px;
+        }
+      }
+    }
+  }
+  @media (max-width: 850px) {
+    .title-section {
+      text-align: center;
+      flex-direction: column;
+
+      .test {
+        img {
+          width: 100%;
+          margin: auto;
+        }
+      }
+
+      .page-title {
+        line-height: 30px;
+        .blue {
+          color: var(--color-blue);
+          font-size: 25px;
+        }
+
+        .black {
+          font-size: 18px;
+        }
+      }
+    }
   }
 `;
 
@@ -86,7 +178,6 @@ const HasResult = styled.div`
 
       h1 {
         font-size: 35px;
-        font-weight: bold;
         color: var(--color-blue);
       }
       h2 {
@@ -97,7 +188,7 @@ const HasResult = styled.div`
 
     ul {
       margin: 30px auto;
-      border-top: 2px solid var(--color-grayscale40);
+      border-top: 2px solid var(--color-grayscale30);
       padding-top: 30px;
     }
 
