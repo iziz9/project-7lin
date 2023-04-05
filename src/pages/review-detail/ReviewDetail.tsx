@@ -128,7 +128,6 @@ const Buttons = styled.div`
     }
   }
 `;
-
 const Infos = styled.div`
   margin-top: 40px;
   padding-bottom: 30px;

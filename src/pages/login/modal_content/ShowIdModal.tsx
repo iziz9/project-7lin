@@ -5,9 +5,7 @@ import { useModal } from "../../../hooks/useModal";
 import { scrollToTop } from "../../../utils/scroll";
 import FindIdPasswordModal from "./FindIdPasswordModal";
 
-type Props = {};
-
-const ShowIdModal = (props: Props) => {
+const ShowIdModal = () => {
   const { openModal, closeModal } = useModal();
 
   const findIdPasswordModalData = {
@@ -59,7 +57,7 @@ const Container = styled.div`
       font-weight: 600;
     }
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 16px;
   }
 `;

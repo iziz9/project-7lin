@@ -1,9 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 type Props = {};
 
 const GroupCategory = (props: Props) => {
+  // const isMobile: boolean = useMediaQuery({
+  //   query: "(max-width:850px)",
+  // });
   return (
     <Section>
       <h2 className="title">어떤 그룹과 여행하고 싶으세요?</h2>
@@ -43,7 +47,16 @@ const Section = styled.section`
   h2 {
     font-size: 30px;
     font-weight: bold;
-    margin: 0 20px 30px;
+    margin: 0 20px 10px;
+  }
+
+  @media (max-width: 850px) {
+    margin-top: 0;
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 14px;
+    }
   }
 `;
 
@@ -51,6 +64,10 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
+
+  @media (max-width: 850px) {
+    gap: 10px;
+  }
 
   .category-first {
     display: flex;
@@ -64,11 +81,8 @@ const CategoryContainer = styled.div`
       color: transparent;
 
       .overlay {
+        font-size: 30px;
         display: none;
-      }
-
-      :hover .overlay {
-        display: flex;
         background-color: #0d99ff;
         opacity: 0.8;
         color: white;
@@ -80,8 +94,11 @@ const CategoryContainer = styled.div`
         border-radius: 10px;
         justify-content: center;
         align-items: center;
-        font-size: 30px;
         font-weight: bold;
+      }
+
+      :hover .overlay {
+        display: flex;
       }
     }
     :hover {
@@ -93,6 +110,15 @@ const CategoryContainer = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: 10px;
+    }
+
+    @media (max-width: 850px) {
+      li {
+        .overlay {
+          font-size: 16px;
+          text-align: center;
+        }
+      }
     }
   }
 
@@ -107,8 +133,11 @@ const CategoryContainer = styled.div`
       max-height: 250px;
       border-radius: 10px;
       color: transparent;
+      font-size: 30px;
 
-      :hover .overlay {
+      .overlay {
+        font-size: 30px;
+        display: none;
         background-color: #0d99ff;
         opacity: 0.8;
         color: white;
@@ -118,15 +147,13 @@ const CategoryContainer = styled.div`
         height: 100%;
         top: 0;
         border-radius: 10px;
-        display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 30px;
         font-weight: bold;
       }
 
-      :hover {
-        cursor: pointer;
+      :hover .overlay {
+        display: flex;
       }
     }
 
@@ -135,6 +162,20 @@ const CategoryContainer = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: 10px;
+    }
+
+    @media (max-width: 850px) {
+      li {
+        min-height: 82px;
+
+        img {
+          min-height: 82px;
+        }
+        .overlay {
+          font-size: 16px;
+          min-height: 82px;
+        }
+      }
     }
   }
 `;

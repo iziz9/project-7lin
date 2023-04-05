@@ -3,6 +3,7 @@ import styled from "styled-components";
 import FloatingInput from "./FloatingInput";
 import { PersonalData } from "./Terms";
 import { TimeFormatEnum, currentTime } from "../utils/CurrentTime";
+import { useMediaQuery } from "react-responsive";
 
 export interface ChatListType {
   person: string;
@@ -11,6 +12,9 @@ export interface ChatListType {
 }
 
 const FloatingModal = () => {
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:850px)",
+  });
   const questions = [
     "안녕하세요. 고투게더 여행 그룹 추천 상담봇입니다. 정확한 결과 발송을 위해 연락처를 남겨주세요. <br /> ex) 01012345678",
     "이름 또는 닉네임을 입력해주세요.",
@@ -48,14 +52,53 @@ const FloatingModal = () => {
   }, [recievedMessage]);
 
   return (
-    <Modal>
-      <div className="inner">
-        {/* <PersonalData /> */}
-        <FloatingInput setMyMessage={setMyMessage} orderNumber={orderNumber} />
-      </div>
-    </Modal>
+    <>
+      {isMobile ? (
+        <MobileModal>
+          <div className="inner">
+            {/* <PersonalData /> */}
+            <FloatingInput
+              setMyMessage={setMyMessage}
+              orderNumber={orderNumber}
+            />
+          </div>
+        </MobileModal>
+      ) : (
+        <Modal>
+          <div className="inner">
+            {/* <PersonalData /> */}
+            <FloatingInput
+              setMyMessage={setMyMessage}
+              orderNumber={orderNumber}
+            />
+          </div>
+        </Modal>
+      )}
+    </>
   );
 };
+
+const MobileModal = styled.div`
+  width: 280px;
+  height: 460px;
+  z-index: -99;
+  position: absolute;
+  right: 30px;
+  bottom: 70px;
+  background-color: #f5f5f5;
+  opacity: 0.95;
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px 1px var(--color-grayscale20);
+
+  .inner {
+    width: 250px;
+    height: 300px;
+    margin: 15px auto;
+    border-radius: 8px;
+  }
+`;
 
 const Modal = styled.div`
   width: 450px;

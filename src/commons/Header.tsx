@@ -1,54 +1,170 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 import { BsSearch } from "react-icons/bs";
+import { SlBag, SlLogin, SlLogout } from "react-icons/sl";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../store/userInfoAtom";
+import { loginState } from "../store/loginAtom";
+import { removeLocalStorage } from "../utils/localStorage";
+import { removeCookie } from "../utils/cookie";
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation().pathname;
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:850px)",
+  });
+
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
+
   const navMenu = [
-    "여행추천",
-    "그룹별여행",
-    "지역별여행",
-    "테마별여행",
-    "여행후기",
-    "공지사항",
+    {
+      title: "여행추천",
+      pathname: "/recommend",
+      color: location === "/recommend" || location === "/test" ? "on-page" : "",
+    },
+    {
+      title: "그룹별여행",
+      pathname: "/groups",
+      color: location === "/groups" ? "on-page" : "",
+    },
+    {
+      title: "지역별여행",
+      pathname: "/",
+      color: location === "/" ? "on-page" : "",
+    },
+    {
+      title: "테마별여행",
+      pathname: "/",
+      color: location === "/" ? "on-page" : "",
+    },
+    {
+      title: "여행후기",
+      pathname: "/review",
+      color: location === "/review" ? "on-page" : "",
+    },
+    {
+      title: "공지사항",
+      pathname: "/notice",
+      color: location === "/notice" ? "on-page" : "",
+    },
   ];
 
+  const handleLogout = () => {
+    if (confirm("정말로 로그아웃 하시겠습니까?")) {
+      // logout api 추가
+      setLoginStatus({ isLogin: false });
+      setUserInfo({ email: "", name: "", gender: "", age: 0 });
+      removeLocalStorage("loginStatus");
+      removeLocalStorage("userInfo");
+      removeCookie("accessToken");
+      removeCookie("refreshToken");
+      navigate("/");
+    }
+  };
+
   return (
-    <HeaderContainer>
-      <TopSection>
-        <div className="inner">
-          <div className="logo-search">
-            <div className="logo">
-              <img src="/logo_text.png" onClick={() => navigate("/")} />
-            </div>
-            <div className="searchBar">
-              <input type="text" placeholder="검색어를 입력해주세요" />
-              <BsSearch className="searchButton" />
+    <>
+      {isMobile ? (
+        <MobileHeaderContainer>
+          <div className="inner">
+            <img
+              src="/logo_text.png"
+              alt="로고"
+              onClick={() => navigate("/")}
+            />
+            <div className="iconbox">
+              <SlBag className="icons" />
+              <SlLogin className="icons" onClick={() => navigate("/login")} />
             </div>
           </div>
-          <ul>
-            <li>null/알림</li>
-            <li>장바구니</li>
-            <li onClick={() => navigate("/login")}>로그인/로그아웃</li>
-            <li>회원가입</li>
-          </ul>
-        </div>
-      </TopSection>
-      <NavMenu>
-        <ul>
-          {navMenu.map((menu) => (
-            <li key={menu}>{menu}</li>
-          ))}
-        </ul>
-      </NavMenu>
-    </HeaderContainer>
+        </MobileHeaderContainer>
+      ) : (
+        <PcHeaderContainer>
+          <TopSection>
+            <div className="inner">
+              <div className="logo-search">
+                <div className="logo">
+                  <img src="/logo_text.png" onClick={() => navigate("/")} />
+                </div>
+                <div className="searchBar">
+                  <input type="text" placeholder="검색어를 입력해주세요" />
+                  <BsSearch className="searchButton" />
+                </div>
+              </div>
+              <ul>
+                <li>알림</li>
+                <li>장바구니</li>
+                {loginStatus.isLogin ? (
+                  <li onClick={handleLogout}>로그아웃</li>
+                ) : (
+                  <li onClick={() => navigate("/login")}>로그인</li>
+                )}
+                {loginStatus.isLogin ? (
+                  <li onClick={() => navigate("/mypage")}>마이페이지</li>
+                ) : (
+                  <li onClick={() => navigate("/signup_type")}>회원가입</li>
+                )}
+              </ul>
+            </div>
+          </TopSection>
+          <NavMenu>
+            <ul>
+              {navMenu.map((menu) => (
+                <li
+                  key={menu.title}
+                  onClick={() => navigate(menu.pathname)}
+                  className={menu.color}
+                >
+                  {menu.title}
+                </li>
+              ))}
+            </ul>
+          </NavMenu>
+        </PcHeaderContainer>
+      )}
+    </>
   );
 };
 
-const HeaderContainer = styled.header`
+const MobileHeaderContainer = styled.div`
+  width: 100%;
+  height: 60px;
+  background-color: aliceblue;
+
+  .inner {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+
+    img {
+      width: 119px;
+      height: 20px;
+      padding-top: 10px;
+      cursor: pointer;
+    }
+
+    .iconbox {
+      display: flex;
+      gap: 20px;
+      text-align: center;
+      margin: auto 0;
+
+      .icons {
+        width: 22px;
+        height: 22px;
+        cursor: pointer;
+      }
+    }
+  }
+`;
+
+const PcHeaderContainer = styled.header`
   border-bottom: 2px solid var(--color-inputGray);
-  padding-top: 20px;
+  padding: 20px 20px 0;
 `;
 
 const TopSection = styled.section`
@@ -129,15 +245,14 @@ const NavMenu = styled.nav`
 
   li {
     cursor: pointer;
-    padding: 1rem;
+    padding: 16px 16px 16px 0;
     position: relative;
 
     ::after {
       content: "";
       position: absolute;
-      left: 0.5rem;
-      bottom: -1rem;
-      width: 100px;
+      left: -8px;
+      width: 100%;
     }
 
     :hover {
@@ -160,6 +275,22 @@ const NavMenu = styled.nav`
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 500ms ease, margin-left 0.5s ease;
+    }
+  }
+
+  .on-page {
+    color: var(--color-blue);
+
+    ::after {
+      transform: scaleX(1);
+      margin-left: 0;
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      height: 3px;
+      background-color: var(--color-blue);
+      transition: transform 500ms ease;
+      transform-origin: left;
     }
   }
 `;

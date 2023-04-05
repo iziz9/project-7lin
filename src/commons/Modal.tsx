@@ -22,12 +22,13 @@ const Modal = () => {
       backgroundColor: "rgba(79, 77, 77, 0.7)",
     },
     content: {
-      padding: "50px",
+      padding: "40px",
       border: "none",
       borderRadius: "8px",
-      width: "45%",
-      maxHeight: "80%",
+      width: "50%",
+      maxWidth: "400px",
       minWidth: "248px",
+      maxHeight: "80%",
       margin: "auto",
       // position: "relative",
       top: "none",
@@ -53,8 +54,8 @@ const Modal = () => {
 
 const ModalClose = styled.div`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 15px;
+  right: 15px;
   cursor: pointer;
   svg {
     display: inline-block;
@@ -69,14 +70,14 @@ const ModalTitle = styled.div`
   text-align: center;
   color: #111111;
   margin-bottom: 40px;
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     font-size: 20px;
   }
 `;
 const ModalContent = styled.div`
   display: "flex";
   justify-content: "center";
-  min-width: 248px;
+  /* min-width: 248px; */
 `;
 
 export default Modal;

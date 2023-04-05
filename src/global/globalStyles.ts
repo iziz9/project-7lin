@@ -4,16 +4,24 @@ import reset from "styled-reset";
 const GlobalStyles = createGlobalStyle`
 ${reset}
 
-* {
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
 
+* {
+  font-family: 'Pretendard-Regular', "Inter", sans-serif;
 }
 
   body {
     margin:0;
     padding:0;
     height:100%;
-    font-family: "Inter";
+    font-family: 'Pretendard-Regular', "Inter", sans-serif;
   }
+
   #root {
     /* Color */
     --color-blue: #0D99FF;
@@ -24,11 +32,12 @@ ${reset}
     --color-grayscale30: #AEAEB2;
     --color-grayscale40: #8E8E93;
     --color-grayscale50: #636366;
-
-
+    --color-grayscale60: #48484A;
     position:relative;
     min-height:100%;
   }
+
+
   a{
     color: black;
     text-decoration: none;
@@ -37,8 +46,12 @@ ${reset}
 
   main {
     max-width: 1240px;
-    margin: auto;
+    margin: 0 auto 100px;
     position: relative;
+
+    @media (max-width: 850px) {
+      padding: 0 20px;
+    }
   }
 `;
 

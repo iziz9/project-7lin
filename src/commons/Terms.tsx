@@ -519,5 +519,15 @@ const PersonalTerms = styled.div`
     line-height: 1.2;
     margin: auto;
     border: 1px solid gray;
+
+    @media (max-width: 770px) {
+      width: 320px;
+    }
+    @media (max-width: 630px) {
+      width: 290px;
+    }
+    @media (max-width: 550px) {
+      width: 250px;
+    }
   }
 `;

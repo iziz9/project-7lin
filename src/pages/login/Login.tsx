@@ -1,5 +1,8 @@
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router-dom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
@@ -8,13 +11,83 @@ import { useModal } from "../../hooks/useModal";
 import { scrollToTop } from "../../utils/scroll";
 import FindIdPasswordModal from "./modal_content/FindIdPasswordModal";
 import NonMemberResvationModal from "./modal_content/NonMemberResvationModal";
+import { LoginFormValue } from "../../@types/data";
+import { useMutation } from "react-query";
+import { login } from "../../apis/auth";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../store/userInfoAtom";
+import { loginState } from "../../store/loginAtom";
+import { setCookie } from "../../utils/cookie";
+import { setLocalStorage } from "../../utils/localStorage";
 
 const Login = () => {
   const navigate = useNavigate();
 
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
+
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:560px)",
+    query: "(max-width:850px)",
   });
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .required("이메일을 입력해주세요!")
+      .trim()
+      .matches(
+        /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+        "이메일 형식이 올바르지 않습니다!",
+      ),
+    password: Yup.string()
+      .required("비밀번호를 입력해주세요!")
+      .trim()
+      .min(8, "비밀번호는 8 ~ 16자 길이여야 합니다!")
+      .max(16, "비밀번호는 8 ~ 16자 길이여야 합니다!"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValue>({
+    resolver: yupResolver(validationSchema),
+    mode: "onBlur",
+  });
+
+  const loginMutation = useMutation(login, {
+    onSuccess: (res: any) => {
+      if (res) {
+        console.log(res);
+        const { email, name, age, gender, tokenDto } = res.data;
+        setCookie("accessToken", tokenDto.accessToken, {
+          path: "/",
+          maxAge: 1800,
+        });
+        setCookie("refreshToken", tokenDto.refreshToken, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+        setLoginStatus({ isLogin: true });
+        setLocalStorage("loginStatus", { isLogin: true });
+        setUserInfo({ email, name, age, gender });
+        setLocalStorage("userInfo", { email, name, age, gender });
+        alert("로그인 성공");
+        navigate("/", { replace: true });
+      }
+    },
+    onError: (error) => {
+      alert("로그인 실패" + error);
+    },
+  });
+
+  const onSubmitHandler: SubmitHandler<LoginFormValue> = (data) => {
+    console.log(JSON.stringify(data, null, 2));
+    const loginPayload: LoginFormValue = {
+      email: data.email,
+      password: data.password,
+    };
+    loginMutation.mutate(loginPayload);
+  };
 
   const { openModal } = useModal();
 
@@ -37,7 +110,7 @@ const Login = () => {
   const socialLogin = snsArray.map((sns) => (
     <div className="social" key={sns.name}>
       <img src={sns.img} alt={sns.name} />
-      {isMobile ? null : sns.name}
+      {/* {isMobile ? null : sns.name} */}
     </div>
   ));
 
@@ -46,16 +119,32 @@ const Login = () => {
       <LoginContainer>
         <div className="login-wrapper">
           <div className="title">로그인</div>
-          <LoginForm>
+          <LoginForm onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="input_form id">
-              <BasicInput type="text" placeholder="아이디" />
+              {errors.email ? (
+                <div className="invalid">{errors.email?.message}</div>
+              ) : null}
+              <BasicInput
+                className={errors.email ? "warning" : ""}
+                type="text"
+                placeholder="아이디"
+                {...register("email")}
+              />
             </div>
             <div className="input_form password">
-              <BasicInput type="password" placeholder="비밀번호" />
+              {errors.password ? (
+                <div className="invalid">{errors.password?.message}</div>
+              ) : null}
+              <BasicInput
+                className={errors.password ? "warning" : ""}
+                type="password"
+                placeholder="비밀번호"
+                {...register("password")}
+              />
             </div>
             <div className="label-wrapper">
               <label>
-                <input type="checkbox" />
+                <input type="checkbox" defaultChecked={true} />
                 로그인 상태 저장
               </label>
             </div>
@@ -103,19 +192,23 @@ const LoginContainer = styled.div`
   margin-top: 60px;
   margin-top: 2rem;
   margin-bottom: "90px";
-  background: #fafafa;
+  /* background: #fafafa; */
   width: 100%;
   min-width: 328px;
-  font-size: 23px;
+  /* font-size: 23px; */
+  font-size: 18px;
   line-height: 100%;
   letter-spacing: -0.02em;
   .login-wrapper {
-    max-width: 700px;
-    padding: 155px 0;
+    /* max-width: 700px; */
+    max-width: 400px;
+    /* padding: 155px 0; */
+    padding: 50px 0;
     margin: 0 auto;
   }
   .title {
     font-weight: bold;
+    text-align: center;
     font-size: 30px;
     color: #5b5b5b;
     margin-bottom: 55px;
@@ -123,14 +216,24 @@ const LoginContainer = styled.div`
   .btn-wrapper {
     margin-bottom: 20px;
   }
+  .invalid {
+    width: 100%;
+    padding-bottom: 0.8rem;
+    font-size: 18px;
+    font-weight: bold;
+    color: #dc3545;
+  }
+  .warning {
+    border: 1px solid #dc3545;
+  }
 
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     margin-top: 35px;
     margin-bottom: 0;
     font-size: 16px;
     width: 80%;
     .login-wrapper {
-      padding: 50px 40px;
+      padding: 0px;
     }
     .title {
       font-size: 20px;
@@ -138,6 +241,9 @@ const LoginContainer = styled.div`
     }
     .btn-wrapper {
       margin-bottom: 10px;
+    }
+    .invalid {
+      font-size: 16px;
     }
   }
 `;
@@ -149,7 +255,7 @@ const LoginForm = styled.form`
   .label-wrapper {
     display: flex;
     label {
-      margin: 44px 0;
+      margin: 22px 0;
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -158,12 +264,12 @@ const LoginForm = styled.form`
         width: 25px;
         height: 25px;
         margin-right: 15px;
-        @media (max-width: 560px) {
+        @media (max-width: 850px) {
           width: 20px;
           height: 20px;
         }
       }
-      @media (max-width: 560px) {
+      @media (max-width: 850px) {
         margin: 22px 0;
       }
     }
@@ -177,7 +283,7 @@ const Others = styled.div`
   .option {
     cursor: pointer;
   }
-  @media (max-width: 560px) {
+  @media (max-width: 850px) {
     padding: 20px 0;
   }
 `;
@@ -195,14 +301,14 @@ const SocialLogins = styled.div`
     img {
       width: 50px;
       height: 50px;
-      @media (max-width: 560px) {
-        width: 30px;
-        height: 30px;
+      @media (max-width: 850px) {
+        width: 40px;
+        height: 40px;
       }
     }
   }
-  @media (max-width: 560px) {
-    gap: 16px;
+  @media (max-width: 850px) {
+    gap: 30px;
   }
 `;
 
