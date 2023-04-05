@@ -1,8 +1,21 @@
 import React from "react";
 import styled from "styled-components";
 import { BasicBtn } from "../../../commons/Button";
+import { useMutation } from "react-query";
+import { widthdrawal } from "../../../apis/auth";
 
 const WithdrawlModal = () => {
+  const withDrawalMutation = useMutation(widthdrawal, {
+    onSuccess: (res: any) => {
+      if (res) {
+        console.log(res);
+      }
+    },
+    onError: (error) => {
+      alert("회원탈퇴 실패" + error);
+    },
+  });
+
   return (
     <Container>
       <div className="info">
@@ -17,7 +30,7 @@ const WithdrawlModal = () => {
         <div>회원탈퇴를 진행하시겠습니까?</div>
       </div>
       <div className="btn-wrapper">
-        <BasicBtn>탈퇴하기</BasicBtn>
+        <BasicBtn onClick={() => {}}>탈퇴하기</BasicBtn>
       </div>
     </Container>
   );

@@ -60,8 +60,8 @@ const Header = () => {
       setUserInfo({ email: "", name: "", gender: "", age: 0 });
       removeLocalStorage("loginStatus");
       removeLocalStorage("userInfo");
-      removeCookie("accessToken");
-      removeCookie("refreshToken");
+      removeCookie("accessToken", { path: "/" });
+      removeCookie("refreshToken", { path: "/" });
       navigate("/");
     }
   };
