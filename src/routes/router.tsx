@@ -11,7 +11,7 @@ import TripTest from "../pages/recommend/TripTestPage";
 import TestResult from "../pages/recommend/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
-import Reservation from "../pages/reservation/Reservation";
+import Reservation from "../pages/reservation/ReservationPage";
 import MyPage from "../pages/mypage/MyPage";
 import MyReservation from "../pages/mypage/MyReservation";
 import Favor from "../pages/mypage/Favor";

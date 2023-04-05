@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
+import Product from "../groups/Product";
 
 type Props = {};
 
@@ -9,22 +10,24 @@ const RecommendPage = (props: Props) => {
   return (
     <Container>
       {/* 저장된 테스트 결과 없을 때 */}
-      {/* <NoResult onClick={() => navigate("/test")}>
+      <NoResult onClick={() => navigate("/test")}>
         <h2>테스트 후 추천받을 수 있음</h2>
         <section>테스트 시작하기</section>
-      </NoResult> */}
+      </NoResult>
 
       {/* 로컬스토리지에 저장된 테스트 결과 있을 때 / 테스트화면에서 더보기 누르면 여기로 이동*/}
-      <HasResult>
-        <section className="top-section">
-          <div className="title">
+      {/* <HasResult>
+        <section>
+          <div className="page-title">
             <h1>"나이스샷 - 골프패키지"</h1>
-            <h2>유형에 맞는 추천상품입니다.</h2>
+            <h2>유형의 당신에게 맞춤 상품을 추천드려요!</h2>
           </div>
           <button onClick={() => navigate("/test")}>테스트 다시 하기</button>
         </section>
-        <div>카테고리 네모 가져오기..</div>
-      </HasResult>
+        <section>
+          <Product />
+        </section>
+      </HasResult> */}
     </Container>
   );
 };
@@ -75,21 +78,27 @@ const HasResult = styled.div`
     display: flex;
     justify-content: space-around;
 
-    .title {
+    .page-title {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-bottom: 50px;
+      gap: 20px;
+      margin-bottom: 20px;
 
       h1 {
-        font-size: 40px;
+        font-size: 35px;
         font-weight: bold;
         color: var(--color-blue);
       }
       h2 {
-        font-size: 30px;
+        font-size: 28px;
         font-weight: bold;
       }
+    }
+
+    ul {
+      margin: 30px auto;
+      border-top: 2px solid var(--color-grayscale40);
+      padding-top: 30px;
     }
 
     button {
@@ -100,10 +109,46 @@ const HasResult = styled.div`
       cursor: pointer;
       background-color: var(--color-blue);
       color: white;
-      font-size: 30px;
+      font-size: 28px;
 
       :hover {
         background-color: var(--color-grayscale40);
+      }
+    }
+  }
+
+  @media (max-width: 850px) {
+    section {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+
+      .page-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 20px;
+        margin-bottom: 30px;
+
+        h1 {
+          font-size: 25px;
+        }
+        h2 {
+          font-size: 18px;
+          line-height: 24px;
+        }
+      }
+
+      button {
+        width: 150px;
+        height: 60px;
+        font-size: 20px;
+        margin: auto;
+
+        :hover {
+          background-color: var(--color-grayscale40);
+        }
       }
     }
   }
