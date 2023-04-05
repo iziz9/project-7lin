@@ -69,3 +69,17 @@ export interface TestResultProductType {
   briefExplanation: string;
   thumbnail: string;
 }
+
+// 상품 조회 instance
+export interface postProductResultType {
+  category: [
+    {
+      mainCategory: string;
+    },
+  ];
+  minPeriod?: number;
+  maxPeriod?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: string;
+}

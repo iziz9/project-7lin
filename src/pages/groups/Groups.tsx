@@ -5,29 +5,49 @@ import { useMediaQuery } from "react-responsive";
 import SubMenu from "./SubMenu";
 import Product from "./Product";
 import Filter from "./Filter";
+import { postProductResult } from "../../apis/request";
+import { postProductResultType } from "../../@types/data";
 
 const Groups = () => {
+  let testdata: postProductResultType = {
+    category: [
+      {
+        mainCategory: "GROUP",
+      },
+    ],
+  };
+
+  const [currentPage, setCurrentPage] = useState(2);
+  const [pages, setPages] = useState(1);
+
+  const renderProduct = async () => {
+    const result = await postProductResult(testdata, currentPage);
+
+    setPages(Math.round(result.data.totalElements / 12));
+  };
+
+  // 페이지네이션 함수
+  const pagenation = () => {
+    let arr = [];
+    for (let i = 1; i <= pages; i++) {
+      arr.push(
+        <li
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={i === currentPage ? "selected" : ""}
+        >
+          {i}
+        </li>,
+      );
+    }
+    return arr;
+  };
+
+  renderProduct();
+
   return (
     <Container>
-      {/* <Description>
-        <h2>여행지보다 동행자가 중요한 당신!</h2>
-        <h3>함께가고 싶은 동행그룹을 찾아보세요.</h3>
-      </Description> */}
       <SubMenu />
-      {/* <h1>그룹별 여행</h1> */}
-      {/* {!isMobile && (
-          <FilterList>
-            <li>액티브 시니어</li>
-            <li>휴양지 러버</li>
-            <li>영화 마니아</li>
-            <li>미식가 시니어</li>
-            <li>자연 마니아</li>
-            <li>역사 마니아</li>
-            <li>스포츠 마니아</li>
-            <li>호캉스 마니아</li>
-          </FilterList>
-        )} */}
-      {/* 상품 리스트 */}
       <div className="body">
         <Filter />
         <div>
@@ -36,26 +56,12 @@ const Groups = () => {
       </div>
       <Pages>
         <li>{"<"}</li>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
+        {pagenation()}
         <li>{">"}</li>
       </Pages>
     </Container>
   );
 };
-
-const Description = styled.div`
-  h2 {
-    font-size: 35px;
-    margin-bottom: 14px;
-  }
-  h3 {
-    font-size: 30px;
-  }
-`;
 
 // 임시 컴포넌트
 const Container = styled.div`
@@ -86,24 +92,9 @@ const Container = styled.div`
       flex-direction: column;
     }
   }
-`;
 
-const FilterList = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(5, 184px);
-  grid-auto-rows: 62px;
-  column-gap: 20px;
-  row-gap: 16px;
-  margin: 0 auto;
-
-  li {
-    height: 100%;
-    font-size: 23px;
-    background-color: #ddd;
-    border-radius: 27px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .selected {
+    color: red;
   }
 `;
 
