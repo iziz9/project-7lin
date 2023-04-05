@@ -58,7 +58,7 @@ const Login = () => {
     onSuccess: (res: any) => {
       if (res) {
         console.log(res);
-        const { email, name, age, gender, tokenDto } = res.data;
+        const { email, name, age, gender, tokenDto } = res.data; // res.response
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
           maxAge: 1800,
@@ -76,11 +76,11 @@ const Login = () => {
       }
     },
     onError: (error) => {
-      alert("로그인 실패" + error);
+      alert("로그인 실패: " + error);
     },
   });
 
-  const onSubmitHandler: SubmitHandler<LoginFormValue> = (data) => {
+  const onSubmitHandler: SubmitHandler<LoginFormValue> = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const loginPayload: LoginFormValue = {
       email: data.email,

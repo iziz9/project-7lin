@@ -11,6 +11,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { FindIdFormValue, FindPwFormValue } from "../../../@types/data";
+import { findId, findPassword } from "../../../apis/auth";
+import { useMutation, useQuery } from "react-query";
 
 interface Props {
   findPw?: boolean;
@@ -32,16 +34,6 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
   };
 
   const description = setDescription();
-
-  const showIdModalData = {
-    title: "아이디 찾기",
-    content: <ShowIdModal />,
-  };
-
-  const showPwModalData = {
-    title: "비밀번호 찾기",
-    content: <ShowPwModal />,
-  };
 
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -85,11 +77,59 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
     mode: "onBlur",
   });
 
-  const onSubmitHandler: SubmitHandler<FindIdFormValue | FindPwFormValue> = (
-    data,
-  ) => {
-    console.log(JSON.stringify(data, null, 2));
-    isFindId ? openModal(showIdModalData) : openModal(showPwModalData);
+  const findPwMutation = useMutation(findPassword, {
+    onSuccess: (res: any) => {
+      if (res) {
+        console.log(res);
+        openModal(showPwModalData);
+      }
+    },
+    onError: (error) => {
+      alert("비밀번호 찾기 실패: " + error);
+      openModal(showPwModalData);
+    },
+  });
+
+  const showPwModalData = {
+    title: "비밀번호 찾기",
+    content: <ShowPwModal email={findPwForm.getValues("email")} />,
+  };
+
+  const onSubmitHandler: SubmitHandler<
+    FindIdFormValue | FindPwFormValue
+  > = async (submitData) => {
+    console.log(JSON.stringify(submitData, null, 2));
+
+    const phone = submitData.phone.replaceAll("-", "");
+
+    if (isFindId && "name" in submitData) {
+      const findIdPayload: FindIdFormValue = {
+        name: submitData.name,
+        phone,
+      };
+      try {
+        const data = await findId(findIdPayload);
+        console.log(data);
+        const showIdModalData = {
+          title: "아이디 찾기",
+          content: (
+            <ShowIdModal
+              name={findIdForm.getValues("name")}
+              email={data.data.email}
+            />
+          ),
+        };
+        openModal(showIdModalData);
+      } catch (error: any) {
+        alert("아이디 찾기 실패: " + error);
+      }
+    } else if (!isFindId && "email" in submitData) {
+      const findPwPayload: FindPwFormValue = {
+        email: submitData.email,
+        phone,
+      };
+      findPwMutation.mutate(findPwPayload);
+    }
   };
 
   return (

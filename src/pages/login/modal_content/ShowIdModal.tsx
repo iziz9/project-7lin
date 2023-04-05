@@ -5,7 +5,12 @@ import { useModal } from "../../../hooks/useModal";
 import { scrollToTop } from "../../../utils/scroll";
 import FindIdPasswordModal from "./FindIdPasswordModal";
 
-const ShowIdModal = () => {
+interface Props {
+  name: string;
+  email: string;
+}
+
+const ShowIdModal = ({ name, email }: Props) => {
   const { openModal, closeModal } = useModal();
 
   const findIdPasswordModalData = {
@@ -16,8 +21,8 @@ const ShowIdModal = () => {
   return (
     <Container>
       <div className="show-id">
-        <span className="name">7조</span>님의 아이디는
-        <span className="id"> 7lin@gmail.com</span> 입니다.
+        <span className="name">{name}</span>님의 아이디는
+        <span className="id"> {email}</span> 입니다.
       </div>
       <div
         style={{ marginBottom: "10px" }}
