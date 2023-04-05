@@ -7,9 +7,6 @@ import Product from "./Product";
 import Filter from "./Filter";
 
 const Groups = () => {
-  // 반응형
-  const isMobile = useMediaQuery({ query: "(max-width:850px)" });
-
   return (
     <Container>
       {/* <Description>
@@ -31,9 +28,11 @@ const Groups = () => {
           </FilterList>
         )} */}
       {/* 상품 리스트 */}
-      <div className="product">
-        {!isMobile && <Filter />}
-        <Product />
+      <div className="body">
+        <Filter />
+        <div>
+          <Product />
+        </div>
       </div>
       <Pages>
         <li>{"<"}</li>
@@ -72,7 +71,7 @@ const Container = styled.div`
     font-size: 20px;
   }
 
-  .product {
+  .body {
     display: flex;
     gap: 20px;
     justify-content: space-between;
@@ -80,6 +79,12 @@ const Container = styled.div`
 
   @media (max-width: 850px) {
     align-items: center;
+    margin: 0;
+    gap: 18px;
+
+    .body {
+      flex-direction: column;
+    }
   }
 `;
 

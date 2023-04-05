@@ -10,7 +10,7 @@ type PropsType = {
 
 const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width:850px)",
   });
   // 질문 3번째부터는 text input 대신 button형식으로 변경하기
   // 질문 순서에 따른 버튼목록
@@ -105,7 +105,7 @@ const InputSection = styled.section`
   bottom: 20px;
   border-radius: 8px;
 
-  @media (max-width: 849px) {
+  @media (max-width: 850px) {
     bottom: 10px;
   }
 `;
@@ -182,7 +182,7 @@ const ButtonsForm = styled.form`
     }
   }
 
-  @media (max-width: 849px) {
+  @media (max-width: 850px) {
     width: 250px;
     height: 130px;
     font-size: 12px;
@@ -257,7 +257,7 @@ const TextForm = styled.form`
     }
   }
 
-  @media (max-width: 849px) {
+  @media (max-width: 850px) {
     input {
       width: 250px;
       height: 50px;

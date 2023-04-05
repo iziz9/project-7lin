@@ -12,7 +12,7 @@ const MainPage = (props: Props) => {
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const isMobile: boolean = useMediaQuery({
-    query: "(max-width:849px)",
+    query: "(max-width:850px)",
   });
 
   return (
@@ -45,7 +45,7 @@ const MainPage = (props: Props) => {
               ></iframe>
             )}
           </div>
-          <div className="test" onClick={() => navigate("test")}>
+          <div className="test" onClick={() => navigate("/test")}>
             <img src="/test.png" alt="나의 여행 유형 테스트" />
           </div>
         </MobileMain>
@@ -73,7 +73,7 @@ const MainPage = (props: Props) => {
                 ></iframe>
               )}
             </Youtube>
-            <Test onClick={() => navigate("test")}>
+            <Test onClick={() => navigate("/test")}>
               <img src="/test.png" alt="나의 여행 유형 테스트" />
             </Test>
           </div>
@@ -179,7 +179,7 @@ const MobileMain = styled.div`
 
 const PcMain = styled.div`
   .inner {
-    margin: 0 100px;
+    margin: 0 60px;
   }
 `;
 

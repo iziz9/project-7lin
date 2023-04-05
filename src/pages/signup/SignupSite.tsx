@@ -6,7 +6,11 @@ import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
 import { BasicSelect } from "../../commons/Select";
-import { SignupFormValue } from "../../@types/data";
+import { SignUpRequest, SignupFormValue } from "../../@types/data";
+import { useMutation } from "react-query";
+import { idCheck, signUp } from "../../apis/auth";
+import { scrollToTop } from "../../utils/scroll";
+import { useNavigate } from "react-router-dom";
 
 const SignupSite = () => {
   const validationSchema = Yup.object().shape({
@@ -53,6 +57,7 @@ const SignupSite = () => {
     handleSubmit,
     watch,
     reset,
+    getValues,
     setValue,
     setError,
     clearErrors,
@@ -105,6 +110,31 @@ const SignupSite = () => {
       : setTerms(terms.filter((term) => term !== e.target.name));
   };
 
+  const [isCheckDuplicate, setIsCheckDuplicate] = useState<boolean>(false);
+  const [isIdDuplicate, setIsIdDuplicate] = useState<boolean>(true);
+
+  const checkIdDuplicate = async () => {
+    setIsCheckDuplicate(true);
+    const { email } = getValues();
+
+    if (errors.email || email === "") {
+      alert("이메일을 제데로 입력해주세요");
+      return;
+    }
+
+    const data: any = await idCheck(email);
+    setIsIdDuplicate(data);
+
+    if (data === true) {
+      clearErrors("email");
+      setError("email", { message: "이미 존재하는 이메일입니다!" });
+      alert("이미 존재하는 이메일입니다!");
+      return;
+    } else {
+      clearErrors("email");
+    }
+  };
+
   const resetForm = () => {
     reset();
     setTerms([]);
@@ -115,8 +145,69 @@ const SignupSite = () => {
     });
   };
 
-  const onSubmitHandler: SubmitHandler<SignupFormValue> = (data) => {
+  const signupMutation = useMutation(signUp, {
+    onSuccess: (res) => {
+      if (res) {
+        console.log(res);
+        // 자동 로그인 시도해보기
+        navigate("/login");
+      }
+    },
+    onError: (error) => {
+      alert("회원가입 실패" + error);
+    },
+  });
+
+  const onSubmitHandler: SubmitHandler<SignupFormValue> = async (data) => {
     console.log(JSON.stringify(data, null, 2));
+
+    if (!isCheckDuplicate) {
+      alert("이메일 중복검사를 해주세요!");
+      scrollToTop();
+      return;
+    }
+
+    if (isIdDuplicate) {
+      alert("이미 존재하는 이메일입니다!");
+      scrollToTop();
+      return;
+    }
+
+    const phone = data.phone.replaceAll("-", "");
+    const birth = [data.year, data.month, data.day].join("-");
+    const age = new Date().getFullYear() - Number(data.year);
+
+    const signupPayload: SignUpRequest = {
+      email: data.email,
+      password: data.password,
+      validPassword: data.confirmPassword,
+      name: data.name,
+      phone: phone,
+      birth: birth,
+      gender: data.gender,
+      age: age.toString(),
+    };
+    signupMutation.mutate(signupPayload);
+  };
+
+  const onErrorSubmit = () => {
+    if (!isCheckDuplicate) {
+      clearErrors([
+        "password",
+        "confirmPassword",
+        "day",
+        "month",
+        "year",
+        "phone",
+        "gender",
+        "acceptTerms",
+        "name",
+        "email",
+      ]);
+      alert("이메일 중복검사를 해주세요!");
+      scrollToTop();
+      return;
+    }
   };
 
   useEffect(() => {
@@ -129,25 +220,52 @@ const SignupSite = () => {
     }
   }, [terms]);
 
+  const [email, setEmail] = useState<string>("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsCheckDuplicate(false);
+    if (!isIdDuplicate) {
+      setIsIdDuplicate(true);
+      clearErrors([
+        "password",
+        "confirmPassword",
+        "day",
+        "month",
+        "year",
+        "phone",
+        "gender",
+        "acceptTerms",
+        "name",
+      ]);
+    }
+  }, [email]);
+
   return (
     <Container>
       <div className="wrapper">
         <div className="title">회원가입</div>
-        <LoginForm onSubmit={handleSubmit(onSubmitHandler)}>
+        <LoginForm onSubmit={handleSubmit(onSubmitHandler, onErrorSubmit)}>
           <div className="id-pw">
             {errors.email ? (
               <div className="invalid">{errors.email?.message}</div>
             ) : null}
+            {isIdDuplicate || !isCheckDuplicate || errors.email ? null : (
+              <div className="valid">사용 가능한 이메일입니다!</div>
+            )}
             <div className="id-area">
               <div className="input_form id">
                 <BasicInput
                   type="text"
                   placeholder="이메일"
                   className={errors.email ? "warning" : ""}
-                  {...register("email")}
+                  {...register("email", {
+                    onChange: (e) => setEmail(e.target.value),
+                  })}
                 />
               </div>
-              <div className="btn-wrapper">
+              <div className="btn-wrapper" onClick={checkIdDuplicate}>
                 <BasicBtn
                   type="button"
                   style={{ height: "49px" }}
@@ -163,6 +281,7 @@ const SignupSite = () => {
               ) : null}
               <BasicInput
                 className={errors.password ? "warning" : ""}
+                disabled={isIdDuplicate ? true : false}
                 type="password"
                 placeholder="비밀번호 (8 ~ 16자)"
                 {...register("password")}
@@ -174,6 +293,7 @@ const SignupSite = () => {
               ) : null}
               <BasicInput
                 className={errors.confirmPassword ? "warning" : ""}
+                disabled={isIdDuplicate ? true : false}
                 type="password"
                 placeholder="비밀번호 확인"
                 {...register("confirmPassword")}
@@ -191,6 +311,7 @@ const SignupSite = () => {
             <div>
               <BasicInput
                 className={errors.name ? "warning" : ""}
+                disabled={isIdDuplicate ? true : false}
                 type="text"
                 placeholder="이름을 입력하세요."
                 {...register("name")}
@@ -208,7 +329,8 @@ const SignupSite = () => {
             <div>
               <BasicInput
                 className={errors.phone ? "warning" : ""}
-                type="text"
+                disabled={isIdDuplicate ? true : false}
+                type="tel"
                 placeholder="전화번호를 입력하세요."
                 {...register("phone")}
               />
@@ -225,6 +347,7 @@ const SignupSite = () => {
             <div className="check-birth">
               <BasicSelect
                 className={errors.year ? "warning" : ""}
+                disabled={isIdDuplicate ? true : false}
                 {...register("year", {
                   onChange: (e) => setDate({ ...date, year: e.target.value }),
                 })}
@@ -239,6 +362,7 @@ const SignupSite = () => {
               </BasicSelect>
               <BasicSelect
                 className={errors.month ? "warning" : ""}
+                disabled={isIdDuplicate ? true : false}
                 {...register("month", {
                   onChange: (e) => setDate({ ...date, month: e.target.value }),
                 })}
@@ -253,6 +377,7 @@ const SignupSite = () => {
               </BasicSelect>
               <BasicSelect
                 className={errors.day ? "warning" : ""}
+                disabled={isIdDuplicate ? true : false}
                 {...register("day", {
                   onChange: (e) => setDate({ ...date, day: e.target.value }),
                 })}
@@ -277,11 +402,21 @@ const SignupSite = () => {
             </div>
             <div className="label-wrapper">
               <label>
-                <input type="radio" value="FEMALE" {...register("gender")} />
+                <input
+                  type="radio"
+                  value="FEMALE"
+                  disabled={isIdDuplicate ? true : false}
+                  {...register("gender")}
+                />
                 여성
               </label>
               <label>
-                <input type="radio" value="MALE" {...register("gender")} />
+                <input
+                  type="radio"
+                  value="MALE"
+                  disabled={isIdDuplicate ? true : false}
+                  {...register("gender")}
+                />
                 남성
               </label>
             </div>
@@ -305,6 +440,7 @@ const SignupSite = () => {
                     <input
                       type="checkbox"
                       checked={terms.length === 3 ? true : false}
+                      disabled={isIdDuplicate ? true : false}
                       {...register("acceptTerms")}
                       onChange={checkAll}
                     />
@@ -317,6 +453,7 @@ const SignupSite = () => {
                       type="checkbox"
                       name="age"
                       checked={terms.includes("age") ? true : false}
+                      disabled={isIdDuplicate ? true : false}
                       onChange={check}
                     />
                     <span>(필수) </span> 만 15세 이상입니다.
@@ -326,6 +463,7 @@ const SignupSite = () => {
                       type="checkbox"
                       name="service"
                       checked={terms.includes("service") ? true : false}
+                      disabled={isIdDuplicate ? true : false}
                       onChange={check}
                     />
                     <span>(필수)</span> 서비스 이용약관 동의
@@ -335,6 +473,7 @@ const SignupSite = () => {
                       type="checkbox"
                       name="personal"
                       checked={terms.includes("personal") ? true : false}
+                      disabled={isIdDuplicate ? true : false}
                       onChange={check}
                     />
                     <span>(필수)</span> 개인정보 수집 및 이용 동의
@@ -455,13 +594,21 @@ const Container = styled.div`
     color: #dc3545;
   }
 
+  .valid {
+    width: 100%;
+    padding: 0.8rem 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0d99ff;
+  }
+
   @media (max-width: 850px) {
     margin-top: 35px;
     margin-bottom: 0;
     font-size: 16px;
     width: 80%;
     .wrapper {
-      padding: 0 20px;
+      padding: 0px;
     }
     .title {
       font-size: 20px;
@@ -475,6 +622,9 @@ const Container = styled.div`
       margin-bottom: 10px;
     }
     .invalid {
+      font-size: 16px;
+    }
+    .valid {
       font-size: 16px;
     }
     section {

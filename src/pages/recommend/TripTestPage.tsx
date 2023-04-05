@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { scrollToTop } from "../../utils/scroll";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
+import { useNavigate } from "react-router";
+import TestResult from "./TestResult";
 
 type Props = {};
 
 const TripTest = (props: Props) => {
+  const navigate = useNavigate();
   const [orderNumber, setOrderNumber] = useState(0);
+  const [resultData, setResultData] = useState("");
+  const [isTestFinished, setIsTestFinished] = useState(false); //전역상태로 바꾸기
 
   useEffect(() => {
     scrollToTop();
@@ -24,8 +29,9 @@ const TripTest = (props: Props) => {
   // 이전 문항으로 돌아간 게 아니면 right 버튼 x
   // 마지막 장에서는 right 버튼 x, 결과보기 버튼 o
 
-  const testSubmit = () => {
-    console.log("api 연결");
+  const testSubmit = (answer: string) => {
+    setIsTestFinished(true);
+    setResultData(answer);
   };
 
   const testContent = [
@@ -36,7 +42,8 @@ const TripTest = (props: Props) => {
       question: "어떤 여행을 가고 싶으세요?",
       answers: [
         "여기저기 보고 느끼는 여행이 좋아!",
-        "쉬고싶다... 힐링 여행이 최고지!",
+        "남들과는 다른 특별한 경험을 해 보고 싶어!",
+        "힐링 여행이 최고지!",
       ],
     },
     {
@@ -45,8 +52,7 @@ const TripTest = (props: Props) => {
       desc: "출발하기 전에 정해야 해!",
       question: "어떤 수단을 이용할까요?",
       answers: [
-        "당연히 렌트 해서 가는거지",
-        "기차가 최고야 KTX 타고 고고",
+        "튼튼한 두 다리만 있으면 되지!",
         "지하철만 타도 갈 수 있는게 여행이야",
         "여행? 그거 비행기 타야 여행 아니야?",
       ],
@@ -58,8 +64,8 @@ const TripTest = (props: Props) => {
       question: "어떤 물건을 두고 왔을까요?",
       answers: [
         "비상시 쓸 상비약을 안 챙겼네ㅠㅠ",
-        "설마 내 장비를 두고 온 건 아니겠지?",
         "컵라면이라도 좀 가져왔어야 했는데...",
+        "설마 내 장비를 두고 온 건 아니겠지?",
       ],
     },
     {
@@ -68,58 +74,52 @@ const TripTest = (props: Props) => {
       desc: "드디어 도착했다! 역시 여행은 도전!",
       question: "어떤 액티비티를 즐겨볼까요?",
       answers: [
-        "이번에도 남들이 안 가본 새로운 곳을 찾아",
-        "액티비티도 좋지만 기도부터 해야지",
-        "이번 여행은 건강건강! 도전하자!",
-      ],
-    },
-    {
-      background: 'url("/trip-test5.png")',
-      numberImg: "/number5.png",
-      desc: "역시 여행은 도전!",
-      question: "어떤 액티비티를 즐겨볼까요?",
-      answers: [
-        "이날을 위해 스크린에서 연습했지. 라운딩 가자!",
-        "멋진 풍경을 배경삼아 한번 걸어볼까?",
-        "일단 그래도 이 곳 문화가 어떤지 알아봐야지",
-        "노는 것도 좋지만 도움이 필요한 곳은 없을까?",
+        "이날을 위해 스크린에서 연습했지. 라운딩 가자!", //+골프 [스크린]
+        "멋진 풍경을 배경삼아 한번 걸어볼까?", //+ 트레킹 [걸어]
+        "따뜻한 햇볕 아래 해변을 산책하고 싶어!", //+휴양지 [해변]
+        "남들이 안 가본 새로운 곳을 찾아", //+문화탐방 [새로운]
       ],
     },
   ];
 
   return (
-    <Container background={testContent[orderNumber].background}>
-      {orderNumber === 0 ? null : (
-        <GoChevronLeft className="left" onClick={() => goPrev()} />
+    <>
+      {isTestFinished ? (
+        <TestResult result={resultData} />
+      ) : (
+        <Container background={testContent[orderNumber].background}>
+          {/* {orderNumber === 0 ? null : (
+            <GoChevronLeft className="left" onClick={() => goPrev()} />
+          )} */}
+          <section>
+            <img src={testContent[orderNumber].numberImg} alt="문항 번호" />
+            <Title>
+              <span className="desc"> {testContent[orderNumber].desc} </span>
+              <span className="question">
+                {testContent[orderNumber].question}
+              </span>
+            </Title>
+            <Buttons>
+              {testContent[orderNumber].answers.map((answer, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    orderNumber === testContent.length - 1
+                      ? testSubmit(answer)
+                      : goNext();
+                  }}
+                >
+                  {answer}
+                </button>
+              ))}
+            </Buttons>
+          </section>
+          {/* {orderNumber === testContent.length - 1 ? null : (
+            <GoChevronRight className="right" onClick={() => goNext()} />
+          )} */}
+        </Container>
       )}
-      <section>
-        <img src={testContent[orderNumber].numberImg} alt="문항 번호" />
-        <Title>
-          <span className="desc"> {testContent[orderNumber].desc} </span>
-          <span className="question">{testContent[orderNumber].question}</span>
-        </Title>
-        <Buttons>
-          {testContent[orderNumber].answers.map((answer, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                orderNumber === testContent.length - 1
-                  ? testSubmit()
-                  : goNext();
-              }}
-            >
-              {answer}
-            </button>
-          ))}
-        </Buttons>
-        {/* <div className="submit">
-          <button onClick={() => testSubmit()}>결과보기</button>
-        </div> */}
-      </section>
-      {orderNumber === testContent.length - 1 ? null : (
-        <GoChevronRight className="right" onClick={() => goNext()} />
-      )}
-    </Container>
+    </>
   );
 };
 
@@ -166,23 +166,25 @@ const Container = styled.div<{ background: string }>`
       top: 20px;
       left: 20px;
     }
+  }
 
-    // .submit {
-    //   display: flex;
-    //   justify-content: center;
+  @media (max-width: 850px) {
+    background-image: none;
+    height: 100%;
 
-    //   button {
-    //     width: 123px;
-    //     height: 46px;
-    //     margin-top: 30px;
-    //     color: white;
-    //     font-size: 23px;
-    //     background-color: var(--color-blue);
-    //     border: none;
-    //     border-radius: 8px;
-    //     cursor: pointer;
-    //   }
-    // }
+    section {
+      position: relative;
+      width: 80%;
+      height: 380px;
+      margin-top: 40px;
+
+      img {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        width: 40px;
+      }
+    }
   }
 `;
 
@@ -203,6 +205,20 @@ const Title = styled.div`
     font-size: 30px;
     font-weight: bold;
   }
+
+  @media (max-width: 850px) {
+    margin-top: 80px;
+    gap: 8px;
+
+    .desc {
+      font-size: 15px;
+    }
+
+    .question {
+      font-size: 20px;
+      font-weight: bold;
+    }
+  }
 `;
 
 const Buttons = styled.div`
@@ -213,7 +229,7 @@ const Buttons = styled.div`
 
   button {
     width: 75%;
-    height: 41px;
+    padding: 8px 5px;
     margin: 0 auto;
     border: 2px solid var(--color-blue);
     border-radius: 8px;
@@ -224,6 +240,18 @@ const Buttons = styled.div`
     :hover {
       background-color: var(--color-blue);
       color: white;
+    }
+  }
+
+  @media (max-width: 850px) {
+    margin-top: 40px;
+    gap: 10px;
+
+    button {
+      width: 80%;
+      height: fit-content;
+      font-size: 13px;
+      word-break: keep-all;
     }
   }
 `;
