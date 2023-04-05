@@ -13,6 +13,7 @@ const Modal = () => {
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: "rgba(79, 77, 77, 0.7)",
+      zIndex: 10,
     },
     content: {
       padding: "40px",
