@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactModal from "react-modal";
 import styled from "styled-components";
 import { useModal } from "../hooks/useModal";
@@ -6,6 +6,13 @@ import { IoMdClose } from "react-icons/io";
 
 const Modal = () => {
   const { modalDataState, closeModal } = useModal();
+
+  useEffect(() => {
+    const bodyEl = document.querySelector("body");
+    if (bodyEl && modalDataState.isOpen) bodyEl.style.overflowY = "hidden";
+    else if (bodyEl && !modalDataState.isOpen)
+      bodyEl.style.overflowY = "scroll";
+  }, [modalDataState.isOpen]);
 
   const modalStyle = {
     overlay: {
@@ -21,6 +28,7 @@ const Modal = () => {
       width: "50%",
       maxWidth: "400px",
       minWidth: "248px",
+      maxHeight: "80%",
       margin: "auto",
       // position: "relative",
       top: "none",

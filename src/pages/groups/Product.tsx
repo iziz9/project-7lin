@@ -2,6 +2,7 @@ import React from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useMediaQuery } from "react-responsive";
 import styled, { css } from "styled-components";
+import { Link } from "react-router-dom";
 
 // 목업 데이터
 const mockupData = [
@@ -51,16 +52,26 @@ const Product = () => {
   return (
     <Container>
       {mockupData.map((props) => (
-        <Item key={props.id}>
-          <img className="image" src={props.image} alt={props.title} />
-          <AiOutlineHeart />
-          <h3 className="title">{props.title}</h3>
-          <span className="price">{props.price.toLocaleString("ko-KR")}원</span>
-          <p
-            className="body"
-            dangerouslySetInnerHTML={{ __html: props.discription }}
-          ></p>
-        </Item>
+        <Link
+          key={props.id}
+          to={`/product/${props.id}`}
+          state={{
+            ...props,
+          }}
+        >
+          <Item key={props.id}>
+            <img className="image" src={props.image} alt={props.title} />
+            <AiOutlineHeart />
+            <h3 className="title">{props.title}</h3>
+            <span className="price">
+              {props.price.toLocaleString("ko-KR")}원
+            </span>
+            <p
+              className="body"
+              dangerouslySetInnerHTML={{ __html: props.discription }}
+            ></p>
+          </Item>
+        </Link>
       ))}
     </Container>
   );
