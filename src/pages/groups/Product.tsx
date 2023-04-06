@@ -62,6 +62,8 @@ interface itemProps {
 }
 
 const Product = (props: productProps) => {
+  const [item, setItem] = useState([{}]);
+
   const renderProduct = () => {
     let arr = [];
     for (let i = 0; i < props.count; i++) {
