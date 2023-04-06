@@ -7,6 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import { intro, questions } from "./questionsAndAnswers";
 import { useRecoilState } from "recoil";
 import { chatbotStepState } from "../../store/chatbotAtom";
+import { BasicBtn } from "../Button";
 
 export interface ChatListType {
   person: string;
@@ -44,8 +45,14 @@ const FloatingModal = () => {
   return (
     <Modal>
       <div className="inner">
-        <PersonalData />
-        <FloatingInput setMyMessage={setMyMessage} orderNumber={orderNumber} />
+        <div className="check-terms">
+          <h2>개인정보 수집이용 동의</h2>
+          <PersonalData />
+          <CheckTermsBtn onClick={() => console.log("step2로 이동")}>
+            동의하고 시작하기
+          </CheckTermsBtn>
+        </div>
+        {/* <FloatingInput setMyMessage={setMyMessage} orderNumber={orderNumber} /> */}
       </div>
     </Modal>
   );
@@ -69,6 +76,27 @@ const Modal = styled.div`
     width: 420px;
     height: 530px;
     margin: 20px auto;
+
+    .check-terms {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      pre {
+        height: 500px;
+      }
+
+      button {
+        margin: 25px auto 0;
+      }
+    }
   }
 
   @media (max-width: 850px) {
@@ -81,6 +109,19 @@ const Modal = styled.div`
       width: 350px;
       height: 300px;
       margin: 15px auto;
+
+      .check-terms {
+        h2 {
+          text-align: center;
+          margin-bottom: 20px;
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        pre {
+          height: 300px;
+        }
+      }
     }
   }
 
@@ -96,6 +137,11 @@ const Modal = styled.div`
       margin: 15px auto;
     }
   }
+`;
+
+const CheckTermsBtn = styled(BasicBtn)`
+  margin-top: 30px;
+  width: 85%;
 `;
 
 export default FloatingModal;
