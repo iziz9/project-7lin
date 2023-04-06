@@ -91,7 +91,7 @@ const Filter = () => {
                         />
                         {item}
                       </label>
-                    ))}{" "}
+                    ))}
                   </div>
                 </section>
               ))}
