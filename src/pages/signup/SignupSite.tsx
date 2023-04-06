@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
 import { PersonalData, Policy } from "../../commons/Terms";
 import Modal from "../../commons/Modal";
-import { AxiosResponse } from "axios";
 
 const SignupSite = () => {
   const validationSchema = Yup.object().shape({
@@ -125,16 +124,21 @@ const SignupSite = () => {
       return;
     }
 
-    const data = await idCheck(email);
-    setIsIdDuplicate(data);
+    try {
+      const data = await idCheck(email);
+      setIsIdDuplicate(data);
 
-    if (data === true) {
-      clearErrors("email");
-      setError("email", { message: "이미 존재하는 이메일입니다!" });
-      alert("이미 존재하는 이메일입니다!");
-      return;
-    } else {
-      clearErrors("email");
+      if (data === true) {
+        clearErrors("email");
+        setError("email", { message: "이미 존재하는 이메일입니다!" });
+        alert("이미 존재하는 이메일입니다!");
+        return;
+      } else {
+        clearErrors("email");
+      }
+    } catch (e) {
+      alert("이메일 중복검사 실패");
+      setIsCheckDuplicate(false);
     }
   };
 
@@ -152,7 +156,7 @@ const SignupSite = () => {
     }
 
     try {
-      const data: any = await phoneCheck(phone);
+      const data = await phoneCheck(phone);
       setIsPhoneDuplicate(data);
 
       if (data === true) {

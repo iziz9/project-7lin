@@ -20,7 +20,9 @@ export const idCheck = async (email: string) => {
 };
 
 export const phoneCheck = async (phone: string) => {
-  const data = await axiosInstance.post("/signUp/checkPhone", { phone });
+  const data: boolean = await axiosInstance.post("/signUp/checkPhone", {
+    phone,
+  });
   console.log(data);
   return data;
 };
