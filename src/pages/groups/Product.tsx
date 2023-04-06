@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useMediaQuery } from "react-responsive";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import { render } from "react-dom";
 
 // 목업 데이터
 const mockupData = [
@@ -48,33 +49,56 @@ const mockupData = [
   },
 ];
 
-const Product = () => {
-  return (
-    <Container>
-      {mockupData.map((props) => (
-        <Link
-          key={props.id}
-          to={`/product/${props.id}`}
-          state={{
-            ...props,
-          }}
-        >
-          <Item key={props.id}>
-            <img className="image" src={props.image} alt={props.title} />
+interface productProps {
+  count: number;
+}
+
+interface itemProps {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  thumbnail: string;
+  briefExplanation: string;
+}
+
+const Product = (props: productProps) => {
+  const [item, setItem] = useState([{}]);
+
+  const renderProduct = () => {
+    let arr = [];
+    for (let i = 0; i < props.count; i++) {
+      const itemString: string | null = sessionStorage.getItem(`product${i}`);
+      // null값 에러처리
+      if (!itemString) {
+        throw new Error("값이 없습니다.");
+      }
+      const item: itemProps = JSON.parse(itemString);
+
+      arr.push(
+        <Link key={i} to={`/product/${item.productId}`}>
+          <Item>
+            <img
+              className="image"
+              src={item.thumbnail}
+              alt={item.productName}
+            />
             <AiOutlineHeart />
-            <h3 className="title">{props.title}</h3>
+            <h3 className="title">{item.productName}</h3>
             <span className="price">
-              {props.price.toLocaleString("ko-KR")}원
+              {item.productPrice.toLocaleString("ko-KR")}원
             </span>
             <p
               className="body"
-              dangerouslySetInnerHTML={{ __html: props.discription }}
+              dangerouslySetInnerHTML={{ __html: item.briefExplanation }}
             ></p>
           </Item>
-        </Link>
-      ))}
-    </Container>
-  );
+        </Link>,
+      );
+    }
+    return arr;
+  };
+
+  return <Container>{renderProduct()}</Container>;
 };
 
 const Container = styled.ul`
