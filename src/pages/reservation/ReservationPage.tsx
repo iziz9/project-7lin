@@ -106,11 +106,11 @@ const Reservation = (props: Props) => {
             <h2>결제 수단</h2>
             <ul>
               <li>
-                <input type="radio" id="payment2" name="payment" checked />
+                <input type="radio" id="payment2" checked readOnly />
                 <label htmlFor="payment2">계좌 이체</label>
               </li>
               <li>
-                <input type="radio" id="payment3" name="payment" disabled />
+                <input type="radio" id="payment3" disabled readOnly />
                 <label htmlFor="payment3">
                   <span>신용/체크카드</span>
                   <span className="red">⚠️ 서비스 준비중입니다.</span>

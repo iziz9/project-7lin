@@ -8,7 +8,7 @@ type Props = {};
 
 const EditUserInfoModal = (props: Props) => {
   const { openModal, closeModal } = useModal();
-  // 상태관리쓰기
+  // 기존 정보 props내리기, placeholder대신 value 채워넣기
 
   return (
     <Container>
