@@ -4,7 +4,7 @@ import FloatingInput from "./FloatingInput";
 import { PersonalData } from "../Terms";
 import { TimeFormatEnum, currentTime } from "../../utils/CurrentTime";
 import { useMediaQuery } from "react-responsive";
-import { intro, questions } from "./questionsAndAnswers";
+import { ChatbotIntro1, questions } from "./questionsAndAnswers";
 import { useRecoilState } from "recoil";
 import { chatbotStepState } from "../../store/chatbotAtom";
 import { BasicBtn } from "../Button";
@@ -45,12 +45,20 @@ const FloatingModal = () => {
   return (
     <Modal>
       <div className="inner">
-        <div className="check-terms">
-          <h2>개인정보 수집이용 동의</h2>
+        <div className="intro">
+          {/* 모달 처음 오픈 */}
+          <div className="intro-text">{ChatbotIntro1}</div>
+          <IntroBtn onClick={() => console.log("step2로 이동")}>
+            여행그룹 추천 설문 시작하기
+          </IntroBtn>
+
+          {/* 시작하기 누른 후 */}
+
+          {/* <h2>개인정보 수집이용 동의</h2>
           <PersonalData />
-          <CheckTermsBtn onClick={() => console.log("step2로 이동")}>
+          <IntroBtn onClick={() => console.log("step2로 이동")}>
             동의하고 시작하기
-          </CheckTermsBtn>
+          </IntroBtn> */}
         </div>
         {/* <FloatingInput setMyMessage={setMyMessage} orderNumber={orderNumber} /> */}
       </div>
@@ -77,7 +85,7 @@ const Modal = styled.div`
     height: 530px;
     margin: 20px auto;
 
-    .check-terms {
+    .intro {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -96,6 +104,16 @@ const Modal = styled.div`
       button {
         margin: 25px auto 0;
       }
+
+      .intro-text {
+        width: 80%;
+        background-color: white;
+        margin: auto;
+        padding: 30px 20px;
+        white-space: pre-line;
+        font-size: 20px;
+        line-height: 25px;
+      }
     }
   }
 
@@ -110,7 +128,7 @@ const Modal = styled.div`
       height: 300px;
       margin: 15px auto;
 
-      .check-terms {
+      .intro {
         h2 {
           text-align: center;
           margin-bottom: 20px;
@@ -120,6 +138,11 @@ const Modal = styled.div`
 
         pre {
           height: 300px;
+        }
+
+        .intro-text {
+          font-size: 15px;
+          line-height: 20px;
         }
       }
     }
@@ -139,7 +162,7 @@ const Modal = styled.div`
   }
 `;
 
-const CheckTermsBtn = styled(BasicBtn)`
+const IntroBtn = styled(BasicBtn)`
   margin-top: 30px;
   width: 85%;
 `;

@@ -9,6 +9,12 @@ interface chatNumberType {
   answerNumber: number | null;
 }
 
+interface chatAnswersType {
+  answers: string[];
+}
+
+// 3개 어떻게 합칠 수 있나?
+
 //step0: firstOpen, 시작하기 버튼 생성됨
 //step1: 시작하기 버튼 누른 후, 개인정보동의 텍스트박스 및 버튼 생성됨
 //step2: 개인정보 동의 버튼 누른 후, 설문 시작
@@ -26,5 +32,13 @@ export const chatNumberState = atom<chatNumberType>({
   default: {
     orderNumber: 0,
     answerNumber: null,
+  },
+});
+
+// 전체 응답내용 순서대로 배열 저장-> api호출 시 꺼내서 보내주기
+export const chatAnswersState = atom({
+  key: "chatAnswersState",
+  default: {
+    answers: [],
   },
 });
