@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "axios";
 import { axiosInstance } from "./instance";
-import { postProductResultType } from "../@types/data";
+import { ProductRequestType, ProductResponseType } from "../@types/data";
 
 export const getTestResult = async (category: string) => {
   const res = await axiosInstance.post("/products?size=3", {
@@ -17,16 +17,19 @@ export const getTestResult = async (category: string) => {
 
 // 상품 조회 api
 export const postProductResult = async (
-  testdata: postProductResultType,
+  testdata: ProductRequestType,
   page: number,
 ) => {
-  const res = await axiosInstance.post(`/products?page=${page}`, {
-    categories: [
-      {
-        mainCategory: testdata.category[0].mainCategory,
-      },
-    ],
-  });
+  const res: ProductResponseType = await axiosInstance.post(
+    `/products?page=${page}`,
+    {
+      categories: [
+        {
+          mainCategory: testdata.category[0].mainCategory,
+        },
+      ],
+    },
+  );
   console.log(res);
 
   return res;

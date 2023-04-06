@@ -75,8 +75,8 @@ export interface TestResultProductType {
   thumbnail: string;
 }
 
-// 상품 조회 instance
-export interface postProductResultType {
+// 상품 조회 request
+export interface ProductRequestType {
   category: [
     {
       mainCategory: string;
@@ -87,4 +87,10 @@ export interface postProductResultType {
   minPrice?: number;
   maxPrice?: number;
   sort?: string;
+}
+
+// 상품 조회 response
+export interface ProductResponseType {
+  dataSize: number;
+  data: { products: object[]; totalElements: number };
 }

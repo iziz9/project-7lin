@@ -5,7 +5,7 @@ import SubMenu from "./SubMenu";
 import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
-import { postProductResultType } from "../../@types/data";
+import { ProductRequestType } from "../../@types/data";
 
 // 페이지네이션 함수
 const pagenation = (
@@ -29,7 +29,7 @@ const pagenation = (
 };
 
 const Groups = () => {
-  let testdata: postProductResultType = {
+  let testdata: ProductRequestType = {
     category: [
       {
         mainCategory: "GROUP",
@@ -43,6 +43,10 @@ const Groups = () => {
 
   const renderProduct = async () => {
     const result = await postProductResult(testdata, currentPage);
+
+    if (!result.dataSize) {
+      throw new Error("값이 없습니다.");
+    }
 
     for (let i = 0; i < result.dataSize; i++) {
       // 세션 스토리지에 상품 저장
