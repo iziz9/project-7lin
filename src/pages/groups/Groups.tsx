@@ -1,12 +1,32 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
-import { useMediaQuery } from "react-responsive";
 import SubMenu from "./SubMenu";
 import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
 import { postProductResultType } from "../../@types/data";
+
+// 페이지네이션 함수
+const pagenation = (
+  pages: number,
+  currentPage: number,
+  setCurrentPage: Function,
+) => {
+  let arr = [];
+  for (let i = 1; i <= pages; i++) {
+    arr.push(
+      <li
+        key={i}
+        onClick={() => setCurrentPage(i)}
+        className={i === currentPage ? "selected" : ""}
+      >
+        {i}
+      </li>,
+    );
+  }
+  return arr;
+};
 
 const Groups = () => {
   let testdata: postProductResultType = {
@@ -17,30 +37,25 @@ const Groups = () => {
     ],
   };
 
-  const [currentPage, setCurrentPage] = useState(2);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pages, setPages] = useState(1);
+  const [count, setCount] = useState(0);
 
   const renderProduct = async () => {
     const result = await postProductResult(testdata, currentPage);
 
-    setPages(Math.round(result.data.totalElements / 12));
-  };
-
-  // 페이지네이션 함수
-  const pagenation = () => {
-    let arr = [];
-    for (let i = 1; i <= pages; i++) {
-      arr.push(
-        <li
-          key={i}
-          onClick={() => setCurrentPage(i)}
-          className={i === currentPage ? "selected" : ""}
-        >
-          {i}
-        </li>,
+    for (let i = 0; i < result.dataSize; i++) {
+      // 세션 스토리지에 상품 저장
+      sessionStorage.setItem(
+        `product${i}`,
+        JSON.stringify(result.data.products[i]),
       );
     }
-    return arr;
+
+    // 총 상품 개수
+    setCount(result.dataSize);
+    // 총 페이지 개수
+    setPages(Math.round(result.data.totalElements / 12));
   };
 
   renderProduct();
@@ -51,12 +66,12 @@ const Groups = () => {
       <div className="body">
         <Filter />
         <div>
-          <Product />
+          <Product count={count} />
         </div>
       </div>
       <Pages>
         <li>{"<"}</li>
-        {pagenation()}
+        {pagenation(pages, currentPage, setCurrentPage)}
         <li>{">"}</li>
       </Pages>
     </Container>
@@ -94,7 +109,7 @@ const Container = styled.div`
   }
 
   .selected {
-    color: red;
+    font-weight: 700;
   }
 `;
 
