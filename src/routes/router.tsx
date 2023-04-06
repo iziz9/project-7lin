@@ -8,7 +8,6 @@ import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
 import Notice from "../pages/notice/Notice";
 import TripTest from "../pages/recommend/TripTestPage";
-import TestResult from "../pages/recommend/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
 import ReviewWrite from "./../pages/review-write/ReviewWrite";
@@ -21,6 +20,10 @@ import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
+import KakaoLogin from "../pages/sociallogin/KakaoLogin";
+import NotFoundPage from "../pages/not-found/NotFoundPage";
+import NaverLogin from "../pages/sociallogin/NaverLogin";
+import GoogleLogin from "../pages/sociallogin/GoogleLogin";
 
 const router = createBrowserRouter([
   {
@@ -119,7 +122,23 @@ const router = createBrowserRouter([
         path: "/product/:id",
         element: <ProductDetail />,
       },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
+  },
+  {
+    path: "/kakaologin",
+    element: <KakaoLogin />,
+  },
+  {
+    path: "/naverlogin",
+    element: <NaverLogin />,
+  },
+  {
+    path: "/googlelogin",
+    element: <GoogleLogin />,
   },
 ]);
 

@@ -1,58 +1,94 @@
-import axios, { AxiosError } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { getCookie, setCookie } from "../utils/cookie";
 
 const API_BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
 const axiosApi = (url: string) => {
-  const instance = axios.create({ baseURL: url });
-  instance.defaults.timeout = 5000;
+  const instance: AxiosInstance = axios.create({
+    baseURL: url,
+    timeout: 10000,
+  });
 
   instance.interceptors.request.use(
-    (config) => {
+    (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
       const accessToken = getCookie("accessToken");
-      if (accessToken)
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
+      if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
       return config;
     },
-    (error) => {
+    (error: AxiosError): Promise<AxiosError> => {
       console.log(error);
       return Promise.reject(error);
     },
   );
 
   instance.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
       console.log(response);
       if (response.status === 200) return response.data;
-      // else throw AxiosError;
     },
-    async (error: AxiosError) => {
+    async (error) => {
       console.log(error);
-      const originalConfig = error.config;
 
-      // if (error.response) {
-      //   // Access Token was expired
-      //   if (error.response.status === 401) {
-      //     try {
-      //       const res = await refreshToken();
-      //       const { accessToken } = res.data;
-      //       setCookie("accessToken", accessToken, {
-      //         path: "/",
-      //         maxAge: 1800,
-      //       });
-      //       instance.defaults.headers.common["Authorization"] = accessToken;
+      const originalRequest = error.config;
 
-      //       return await instance(originalConfig!);
-      //     } catch (_error: any) {
-      //       //
-      //       return (window.location.href = "/login");
-      //     }
-      //   }
+      switch (error.response?.status) {
+        case 400:
+          switch (error.response.data.code) {
+            case "DUPLICATE_ID":
+              return Promise.reject("이미 존재하는 아이디 입니다");
+            case "ENTITY_NOT_FOUND":
+              return Promise.reject("존재하지 않는 회원입니다");
+            default:
+              break;
+          }
+          break;
+        case 401:
+          if (!originalRequest?._retry) {
+            originalRequest._retry = true;
+            try {
+              const { data } = await axios.post(
+                `${url}/reissue`,
+                {},
+                {
+                  withCredentials: true,
+                },
+              );
 
-      //   if (error.response.status === 403 && error.response.data) {
-      //     return Promise.reject(error.response.data);
-      //   }
-      // }
+              // access token과 refresh token 저장
+              setCookie("accessToken", data.accessToken, {
+                path: "/",
+                maxAge: 1800,
+                secure: true,
+              });
+
+              // 새로 발급받은 access token으로 요청 retry
+              originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+              return instance(originalRequest);
+            } catch (refreshTokenError) {
+              // refresh token이 만료되거나 잘못된 경우 로그인 페이지로 이동 또는 다른 로직 수행
+              alert("로그인시간 만료");
+              return (window.location.href = "/login");
+            }
+          }
+          break;
+        case 404:
+          switch (error.response.data.code) {
+            case "PASSWORD_NOT_MATCHS":
+              return Promise.reject("비밀번호를 잘못 입력했습니다");
+            case "ENTITY_NOT_FOUND":
+              return Promise.reject("해당하는 아이디가 존재하지 않습니다");
+            default:
+              break;
+          }
+          break;
+        default:
+          break;
+      }
       return Promise.reject(error);
     },
   );

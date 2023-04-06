@@ -1,47 +1,57 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import Product from "../groups/Product";
 
-type Props = {};
+interface TestResultType {
+  title: string;
+  category: string;
+}
 
-const RecommendPage = (props: Props) => {
+const RecommendPage = () => {
   const navigate = useNavigate();
+
+  const savedTestResult: TestResultType = localStorage.getItem("testResult")
+    ? JSON.parse(localStorage.getItem("testResult")!)
+    : "";
+
+  console.log(savedTestResult);
+
   return (
     <Container>
-      {/* 저장된 테스트 결과 없을 때 */}
-      <NoResult onClick={() => navigate("/test")}>
-        <section className="title-section">
-          <div className="page-title">
-            <div>
-              <span className="blue">여행유형 테스트 </span>
-              <span className="black">를 완료하면</span>
+      {savedTestResult ? (
+        <HasResult>
+          <section>
+            <div className="page-title">
+              <h1>{savedTestResult.title}</h1>
+              <h2>유형의 당신에게 맞춤 상품을 추천드려요!</h2>
             </div>
-            <span className="black">맞춤 상품을 추천받을 수 있어요!</span>
-          </div>
-          <div className="test" onClick={() => navigate("/test")}>
-            <img src="/test.png" alt="나의 여행 유형 테스트" />
-          </div>
-        </section>
-        <section className="content-section">
-          <h1>이런 상품은 어떠세요?</h1>
-          <Product />
-        </section>
-      </NoResult>
-
-      {/* 로컬스토리지에 저장된 테스트 결과 있을 때 / 테스트화면에서 더보기 누르면 여기로 이동*/}
-      {/* <HasResult>
-        <section>
-          <div className="page-title">
-            <h1>"나이스샷 - 골프패키지"</h1>
-            <h2>유형의 당신에게 맞춤 상품을 추천드려요!</h2>
-          </div>
-          <button onClick={() => navigate("/test")}>테스트 다시 하기</button>
-        </section>
-        <section>
-          <Product />
-        </section>
-      </HasResult> */}
+            <button onClick={() => navigate("/test")}>테스트 다시 하기</button>
+          </section>
+          <section>
+            <Product />
+          </section>
+        </HasResult>
+      ) : (
+        <NoResult>
+          <section className="title-section">
+            <div className="page-title">
+              <div>
+                <span className="blue">여행유형 테스트 </span>
+                <span className="black">를 완료하면</span>
+              </div>
+              <span className="black">맞춤 상품을 추천받을 수 있어요!</span>
+            </div>
+            <div className="test" onClick={() => navigate("/test")}>
+              <img src="/test.png" alt="나의 여행 유형 테스트" />
+            </div>
+          </section>
+          <section className="content-section">
+            <h1>이런 상품은 어떠세요?</h1>
+            <Product />
+          </section>
+        </NoResult>
+      )}
     </Container>
   );
 };

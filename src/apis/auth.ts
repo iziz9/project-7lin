@@ -26,13 +26,13 @@ export const login = async (arg: LoginFormValue) => {
 
 export const findId = async (arg: FindIdFormValue) => {
   const data = await axiosInstance.get(
-    `/finId?name=${arg.name}&phone=${arg.phone}`,
+    `/findId?name=${arg.name}&phone=${arg.phone}`,
   );
   console.log(data);
   return data;
 };
 
-export const findPw = async (arg: FindPwFormValue) => {
+export const findPassword = async (arg: FindPwFormValue) => {
   const data = await axiosInstance.post(
     `/sendEmail?email=${arg.email}&phone=${arg.phone}`,
   );
