@@ -74,3 +74,23 @@ export interface TestResultProductType {
   briefExplanation: string;
   thumbnail: string;
 }
+
+// 상품 조회 request
+export interface ProductRequestType {
+  category: [
+    {
+      mainCategory: string;
+    },
+  ];
+  minPeriod?: number;
+  maxPeriod?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: string;
+}
+
+// 상품 조회 response
+export interface ProductResponseType {
+  dataSize: number;
+  data: { products: object[]; totalElements: number };
+}
