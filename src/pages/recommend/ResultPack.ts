@@ -1,4 +1,4 @@
-import { ResultPackDataType, lastAnswersType } from "../../@types/data";
+import { lastAnswersType } from "../../@types/data";
 
 export const lastAnswers: lastAnswersType = {
   golf: "이날을 위해 스크린에서 연습했지. 라운딩 가자!",

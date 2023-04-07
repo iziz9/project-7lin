@@ -27,7 +27,7 @@ const FloatingModal = () => {
   const [chatList, setChatList] = useRecoilState(chatListState);
   const [orderNumber, setOrderNumber] = useState(0);
 
-  const [text, setText] = useState("");
+  const [answer, setAnswer] = useState([]);
 
   // const [recievedMessage, setRecievedMessage] = useState<string>(
   //   questions[chatNumber.questionNumber],
@@ -43,7 +43,7 @@ const FloatingModal = () => {
     //   ...prev,
     //   { person: "me", time: time, message: myMessage },
     // ]);
-  }, [text]);
+  }, [answer]);
 
   return (
     <Modal>
@@ -97,8 +97,8 @@ const FloatingModal = () => {
             <FloatingInput
               orderNumber={orderNumber}
               setOrderNumber={setOrderNumber}
-              text={text}
-              setText={setText}
+              answer={answer}
+              setAnswer={setAnswer}
             />
           </div>
         )}

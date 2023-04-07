@@ -8,24 +8,24 @@ import { useRecoilState } from "recoil";
 type FloatingInputPropsType = {
   orderNumber: number;
   setOrderNumber: any;
-  text: string;
-  setText: any;
+  answer: string[];
+  setAnswer: any;
 };
 
 const FloatingInput = ({
   orderNumber,
   setOrderNumber,
-  text,
-  setText,
+  answer,
+  setAnswer,
 }: FloatingInputPropsType) => {
   const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
   const [chatList, setChatList] = useRecoilState(chatListState);
   const [selectedButton, setSelectedButton] = useState([]);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(text);
-    // setChatList({ chatList: []});
-    setText("");
+  const onSubmit = (aaa: string[]) => {
+    console.log(aaa);
+    setChatList({ chatList: [] });
+    // setAnswer("");
 
     if (orderNumber === 7) {
       // api연결코드 작성
@@ -35,18 +35,19 @@ const FloatingInput = ({
 
   return (
     <InputSection>
-      {orderNumber < 2 ? (
+      {orderNumber > 2 ? ( //<
         <TextForm
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(e);
+            let aaa: string[] = [];
+            onSubmit(aaa);
           }}
         >
           <input
             type="text"
             placeholder="여기에 메시지 입력"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
           />
           <button type="submit">
             <IoIosPaperPlane className="send" />
@@ -56,13 +57,17 @@ const FloatingInput = ({
         <ButtonsForm
           onSubmit={(e) => {
             e.preventDefault();
+            // console.log(e);
             const formData = new FormData(e.currentTarget);
             let entries = formData.entries();
+            let aaa: string[] = [];
             for (const pair of entries) {
               console.log(String(pair[0]));
-              setText(String(pair[0]));
+              aaa.push(String(pair[0]));
+              // setAnswer((prev: any) => [...prev, String(pair[0])]);
             }
-            onSubmit(e);
+
+            onSubmit(aaa);
           }}
         >
           <div className="formInner">
