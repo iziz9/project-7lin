@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { IoIosPaperPlane } from "react-icons/io";
 import { useMediaQuery } from "react-responsive";
+import { answers } from "./questionsAndAnswers";
 
 type PropsType = {
   setMyMessage: any;
@@ -13,25 +14,6 @@ const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
     query: "(max-width:850px)",
   });
   // 질문 3번째부터는 text input 대신 button형식으로 변경하기
-  // 질문 순서에 따른 버튼목록
-  const answers = [
-    ["2030", "3040", "4050", "5060", "6070", "모든 연령대"],
-    ["여자끼리", "남자끼리", "자녀동반", "상관없음"],
-    ["나홀로", "친구/동료", "연인/부부", "자녀 동반 가족", "상관없음"],
-    ["하나님과 함께하는 여행", "상관없음", "부처님의 발자취를 찾아"],
-    ["보수적인 그룹", "진보적인 그룹", "상관없음"],
-    [
-      "휴양 및 힐링",
-      "문화탐방",
-      "골프여행",
-      "오지탐험",
-      "트레킹",
-      "봉사활동",
-      "성지순례",
-    ],
-    ["봄", "여름", "가을", "겨울", "아무때나"],
-    ["연 1회 이하", "연 2회", "연 3회", "연 4회", "연 5회 이상"],
-  ];
 
   const [text, setText] = useState("");
 
@@ -258,6 +240,23 @@ const TextForm = styled.form`
   }
 
   @media (max-width: 850px) {
+    input {
+      width: 350px;
+      height: 50px;
+    }
+
+    button {
+      top: 10px;
+      right: 10px;
+
+      .send {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
     input {
       width: 250px;
       height: 50px;

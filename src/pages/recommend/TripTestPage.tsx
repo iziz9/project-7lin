@@ -5,9 +5,14 @@ import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { useNavigate } from "react-router";
 import TestResult from "./TestResult";
 
-type Props = {};
+export const lastAnswers = {
+  golf: "이날을 위해 스크린에서 연습했지. 라운딩 가자!",
+  trekking: "멋진 풍경을 배경삼아 한번 걸어볼까?",
+  ocean: "따뜻한 햇볕 아래 해변을 산책하고 싶어!",
+  culture: "남들이 안 가본 새로운 곳을 찾아",
+};
 
-const TripTest = (props: Props) => {
+const TripTest = () => {
   const navigate = useNavigate();
   const [orderNumber, setOrderNumber] = useState(0);
   const [resultData, setResultData] = useState("");
@@ -74,10 +79,10 @@ const TripTest = (props: Props) => {
       desc: "드디어 도착했다! 역시 여행은 도전!",
       question: "어떤 액티비티를 즐겨볼까요?",
       answers: [
-        "이날을 위해 스크린에서 연습했지. 라운딩 가자!", //+골프 [스크린]
-        "멋진 풍경을 배경삼아 한번 걸어볼까?", //+ 트레킹 [걸어]
-        "따뜻한 햇볕 아래 해변을 산책하고 싶어!", //+휴양지 [해변]
-        "남들이 안 가본 새로운 곳을 찾아", //+문화탐방 [새로운]
+        lastAnswers.golf,
+        lastAnswers.trekking,
+        lastAnswers.ocean,
+        lastAnswers.culture,
       ],
     },
   ];
