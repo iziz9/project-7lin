@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import Product from "../groups/Product";
+import { getLocalStorage } from "../../utils/localStorage";
 
 interface TestResultType {
   title: string;
@@ -10,12 +11,7 @@ interface TestResultType {
 
 const RecommendPage = () => {
   const navigate = useNavigate();
-
-  const savedTestResult: TestResultType = localStorage.getItem("testResult")
-    ? JSON.parse(localStorage.getItem("testResult")!)
-    : "";
-
-  console.log(savedTestResult);
+  const savedTestResult: TestResultType = getLocalStorage("testResult");
 
   return (
     <Container>
