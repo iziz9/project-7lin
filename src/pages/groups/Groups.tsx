@@ -6,6 +6,7 @@ import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
 import { ProductRequestType } from "../../@types/data";
+import { Link } from "react-router-dom";
 
 // 페이지네이션 함수
 const pagenation = (
@@ -16,13 +17,14 @@ const pagenation = (
   let arr = [];
   for (let i = 1; i <= pages; i++) {
     arr.push(
-      <li
+      <Link
+        to={`/groups/${i}`}
         key={i}
         onClick={() => setCurrentPage(i)}
         className={i === currentPage ? "selected" : ""}
       >
         {i}
-      </li>,
+      </Link>,
     );
   }
   return arr;
