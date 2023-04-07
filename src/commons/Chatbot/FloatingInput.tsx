@@ -5,23 +5,26 @@ import { answers } from "./questionsAndAnswers";
 import { chatListState, chatbotStepState } from "../../store/chatbotAtom";
 import { useRecoilState } from "recoil";
 
-const FloatingInput = ({
-  orderNumber,
-  text,
-  setText,
-}: {
+type FloatingInputPropsType = {
   orderNumber: number;
+  setOrderNumber: any;
   text: string;
   setText: any;
-}) => {
+};
+
+const FloatingInput = ({
+  orderNumber,
+  setOrderNumber,
+  text,
+  setText,
+}: FloatingInputPropsType) => {
   const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
   const [chatList, setChatList] = useRecoilState(chatListState);
-
   const [selectedButton, setSelectedButton] = useState([]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log(text);
-    setChatList({ questionNumber: 0, chatList: [], chatAnswer: [] });
+    // setChatList({ chatList: []});
     setText("");
 
     if (orderNumber === 7) {

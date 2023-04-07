@@ -25,6 +25,7 @@ export interface ChatListType {
 const FloatingModal = () => {
   const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
   const [chatList, setChatList] = useRecoilState(chatListState);
+  const [orderNumber, setOrderNumber] = useState(0);
 
   const [text, setText] = useState("");
 
@@ -94,7 +95,8 @@ const FloatingModal = () => {
           <div>
             <ChatList startTime={startTime} />
             <FloatingInput
-              orderNumber={chatList.questionNumber}
+              orderNumber={orderNumber}
+              setOrderNumber={setOrderNumber}
               text={text}
               setText={setText}
             />

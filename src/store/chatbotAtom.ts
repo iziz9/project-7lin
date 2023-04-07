@@ -12,10 +12,10 @@ export const chatbotStepState = atom<ChatbotStepType>({
 });
 
 //step2의 전체 채팅 리스트, 질문번호, 응답내용
+// 불러올때, api 전송할 때는 +1해서 홀수 질문, 짝수 답변으로
+// 내용 저장은 usestate에서 가져오기
 interface ChatListType {
-  questionNumber: number;
   chatList: ChatBubbleType[];
-  chatAnswer: string[];
 }
 interface ChatBubbleType {
   question: boolean;
@@ -25,9 +25,7 @@ interface ChatBubbleType {
 export const chatListState = atom<ChatListType>({
   key: "chatListState",
   default: {
-    questionNumber: 0,
     chatList: [],
-    chatAnswer: [],
   },
 });
 
