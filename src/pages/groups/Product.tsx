@@ -66,34 +66,68 @@ const Product = (props: productProps) => {
 
   const renderProduct = () => {
     let arr = [];
-    for (let i = 0; i < props.count; i++) {
-      const itemString: string | null = sessionStorage.getItem(`product${i}`);
-      // null값 에러처리
-      if (!itemString) {
-        throw new Error("값이 없습니다.");
+    if (props.count === 13) {
+      for (let i = 0; i < mockupData.length; i++) {
+        arr.push(
+          <Link
+            key={mockupData[i].id}
+            to={`/product/${mockupData[i].id}`}
+            state={{
+              image: mockupData[i].image,
+              title: mockupData[i].title,
+              price: mockupData[i].price,
+              discription: mockupData[i].discription,
+            }}
+          >
+            <Item key={mockupData[i].id}>
+              <img
+                className="image"
+                src={mockupData[i].image}
+                alt={mockupData[i].title}
+              />
+              <AiOutlineHeart />
+              <h3 className="title">{mockupData[i].title}</h3>
+              <span className="price">
+                {mockupData[i].price.toLocaleString("ko-KR")}원
+              </span>
+              <p
+                className="body"
+                dangerouslySetInnerHTML={{ __html: mockupData[i].discription }}
+              ></p>
+            </Item>
+          </Link>,
+        );
       }
-      const item: itemProps = JSON.parse(itemString);
+    } else {
+      for (let i = 0; i < props.count; i++) {
+        const itemString: string | null = sessionStorage.getItem(`product${i}`);
+        // null값 에러처리
+        if (!itemString) {
+          throw new Error("값이 없습니다.");
+        }
+        const item: itemProps = JSON.parse(itemString);
 
-      arr.push(
-        <Link key={i} to={`/product/${item.productId}`}>
-          <Item>
-            <img
-              className="image"
-              src={item.thumbnail}
-              alt={item.productName}
-            />
-            <AiOutlineHeart />
-            <h3 className="title">{item.productName}</h3>
-            <span className="price">
-              {item.productPrice.toLocaleString("ko-KR")}원
-            </span>
-            <p
-              className="body"
-              dangerouslySetInnerHTML={{ __html: item.briefExplanation }}
-            ></p>
-          </Item>
-        </Link>,
-      );
+        arr.push(
+          <Link key={i} to={`/product/${item.productId}`}>
+            <Item>
+              <img
+                className="image"
+                src={item.thumbnail}
+                alt={item.productName}
+              />
+              <AiOutlineHeart />
+              <h3 className="title">{item.productName}</h3>
+              <span className="price">
+                {item.productPrice.toLocaleString("ko-KR")}원
+              </span>
+              <p
+                className="body"
+                dangerouslySetInnerHTML={{ __html: item.briefExplanation }}
+              ></p>
+            </Item>
+          </Link>,
+        );
+      }
     }
     return arr;
   };

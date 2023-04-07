@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import Product from "../groups/Product";
+import { getLocalStorage } from "../../utils/localStorage";
 
 interface TestResultType {
   title: string;
@@ -10,12 +11,7 @@ interface TestResultType {
 
 const RecommendPage = () => {
   const navigate = useNavigate();
-
-  const savedTestResult: TestResultType = localStorage.getItem("testResult")
-    ? JSON.parse(localStorage.getItem("testResult")!)
-    : "";
-
-  console.log(savedTestResult);
+  const savedTestResult: TestResultType = getLocalStorage("testResult");
 
   return (
     <Container>
@@ -29,7 +25,7 @@ const RecommendPage = () => {
             <button onClick={() => navigate("/test")}>테스트 다시 하기</button>
           </section>
           <section>
-            <Product count={4} />
+            <Product count={13} />
           </section>
         </HasResult>
       ) : (
@@ -48,7 +44,7 @@ const RecommendPage = () => {
           </section>
           <section className="content-section">
             <h1>이런 상품은 어떠세요?</h1>
-            <Product count={4} />
+            <Product count={13} />
           </section>
         </NoResult>
       )}

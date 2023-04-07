@@ -428,7 +428,7 @@ export const Policy = (props: Props) => {
 
 const PersonalTerms = styled.div`
   pre {
-    width: 400px;
+    width: 350px;
     height: 300px;
     background-color: white;
     white-space: pre-wrap;
@@ -442,10 +442,10 @@ const PersonalTerms = styled.div`
     @media (max-width: 770px) {
       width: 320px;
     }
-    @media (max-width: 630px) {
+    @media (max-width: 680px) {
       width: 290px;
     }
-    @media (max-width: 550px) {
+    @media (max-width: 600px) {
       width: 250px;
     }
   }
