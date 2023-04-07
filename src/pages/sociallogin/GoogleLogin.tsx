@@ -12,10 +12,10 @@ const GoogleLogin = (props: Props) => {
   useEffect(() => {
     if (code) {
       alert("구글 인증코드 받기 성공 and 로그인 기능 미완");
-      navigate("/login");
+      navigate("/login", { replace: true });
     } else {
       alert("구글 인증코드 받기 실패");
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
   }, [code, navigate]);
 

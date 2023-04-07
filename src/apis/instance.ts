@@ -12,6 +12,7 @@ const axiosApi = (url: string) => {
   const instance: AxiosInstance = axios.create({
     baseURL: url,
     timeout: 10000,
+    withCredentials: true,
   });
 
   instance.interceptors.request.use(

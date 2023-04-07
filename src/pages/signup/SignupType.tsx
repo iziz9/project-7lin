@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { scrollToTop } from "../../utils/scroll";
+import KakaoBtn from "../login/components/KakaoBtn";
+import NaverBtn from "../login/components/NaverBtn";
+import GoogleBtn from "../login/components/GoogleBtn";
 
 const SignupType = () => {
   const navigate = useNavigate();
@@ -12,18 +15,18 @@ const SignupType = () => {
     query: "(max-width:850px)",
   });
 
-  const snsArray = [
-    { name: "네이버", img: "sns_naver.svg" },
-    { name: "카카오", img: "sns_kakao.svg" },
-    { name: "페이스북", img: "sns_facebook.svg" },
-  ];
+  // const snsArray = [
+  //   { name: "네이버", img: "sns_naver.svg" },
+  //   { name: "카카오", img: "sns_kakao.svg" },
+  //   { name: "페이스북", img: "sns_facebook.svg" },
+  // ];
 
-  const socialLogin = snsArray.map((sns) => (
-    <div className="social" key={sns.name}>
-      <img src={sns.img} alt={sns.name} />
-      {isMobile ? null : sns.name}
-    </div>
-  ));
+  // const socialLogin = snsArray.map((sns) => (
+  //   <div className="social" key={sns.name}>
+  //     <img src={sns.img} alt={sns.name} />
+  //     {isMobile ? null : sns.name}
+  //   </div>
+  // ));
 
   return (
     <SignupContainer>
@@ -46,7 +49,11 @@ const SignupType = () => {
         >
           <BasicBtn>{isMobile ? "회원가입" : "고투게더 회원가입"}</BasicBtn>
         </div>
-        <SocialLogins>{socialLogin}</SocialLogins>
+        <SocialLogins>
+          <KakaoBtn />
+          <NaverBtn />
+          <GoogleBtn />
+        </SocialLogins>
       </div>
     </SignupContainer>
   );

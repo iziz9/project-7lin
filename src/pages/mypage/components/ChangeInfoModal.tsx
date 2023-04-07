@@ -5,7 +5,12 @@ import { BasicInput } from "../../../commons/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { ChangeInfoFormValue } from "../../../@types/data";
+import { ChangeInfoFormValue, UpdateMemberRequest } from "../../../@types/data";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../../store/userInfoAtom";
+import { useMutation } from "react-query";
+import { updateMemberInfo } from "../../../apis/auth";
+import { useModal } from "../../../hooks/useModal";
 
 const ChangeInfoModal = () => {
   const validationSchema = Yup.object().shape({
@@ -38,7 +43,37 @@ const ChangeInfoModal = () => {
 
   const onSubmitHandler: SubmitHandler<ChangeInfoFormValue> = (data) => {
     console.log(JSON.stringify(data, null, 2));
+
+    if (confirm("정말로 정보를 수정하시겠습니까?")) {
+      const updateMemberPayload: UpdateMemberRequest = {
+        email: userInfo.email,
+        newPassword: data.password,
+        validNewPassword: data.confirmPassword,
+        phone: data.phone,
+      };
+      updateMembreInfoMutation.mutateAsync(updateMemberPayload);
+    }
   };
+
+  const { closeModal } = useModal();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const updateMembreInfoMutation = useMutation(updateMemberInfo, {
+    onSuccess: (res: any) => {
+      if (res.message === "회원정보를 수정했습니다.") {
+        console.log(res);
+        const { phone } = res.data;
+        setUserInfo({ ...userInfo, phone });
+        alert("회원정보 수정 성공");
+        closeModal();
+      }
+    },
+    onError: (error) => {
+      alert("회원정보 수정 실패: " + error);
+    },
+  });
+
+  if (updateMembreInfoMutation.isLoading) return <div>회원정보 수정 중</div>;
 
   return (
     <Container>
@@ -46,7 +81,7 @@ const ChangeInfoModal = () => {
         <div className="img-wrapper">
           <img src="/default_profile.png" />
         </div>
-        <div>일반 회원, 7lin'</div>
+        <div>일반 회원, {userInfo.name}</div>
       </div>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <section>
@@ -55,7 +90,7 @@ const ChangeInfoModal = () => {
               className="disabled"
               type="text"
               disabled
-              value="7lin'@gmail.com"
+              value={userInfo.email}
             />
           </div>
           <div className="error-wrapper">
@@ -79,7 +114,7 @@ const ChangeInfoModal = () => {
               <BasicInput
                 className={errors.confirmPassword ? "warning" : ""}
                 type="password"
-                placeholder="비밀번호 확인"
+                placeholder="새로운 비밀번호 확인"
                 {...register("confirmPassword")}
               />
             </div>
@@ -95,7 +130,7 @@ const ChangeInfoModal = () => {
               <BasicInput
                 className={errors.phone ? "warning" : ""}
                 type="tel"
-                defaultValue="01012345678"
+                defaultValue={userInfo.phone}
                 {...register("phone")}
               />
             </div>
