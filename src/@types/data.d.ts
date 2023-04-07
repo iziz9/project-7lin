@@ -59,11 +59,19 @@ export interface SignUpRequest {
   age: string;
 }
 
-export interface ResultPackageType {
+export interface ResultPackDataType {
   title: string;
   image: string;
   desc: string;
   category: string;
+  backgroundImg: string;
+}
+
+export interface lastAnswersType {
+  golf: string;
+  trekking: string;
+  ocean: string;
+  culture: string;
 }
 
 export interface TestResultProductType {

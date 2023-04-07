@@ -1,26 +1,33 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { IoIosPaperPlane } from "react-icons/io";
-import { useMediaQuery } from "react-responsive";
 import { answers } from "./questionsAndAnswers";
+import { chatListState, chatbotStepState } from "../../store/chatbotAtom";
+import { useRecoilState } from "recoil";
 
-type PropsType = {
-  setMyMessage: any;
+const FloatingInput = ({
+  orderNumber,
+  text,
+  setText,
+}: {
   orderNumber: number;
-};
+  text: string;
+  setText: any;
+}) => {
+  const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
+  const [chatList, setChatList] = useRecoilState(chatListState);
 
-const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
-  const isMobile: boolean = useMediaQuery({
-    query: "(max-width:850px)",
-  });
-  // 질문 3번째부터는 text input 대신 button형식으로 변경하기
-
-  const [text, setText] = useState("");
+  const [selectedButton, setSelectedButton] = useState([]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log(text);
-    setMyMessage(text);
+    setChatList({ questionNumber: 0, chatList: [], chatAnswer: [] });
     setText("");
+
+    if (orderNumber === 7) {
+      // api연결코드 작성
+      setChatbotStep({ step: 3 });
+    }
   };
 
   return (
@@ -108,7 +115,7 @@ const ButtonsForm = styled.form`
 
   .formInner {
     .innerSection {
-      width: 380px;
+      width: 370px;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
@@ -165,6 +172,38 @@ const ButtonsForm = styled.form`
   }
 
   @media (max-width: 850px) {
+    width: 350px;
+    height: 130px;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .formInner {
+      .innerSection {
+        width: 300px;
+        gap: 8px;
+      }
+    }
+
+    label {
+      padding: 8px 10px;
+    }
+
+    button {
+      width: 40px;
+      height: 40px;
+      top: 0px;
+      right: 0px;
+
+      .send {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
     width: 250px;
     height: 130px;
     font-size: 12px;

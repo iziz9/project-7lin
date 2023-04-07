@@ -1,4 +1,6 @@
-export const lastAnswers = {
+import { ResultPackDataType, lastAnswersType } from "../../@types/data";
+
+export const lastAnswers: lastAnswersType = {
   golf: "이날을 위해 스크린에서 연습했지. 라운딩 가자!",
   trekking: "멋진 풍경을 배경삼아 한번 걸어볼까?",
   ocean: "따뜻한 햇볕 아래 해변을 산책하고 싶어!",

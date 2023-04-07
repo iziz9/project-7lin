@@ -1,24 +1,9 @@
 import { atom } from "recoil";
 
+// 챗봇 실행 단계
 interface ChatbotStepType {
   step: number;
 }
-
-interface chatNumberType {
-  orderNumber: number;
-  answerNumber: number | null;
-}
-
-interface chatAnswersType {
-  answers: string[];
-}
-
-// 3개 어떻게 합칠 수 있나?
-
-//step0: firstOpen, 시작하기 버튼 생성됨
-//step1: 시작하기 버튼 누른 후, 개인정보동의 텍스트박스 및 버튼 생성됨
-//step2: 개인정보 동의 버튼 누른 후, 설문 시작
-//step3: 설문완료 후, 설문이 완료되었습니다 안내 텍스트 띄우고 다시 설문하기 버튼 생성
 export const chatbotStepState = atom<ChatbotStepType>({
   key: "chatbotStepState",
   default: {
@@ -26,19 +11,42 @@ export const chatbotStepState = atom<ChatbotStepType>({
   },
 });
 
-//step3의 ordernumber, answernumber +(질문 / 응답)
-export const chatNumberState = atom<chatNumberType>({
-  key: "chatNumberState",
+//step2의 전체 채팅 리스트, 질문번호, 응답내용
+interface ChatListType {
+  questionNumber: number;
+  chatList: ChatBubbleType[];
+  chatAnswer: string[];
+}
+interface ChatBubbleType {
+  question: boolean;
+  time: string;
+  text: string;
+}
+export const chatListState = atom<ChatListType>({
+  key: "chatListState",
   default: {
-    orderNumber: 0,
-    answerNumber: null,
+    questionNumber: 0,
+    chatList: [],
+    chatAnswer: [],
   },
 });
 
-// 전체 응답내용 순서대로 배열 저장-> api호출 시 꺼내서 보내주기
-export const chatAnswersState = atom({
-  key: "chatAnswersState",
-  default: {
-    answers: [],
-  },
-});
+//api요청예시
+// {
+//   "name": "홍길동",
+//   "phone": "010111",
+//   "ageGroup": [
+//       "aaaaaa,bbbbbb,ccccc"
+//   ],
+//   "travelGroup": [
+//       "aaaaa,bbbbb"
+//   ],
+//   "companionGroup": [
+//       "aaa, bbb"
+//   ],
+//   "religion": "aaaaa",
+//   "politics": "aaaaaa",
+//   "travelTheme": "aaaaaa",
+//   "travelPeriod": "aaaaaa",
+//   "travelNumber": "aaaaaa"
+// },

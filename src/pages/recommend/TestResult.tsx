@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { getTestResult } from "../../apis/request";
-import { TestResultProductType, ResultPackageType } from "../../@types/data";
+import { TestResultProductType } from "../../@types/data";
 import { setLocalStorage } from "../../utils/localStorage";
 import { resultPack } from "./ResultPack";
 import { useMutation } from "react-query";
