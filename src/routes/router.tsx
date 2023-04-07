@@ -47,7 +47,11 @@ const router = createBrowserRouter([
         path: "review/write",
         element: <ReviewWrite />,
       },
-      { path: "groups", element: <Groups /> },
+      {
+        path: "groups",
+        element: <Groups />,
+        children: [{ path: ":id", element: <Groups /> }],
+      },
       {
         path: "/login",
         element: (
