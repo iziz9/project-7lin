@@ -6,9 +6,7 @@ import { BsSearch } from "react-icons/bs";
 import { SlBag, SlLogin, SlLogout } from "react-icons/sl";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../store/userInfoAtom";
-import { loginState } from "../store/loginAtom";
-import { removeLocalStorage } from "../utils/localStorage";
-import { removeCookie } from "../utils/cookie";
+import { getCookie, removeCookie } from "../utils/cookie";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -18,7 +16,7 @@ const Header = () => {
   });
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
+  const accessToken = getCookie("accessToken");
 
   const navMenu = [
     {
@@ -56,12 +54,8 @@ const Header = () => {
   const handleLogout = () => {
     if (confirm("정말로 로그아웃 하시겠습니까?")) {
       // logout api 추가
-      setLoginStatus({ isLogin: false });
-      setUserInfo({ email: "", name: "", gender: "", age: 0 });
-      removeLocalStorage("loginStatus");
-      removeLocalStorage("userInfo");
+      setUserInfo({ email: "", name: "", gender: "", age: 0, phone: "" });
       removeCookie("accessToken", { path: "/" });
-      removeCookie("refreshToken", { path: "/" });
       navigate("/");
     }
   };
@@ -98,12 +92,12 @@ const Header = () => {
               <ul>
                 <li>알림</li>
                 <li>장바구니</li>
-                {loginStatus.isLogin ? (
+                {accessToken ? (
                   <li onClick={handleLogout}>로그아웃</li>
                 ) : (
                   <li onClick={() => navigate("/login")}>로그인</li>
                 )}
-                {loginStatus.isLogin ? (
+                {accessToken ? (
                   <li onClick={() => navigate("/mypage")}>마이페이지</li>
                 ) : (
                   <li onClick={() => navigate("/signup_type")}>회원가입</li>

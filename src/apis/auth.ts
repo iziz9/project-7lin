@@ -57,11 +57,12 @@ export const getMemberInfo = async (email: string) => {
   return data;
 };
 
-export const updateMemberInfo = async (
-  email: string,
-  arg: UpdateMemberRequest,
-) => {
-  const data = await axiosInstance.put(`/member/update?email=${email}`, arg);
+export const updateMemberInfo = async (arg: UpdateMemberRequest) => {
+  const data = await axiosInstance.put(`/member/update?email=${arg.email}`, {
+    newPassword: arg.newPassword,
+    validNewPassword: arg.validNewPassword,
+    phone: arg.phone,
+  });
   console.log(data);
   return data;
 };

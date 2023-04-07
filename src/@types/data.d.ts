@@ -61,6 +61,7 @@ export interface SignUpRequest {
 }
 
 export interface UpdateMemberRequest {
+  email: string;
   newPassword: string;
   validNewPassword: string;
   phone: string;

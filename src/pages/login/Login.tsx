@@ -16,9 +16,7 @@ import { useMutation } from "react-query";
 import { login } from "../../apis/auth";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../store/userInfoAtom";
-import { loginState } from "../../store/loginAtom";
 import { setCookie } from "../../utils/cookie";
-import { setLocalStorage } from "../../utils/localStorage";
 import KakaoBtn from "./components/KakaoBtn";
 import NaverBtn from "./components/NaverBtn";
 import GoogleBtn from "./components/GoogleBtn";
@@ -27,11 +25,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
-
-  const isMobile: boolean = useMediaQuery({
-    query: "(max-width:850px)",
-  });
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -61,19 +54,12 @@ const Login = () => {
     onSuccess: (res: any) => {
       if (res) {
         console.log(res);
-        const { email, name, age, gender, tokenDto } = res.data; // res.response
+        const { email, name, age, gender, phone, tokenDto } = res.response; // res.response
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
           maxAge: 1800,
         });
-        setCookie("refreshToken", tokenDto.refreshToken, {
-          path: "/",
-          maxAge: 60 * 60 * 24 * 7,
-        });
-        setLoginStatus({ isLogin: true });
-        setLocalStorage("loginStatus", { isLogin: true });
-        setUserInfo({ email, name, age, gender });
-        setLocalStorage("userInfo", { email, name, age, gender });
+        setUserInfo({ email, name, age, gender, phone });
         alert("로그인 성공");
         navigate("/", { replace: true });
       }
