@@ -20,17 +20,20 @@ export const postProductResult = async (
   testdata: ProductRequestType,
   page: number,
 ) => {
-  const res: ProductResponseType = await axiosInstance.post(
-    `/products?page=${page}`,
-    {
-      categories: [
-        {
-          mainCategory: testdata.category[0].mainCategory,
-        },
-      ],
-    },
-  );
-  console.log(res);
-
-  return res;
+  try {
+    const res: ProductResponseType = await axiosInstance.post(
+      `/products?page=${page}`,
+      {
+        categories: [
+          {
+            mainCategory: testdata.category[0].mainCategory,
+          },
+        ],
+      },
+    );
+    console.log(res);
+    return res;
+  } catch (error: any) {
+    return error.message;
+  }
 };

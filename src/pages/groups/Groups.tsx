@@ -46,6 +46,11 @@ const Groups = () => {
   const renderProduct = async () => {
     const result = await postProductResult(testdata, currentPage);
 
+    if (result === "Network Error") {
+      setCount(13);
+      return;
+    }
+
     if (!result.dataSize) {
       throw new Error("값이 없습니다.");
     }
