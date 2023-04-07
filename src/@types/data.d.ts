@@ -15,6 +15,7 @@ export interface SignupFormValue {
   confirmPassword: string;
   name: string;
   phone: string;
+  confirmPhone: string;
   year: string;
   month: string;
   day: string;
@@ -59,7 +60,14 @@ export interface SignUpRequest {
   age: string;
 }
 
-export interface ResultPackDataType {
+export interface UpdateMemberRequest {
+  email: string;
+  newPassword: string;
+  validNewPassword: string;
+  phone: string;
+}
+
+export interface ResultPackageType {
   title: string;
   image: string;
   desc: string;

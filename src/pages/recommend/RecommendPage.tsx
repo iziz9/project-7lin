@@ -25,7 +25,7 @@ const RecommendPage = () => {
             <button onClick={() => navigate("/test")}>테스트 다시 하기</button>
           </section>
           <section>
-            <Product count={4} />
+            <Product count={13} />
           </section>
         </HasResult>
       ) : (
@@ -44,7 +44,7 @@ const RecommendPage = () => {
           </section>
           <section className="content-section">
             <h1>이런 상품은 어떠세요?</h1>
-            <Product count={4} />
+            <Product count={13} />
           </section>
         </NoResult>
       )}

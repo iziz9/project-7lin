@@ -8,9 +8,12 @@ import { BasicInput } from "../../commons/Input";
 import { BasicSelect } from "../../commons/Select";
 import { SignUpRequest, SignupFormValue } from "../../@types/data";
 import { useMutation } from "react-query";
-import { idCheck, signUp } from "../../apis/auth";
+import { idCheck, phoneCheck, signUp } from "../../apis/auth";
 import { scrollToTop } from "../../utils/scroll";
 import { useNavigate } from "react-router-dom";
+import { useModal } from "../../hooks/useModal";
+import { PersonalData, Policy } from "../../commons/Terms";
+import Modal from "../../commons/Modal";
 
 const SignupSite = () => {
   const validationSchema = Yup.object().shape({
@@ -21,7 +24,6 @@ const SignupSite = () => {
         /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
         "이메일 형식이 올바르지 않습니다!",
       ),
-    // confirmEmail: Yup.string().required("hi"),
     password: Yup.string()
       .required("비밀번호를 입력해주세요!")
       .trim()
@@ -55,10 +57,10 @@ const SignupSite = () => {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     getValues,
     setValue,
+    setFocus,
     setError,
     clearErrors,
     formState: { errors },
@@ -122,16 +124,52 @@ const SignupSite = () => {
       return;
     }
 
-    const data: any = await idCheck(email);
-    setIsIdDuplicate(data);
+    try {
+      const data = await idCheck(email);
+      setIsIdDuplicate(data);
 
-    if (data === true) {
-      clearErrors("email");
-      setError("email", { message: "이미 존재하는 이메일입니다!" });
-      alert("이미 존재하는 이메일입니다!");
+      if (data === true) {
+        clearErrors("email");
+        setError("email", { message: "이미 존재하는 이메일입니다!" });
+        alert("이미 존재하는 이메일입니다!");
+        return;
+      } else {
+        clearErrors("email");
+      }
+    } catch (e) {
+      alert("이메일 중복검사 실패");
+      setIsCheckDuplicate(false);
+    }
+  };
+
+  const [isCheckPhoneDuplicate, setIsCheckPhoneDuplicate] =
+    useState<boolean>(false);
+  const [isPhoneDuplicate, setIsPhoneDuplicate] = useState<boolean>(true);
+
+  const checkPhoneDuplicate = async () => {
+    setIsCheckPhoneDuplicate(true);
+    const { phone } = getValues();
+
+    if (errors.phone || !phone) {
+      alert("전화번호를 제데로 입력해주세요");
       return;
-    } else {
-      clearErrors("email");
+    }
+
+    try {
+      const data = await phoneCheck(phone);
+      setIsPhoneDuplicate(data);
+
+      if (data === true) {
+        clearErrors("phone");
+        setError("phone", { message: "이미 존재하는 전화번호입니다!" });
+        alert("이미 존재하는 전화번호입니다!");
+        return;
+      } else {
+        clearErrors("phone");
+      }
+    } catch (e) {
+      alert("전화번호 중복검사 실패");
+      setIsCheckPhoneDuplicate(false);
     }
   };
 
@@ -143,6 +181,11 @@ const SignupSite = () => {
       month: "0",
       day: "0",
     });
+    setIsCheckDuplicate(false);
+    setIsCheckPhoneDuplicate(false);
+    setIsIdDuplicate(true);
+    setIsPhoneDuplicate(true);
+    scrollToTop();
   };
 
   const signupMutation = useMutation(signUp, {
@@ -170,6 +213,18 @@ const SignupSite = () => {
     if (isIdDuplicate) {
       alert("이미 존재하는 이메일입니다!");
       scrollToTop();
+      return;
+    }
+
+    if (!isCheckPhoneDuplicate) {
+      alert("전화번호 중복검사를 해주세요!");
+      setFocus("phone");
+      return;
+    }
+
+    if (isPhoneDuplicate) {
+      alert("이미 존재하는 전화번호입니다!");
+      setFocus("phone");
       return;
     }
 
@@ -208,6 +263,23 @@ const SignupSite = () => {
       scrollToTop();
       return;
     }
+    if (!isCheckPhoneDuplicate) {
+      clearErrors([
+        "password",
+        "confirmPassword",
+        "day",
+        "month",
+        "year",
+        "phone",
+        "gender",
+        "acceptTerms",
+        "name",
+        "email",
+      ]);
+      alert("전화번호 중복검사를 해주세요!");
+      setFocus("phone");
+      return;
+    }
   };
 
   useEffect(() => {
@@ -241,6 +313,36 @@ const SignupSite = () => {
       ]);
     }
   }, [email]);
+
+  const [phone, setPhone] = useState<string>("");
+
+  useEffect(() => {
+    setIsCheckPhoneDuplicate(false);
+    if (!isPhoneDuplicate) {
+      setIsPhoneDuplicate(true);
+      clearErrors([
+        "password",
+        "confirmPassword",
+        "day",
+        "month",
+        "year",
+        "phone",
+        "gender",
+        "acceptTerms",
+        "name",
+      ]);
+    }
+  }, [phone]);
+
+  const { openModal } = useModal();
+  const policyModalData = {
+    title: "서비스 이용약관",
+    content: <Policy />,
+  };
+  const personalModalData = {
+    title: "개인정보 수집 및 이용",
+    content: <PersonalData />,
+  };
 
   return (
     <Container>
@@ -325,15 +427,34 @@ const SignupSite = () => {
               {errors.phone ? (
                 <span className="invalid">{errors.phone?.message}</span>
               ) : null}
+              {isPhoneDuplicate ||
+              !isCheckPhoneDuplicate ||
+              errors.phone ? null : (
+                <div className="valid">사용 가능한 전화번호입니다!</div>
+              )}
             </div>
-            <div>
-              <BasicInput
-                className={errors.phone ? "warning" : ""}
-                disabled={isIdDuplicate ? true : false}
-                type="tel"
-                placeholder="전화번호를 입력하세요."
-                {...register("phone")}
-              />
+            <div className="id-area">
+              <div className="input-form">
+                <BasicInput
+                  className={errors.phone ? "warning" : ""}
+                  disabled={isIdDuplicate ? true : false}
+                  type="tel"
+                  placeholder="전화번호를 입력하세요."
+                  {...register("phone", {
+                    onChange: (e) => setPhone(e.target.value),
+                  })}
+                />
+              </div>
+              <div className="btn-wrapper" onClick={checkPhoneDuplicate}>
+                <BasicBtn
+                  type="button"
+                  style={{ height: "49px" }}
+                  {...register("confirmPhone")}
+                  disabled={isIdDuplicate ? true : false}
+                >
+                  중복확인
+                </BasicBtn>
+              </div>
             </div>
           </section>
 
@@ -347,7 +468,7 @@ const SignupSite = () => {
             <div className="check-birth">
               <BasicSelect
                 className={errors.year ? "warning" : ""}
-                disabled={isIdDuplicate ? true : false}
+                disabled={isIdDuplicate || isPhoneDuplicate ? true : false}
                 {...register("year", {
                   onChange: (e) => setDate({ ...date, year: e.target.value }),
                 })}
@@ -362,7 +483,7 @@ const SignupSite = () => {
               </BasicSelect>
               <BasicSelect
                 className={errors.month ? "warning" : ""}
-                disabled={isIdDuplicate ? true : false}
+                disabled={isIdDuplicate || isPhoneDuplicate ? true : false}
                 {...register("month", {
                   onChange: (e) => setDate({ ...date, month: e.target.value }),
                 })}
@@ -377,7 +498,7 @@ const SignupSite = () => {
               </BasicSelect>
               <BasicSelect
                 className={errors.day ? "warning" : ""}
-                disabled={isIdDuplicate ? true : false}
+                disabled={isIdDuplicate || isPhoneDuplicate ? true : false}
                 {...register("day", {
                   onChange: (e) => setDate({ ...date, day: e.target.value }),
                 })}
@@ -405,7 +526,7 @@ const SignupSite = () => {
                 <input
                   type="radio"
                   value="FEMALE"
-                  disabled={isIdDuplicate ? true : false}
+                  disabled={isIdDuplicate || isPhoneDuplicate ? true : false}
                   {...register("gender")}
                 />
                 여성
@@ -414,7 +535,7 @@ const SignupSite = () => {
                 <input
                   type="radio"
                   value="MALE"
-                  disabled={isIdDuplicate ? true : false}
+                  disabled={isIdDuplicate || isPhoneDuplicate ? true : false}
                   {...register("gender")}
                 />
                 남성
@@ -440,7 +561,9 @@ const SignupSite = () => {
                     <input
                       type="checkbox"
                       checked={terms.length === 3 ? true : false}
-                      disabled={isIdDuplicate ? true : false}
+                      disabled={
+                        isIdDuplicate || isPhoneDuplicate ? true : false
+                      }
                       {...register("acceptTerms")}
                       onChange={checkAll}
                     />
@@ -453,7 +576,9 @@ const SignupSite = () => {
                       type="checkbox"
                       name="age"
                       checked={terms.includes("age") ? true : false}
-                      disabled={isIdDuplicate ? true : false}
+                      disabled={
+                        isIdDuplicate || isPhoneDuplicate ? true : false
+                      }
                       onChange={check}
                     />
                     <span>(필수) </span> 만 15세 이상입니다.
@@ -463,20 +588,48 @@ const SignupSite = () => {
                       type="checkbox"
                       name="service"
                       checked={terms.includes("service") ? true : false}
-                      disabled={isIdDuplicate ? true : false}
+                      disabled={
+                        isIdDuplicate || isPhoneDuplicate ? true : false
+                      }
                       onChange={check}
                     />
-                    <span>(필수)</span> 서비스 이용약관 동의
+                    <span>(필수)</span>{" "}
+                    <div>
+                      <span
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openModal(policyModalData);
+                        }}
+                        style={{ color: "var(--color-blue)" }}
+                      >
+                        서비스 이용약관
+                      </span>{" "}
+                      동의
+                    </div>
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       name="personal"
                       checked={terms.includes("personal") ? true : false}
-                      disabled={isIdDuplicate ? true : false}
+                      disabled={
+                        isIdDuplicate || isPhoneDuplicate ? true : false
+                      }
                       onChange={check}
                     />
-                    <span>(필수)</span> 개인정보 수집 및 이용 동의
+                    <span>(필수)</span>{" "}
+                    <div>
+                      <span
+                        style={{ color: "var(--color-blue)" }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openModal(personalModalData);
+                        }}
+                      >
+                        개인정보 수집 및 이용
+                      </span>{" "}
+                      동의
+                    </div>
                   </label>
                 </div>
               </div>
@@ -497,6 +650,7 @@ const SignupSite = () => {
           </BasicBtn>
         </div>
       </div>
+      <Modal />
     </Container>
   );
 };
@@ -544,6 +698,17 @@ const Container = styled.div`
   section {
     /* margin-bottom: 42px; */
     margin-bottom: 40px;
+    .id-area {
+      display: flex;
+      gap: 15px;
+      .input-form {
+        width: 70%;
+      }
+      .btn-wrapper {
+        flex-grow: 1;
+        margin-bottom: 0;
+      }
+    }
     .check-birth {
       display: flex;
       justify-content: space-between;
@@ -575,6 +740,7 @@ const Container = styled.div`
             align-items: center;
             gap: 15px;
             width: fit-content;
+            cursor: pointer;
             input {
               margin: 0;
               width: 25px;
