@@ -68,7 +68,7 @@ const pagenation = (
   for (let i = 1; i <= pages; i++) {
     arr.push(
       <Link
-        to={`/groups/${i}`}
+        to={`/groups/?page=${i}`}
         key={i}
         onClick={() => setCurrentPage(i)}
         className={i === currentPage ? "selected" : ""}
@@ -96,7 +96,12 @@ const Groups = () => {
     ],
   };
 
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  // url에서 현재 페이지값 받아오기
+  const urlParams = new URL(location.href).searchParams.get("page");
+
+  const [currentPage, setCurrentPage] = useState(
+    urlParams ? Number(urlParams) : 1,
+  ); // 현재 페이지
   const [pages, setPages] = useState(1); // 총 페이지 수
   const [items, setItems] = useState<ProductType[]>(mockupData); // product 컴포넌트로 내려줄 상품 (response data의 상품 데이터)
 
