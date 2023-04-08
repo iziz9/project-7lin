@@ -8,12 +8,11 @@ import ReviewItem from "../pages/review/ReviewItems";
 import ReviewDetail from "./../pages/review-detail/ReviewDetail";
 import Notice from "../pages/notice/Notice";
 import TripTest from "../pages/recommend/TripTestPage";
-import TestResult from "../pages/recommend/TestResult";
 import SignupType from "../pages/signup/SignupType";
 import SignupSite from "../pages/signup/SignupSite";
 import ReviewWrite from "./../pages/review-write/ReviewWrite";
 import ProductDetail from "./../pages/product-detail/ProductDetail";
-import Reservation from "../pages/reservation/Reservation";
+import Reservation from "../pages/reservation/ReservationPage";
 import MyPage from "../pages/mypage/MyPage";
 import MyReservation from "../pages/mypage/MyReservation";
 import Favor from "../pages/mypage/Favor";
@@ -22,6 +21,10 @@ import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
 import Cart from "./../pages/cart/Cart";
+import KakaoLogin from "../pages/sociallogin/KakaoLogin";
+import NotFoundPage from "../pages/not-found/NotFoundPage";
+import NaverLogin from "../pages/sociallogin/NaverLogin";
+import GoogleLogin from "../pages/sociallogin/GoogleLogin";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +48,11 @@ const router = createBrowserRouter([
         path: "review/write",
         element: <ReviewWrite />,
       },
-      { path: "groups", element: <Groups /> },
+      {
+        path: "groups",
+        element: <Groups />,
+        children: [{ path: ":id", element: <Groups /> }],
+      },
       {
         path: "/login",
         element: (
@@ -124,7 +131,23 @@ const router = createBrowserRouter([
         path: "cart",
         element: <Cart />,
       },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
+  },
+  {
+    path: "/kakaologin",
+    element: <KakaoLogin />,
+  },
+  {
+    path: "/naverlogin",
+    element: <NaverLogin />,
+  },
+  {
+    path: "/googlelogin",
+    element: <GoogleLogin />,
   },
 ]);
 

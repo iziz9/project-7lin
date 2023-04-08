@@ -1,8 +1,34 @@
 import React from "react";
 import styled from "styled-components";
 import { BasicBtn } from "../../../commons/Button";
+import { useMutation } from "react-query";
+import { widthdrawal } from "../../../apis/auth";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../../store/userInfoAtom";
+import { removeCookie } from "../../../utils/cookie";
+import { useNavigate } from "react-router-dom";
+import { useModal } from "../../../hooks/useModal";
 
 const WithdrawlModal = () => {
+  const navigate = useNavigate();
+  const { closeModal } = useModal();
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const withDrawalMutation = useMutation(widthdrawal, {
+    onSuccess: (res: any) => {
+      if (res) {
+        alert("회원탈퇴 성공");
+        setUserInfo({ email: "", name: "", gender: "", age: 0, phone: "" });
+        removeCookie("accessToken", { path: "/" });
+        closeModal();
+        navigate("/");
+      }
+    },
+    onError: (error) => {
+      alert("회원탈퇴 실패" + error);
+    },
+  });
+
   return (
     <Container>
       <div className="info">
@@ -16,7 +42,12 @@ const WithdrawlModal = () => {
         </div>
         <div>회원탈퇴를 진행하시겠습니까?</div>
       </div>
-      <div className="btn-wrapper">
+      <div
+        className="btn-wrapper"
+        onClick={() => {
+          withDrawalMutation.mutate(userInfo.email);
+        }}
+      >
         <BasicBtn>탈퇴하기</BasicBtn>
       </div>
     </Container>

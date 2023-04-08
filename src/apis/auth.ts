@@ -3,6 +3,7 @@ import {
   FindPwFormValue,
   LoginFormValue,
   SignUpRequest,
+  UpdateMemberRequest,
 } from "../@types/data";
 import { axiosInstance } from "./instance";
 
@@ -13,7 +14,15 @@ export const signUp = async (arg: SignUpRequest) => {
 };
 
 export const idCheck = async (email: string) => {
-  const data = await axiosInstance.post("/signUp/checkId", { email });
+  const data: boolean = await axiosInstance.post("/signUp/checkId", { email });
+  console.log(data);
+  return data;
+};
+
+export const phoneCheck = async (phone: string) => {
+  const data: boolean = await axiosInstance.post("/signUp/checkPhone", {
+    phone,
+  });
   console.log(data);
   return data;
 };
@@ -26,16 +35,34 @@ export const login = async (arg: LoginFormValue) => {
 
 export const findId = async (arg: FindIdFormValue) => {
   const data = await axiosInstance.get(
-    `/finId?name=${arg.name}&phone=${arg.phone}`,
+    `/findId?name=${arg.name}&phone=${arg.phone}`,
+    {},
   );
   console.log(data);
   return data;
 };
 
-export const findPw = async (arg: FindPwFormValue) => {
+export const findPassword = async (arg: FindPwFormValue) => {
   const data = await axiosInstance.post(
     `/sendEmail?email=${arg.email}&phone=${arg.phone}`,
+    {},
   );
+  console.log(data);
+  return data;
+};
+
+export const getMemberInfo = async (email: string) => {
+  const data = await axiosInstance.get(`/member?email=${email}`);
+  console.log(data);
+  return data;
+};
+
+export const updateMemberInfo = async (arg: UpdateMemberRequest) => {
+  const data = await axiosInstance.put(`/member/update?email=${arg.email}`, {
+    newPassword: arg.newPassword,
+    validNewPassword: arg.validNewPassword,
+    phone: arg.phone,
+  });
   console.log(data);
   return data;
 };
@@ -48,8 +75,8 @@ export const findPw = async (arg: FindPwFormValue) => {
 //     return data;
 //   };
 
-export const widthdrawal = async (id: string) => {
-  const data = await axiosInstance.put(`/deleteMember?id=${id}`);
+export const widthdrawal = async (email: string) => {
+  const data = await axiosInstance.put(`/deleteMember?email=${email}`, {});
   console.log(data);
   return data;
 };

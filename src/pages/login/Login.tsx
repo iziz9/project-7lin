@@ -16,19 +16,15 @@ import { useMutation } from "react-query";
 import { login } from "../../apis/auth";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../store/userInfoAtom";
-import { loginState } from "../../store/loginAtom";
 import { setCookie } from "../../utils/cookie";
-import { setLocalStorage } from "../../utils/localStorage";
+import KakaoBtn from "./components/KakaoBtn";
+import NaverBtn from "./components/NaverBtn";
+import GoogleBtn from "./components/GoogleBtn";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const [loginStatus, setLoginStatus] = useRecoilState(loginState);
-
-  const isMobile: boolean = useMediaQuery({
-    query: "(max-width:850px)",
-  });
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -58,29 +54,22 @@ const Login = () => {
     onSuccess: (res: any) => {
       if (res) {
         console.log(res);
-        const { email, name, age, gender, tokenDto } = res.data;
+        const { email, name, age, gender, phone, tokenDto } = res.response; // res.response
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
           maxAge: 1800,
         });
-        setCookie("refreshToken", tokenDto.refreshToken, {
-          path: "/",
-          maxAge: 60 * 60 * 24 * 7,
-        });
-        setLoginStatus({ isLogin: true });
-        setLocalStorage("loginStatus", { isLogin: true });
-        setUserInfo({ email, name, age, gender });
-        setLocalStorage("userInfo", { email, name, age, gender });
+        setUserInfo({ email, name, age, gender, phone });
         alert("로그인 성공");
         navigate("/", { replace: true });
       }
     },
     onError: (error) => {
-      alert("로그인 실패" + error);
+      alert("로그인 실패: " + error);
     },
   });
 
-  const onSubmitHandler: SubmitHandler<LoginFormValue> = (data) => {
+  const onSubmitHandler: SubmitHandler<LoginFormValue> = async (data) => {
     console.log(JSON.stringify(data, null, 2));
     const loginPayload: LoginFormValue = {
       email: data.email,
@@ -101,18 +90,18 @@ const Login = () => {
     content: <FindIdPasswordModal />,
   };
 
-  const snsArray = [
-    { name: "네이버", img: "sns_naver.svg" },
-    { name: "카카오", img: "sns_kakao.svg" },
-    { name: "페이스북", img: "sns_facebook.svg" },
-  ];
+  // const snsArray = [
+  //   { name: "네이버", img: "sns_naver.svg" },
+  //   { name: "카카오", img: "sns_kakao.svg" },
+  //   { name: "페이스북", img: "sns_facebook.svg" },
+  // ];
 
-  const socialLogin = snsArray.map((sns) => (
-    <div className="social" key={sns.name}>
-      <img src={sns.img} alt={sns.name} />
-      {/* {isMobile ? null : sns.name} */}
-    </div>
-  ));
+  // const socialLogin = snsArray.map((sns) => (
+  //   <div className="social" key={sns.name}>
+  //     <img src={sns.img} alt={sns.name} />
+  //     {/* {isMobile ? null : sns.name} */}
+  //   </div>
+  // ));
 
   return (
     <>
@@ -179,7 +168,11 @@ const Login = () => {
               아이디 / 비밀번호 찾기
             </div>
           </Others>
-          <SocialLogins>{socialLogin}</SocialLogins>
+          <SocialLogins>
+            <KakaoBtn />
+            <NaverBtn />
+            <GoogleBtn />
+          </SocialLogins>
         </div>
       </LoginContainer>
       <Modal />

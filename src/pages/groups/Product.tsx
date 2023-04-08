@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useMediaQuery } from "react-responsive";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import { render } from "react-dom";
 
 // 목업 데이터
 const mockupData = [
@@ -48,33 +49,90 @@ const mockupData = [
   },
 ];
 
-const Product = () => {
-  return (
-    <Container>
-      {mockupData.map((props) => (
-        <Link
-          key={props.id}
-          to={`/product/${props.id}`}
-          state={{
-            ...props,
-          }}
-        >
-          <Item key={props.id}>
-            <img className="image" src={props.image} alt={props.title} />
-            <AiOutlineHeart />
-            <h3 className="title">{props.title}</h3>
-            <span className="price">
-              {props.price.toLocaleString("ko-KR")}원
-            </span>
-            <p
-              className="body"
-              dangerouslySetInnerHTML={{ __html: props.discription }}
-            ></p>
-          </Item>
-        </Link>
-      ))}
-    </Container>
-  );
+interface productProps {
+  count: number;
+}
+
+interface itemProps {
+  productId: number;
+  productName: string;
+  productPrice: number;
+  thumbnail: string;
+  briefExplanation: string;
+}
+
+const Product = (props: productProps) => {
+  const [item, setItem] = useState([{}]);
+
+  const renderProduct = () => {
+    let arr = [];
+    if (props.count === 13) {
+      for (let i = 0; i < mockupData.length; i++) {
+        arr.push(
+          <Link
+            key={mockupData[i].id}
+            to={`/product/${mockupData[i].id}`}
+            state={{
+              image: mockupData[i].image,
+              title: mockupData[i].title,
+              price: mockupData[i].price,
+              discription: mockupData[i].discription,
+            }}
+          >
+            <Item key={mockupData[i].id}>
+              <img
+                className="image"
+                src={mockupData[i].image}
+                alt={mockupData[i].title}
+              />
+              <AiOutlineHeart />
+              <h3 className="title">{mockupData[i].title}</h3>
+              <span className="price">
+                {mockupData[i].price.toLocaleString("ko-KR")}원
+              </span>
+              <p
+                className="body"
+                dangerouslySetInnerHTML={{ __html: mockupData[i].discription }}
+              ></p>
+            </Item>
+          </Link>,
+        );
+      }
+    } else {
+      for (let i = 0; i < props.count; i++) {
+        const itemString: string | null = sessionStorage.getItem(`product${i}`);
+        // null값 에러처리
+        if (!itemString) {
+          throw new Error("값이 없습니다.");
+        }
+        const item: itemProps = JSON.parse(itemString);
+
+        arr.push(
+          <Link key={i} to={`/product/${item.productId}`}>
+            <Item>
+              <img
+                className="image"
+                src={item.thumbnail}
+                alt={item.productName}
+              />
+              <AiOutlineHeart />
+              <h3 className="title">{item.productName}</h3>
+              <span className="price">
+                {item.productPrice.toLocaleString("ko-KR")}원
+              </span>
+              <p
+                className="body"
+                dangerouslySetInnerHTML={{ __html: item.briefExplanation }}
+              ></p>
+            </Item>
+          </Link>,
+        );
+      }
+    }
+    return arr;
+  };
+
+  return <Container>{renderProduct()}</Container>;
 };
 
 const Container = styled.ul`
@@ -92,6 +150,10 @@ const Container = styled.ul`
   // 모바일 환경
   @media (max-width: 850px) {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(1, minmax(auto, 310px));
   }
 `;
 

@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { loginState } from "../store/loginAtom";
+import { getCookie } from "../utils/cookie";
 
 interface Props {
   onlyAuth: boolean;
@@ -8,14 +7,14 @@ interface Props {
 }
 
 export const PrivateRoute = ({ onlyAuth, children }: Props) => {
-  const loginStatus = useRecoilValue(loginState);
+  // const accessToken = getCookie("accessToken");
 
-  if (onlyAuth && !loginStatus.isLogin) {
-    alert("로그인을 해야만 볼 수 있는 페이지입니다");
-    return <Navigate to="/login" replace={true} />;
-  } else if (!onlyAuth && loginStatus.isLogin) {
-    return <Navigate to="/" replace={true} />;
-  }
+  // if (onlyAuth && !accessToken) {
+  //   alert("로그인을 해야만 볼 수 있는 페이지입니다");
+  //   return <Navigate to="/login" replace={true} />;
+  // } else if (!onlyAuth && accessToken) {
+  //   return <Navigate to="/" replace={true} />;
+  // }
 
   return children;
 };

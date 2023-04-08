@@ -4,7 +4,6 @@ import ProductDetailModalOption from "./ProductDetailModalOption";
 import { IoMdClose } from "react-icons/io";
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { useMediaQuery } from "react-responsive";
-import MobileOptionModal from "../../commons/MobileOptionModal";
 
 interface IProductDetailModalProps {
   image: string;
@@ -234,6 +233,9 @@ const ChangeWrap = styled.div`
         font-size: 25px;
         font-weight: bold;
         color: #0d99ff;
+        @media screen and (max-width: 850px) {
+          font-size: 22px;
+        }
       }
     }
   }
@@ -244,7 +246,7 @@ const ProductInfo = styled.div`
   img {
     width: 90px;
     height: 90px;
-    margin-right: 30px;
+    margin-right: 15px;
     border-radius: 8px;
   }
   > div {
@@ -253,6 +255,9 @@ const ProductInfo = styled.div`
       margin-bottom: 15px;
       font-size: 22px;
       font-weight: bold;
+      @media screen and (max-width: 450px) {
+        font-size: 18px;
+      }
     }
     p {
       margin-bottom: 10px;
@@ -323,6 +328,9 @@ const Bottom = styled.div`
   h2 {
     font-size: 23px;
     font-weight: bold;
+    @media screen and (max-width: 450px) {
+      font-size: 16px;
+    }
   }
 `;
 

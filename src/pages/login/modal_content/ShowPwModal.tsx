@@ -5,14 +5,16 @@ import { BasicBtn } from "../../../commons/Button";
 import { useModal } from "../../../hooks/useModal";
 import { scrollToTop } from "../../../utils/scroll";
 
-const ShowPwModal = () => {
+interface Props {
+  email: string;
+}
+
+const ShowPwModal = ({ email }: Props) => {
   const { closeModal } = useModal();
   return (
     <Container>
       <div className="show-id">
-        <span className="name">7조</span>님의 이메일{" "}
-        <span className="id">7lin@gmail.com</span>로 임시 비밀번호가
-        전송되었습니다.
+        <span className="id">{email}</span>로 임시 비밀번호가 전송되었습니다.
       </div>
       <div
         onClick={() => {

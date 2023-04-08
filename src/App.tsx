@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import FloatingIcon from "./commons/FloatingIcon";
+import FloatingIcon from "./commons/Chatbot/FloatingIcon";
 import Footer from "./commons/Footer";
 import Header from "./commons/Header";
 

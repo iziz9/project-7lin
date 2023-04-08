@@ -15,6 +15,7 @@ export interface SignupFormValue {
   confirmPassword: string;
   name: string;
   phone: string;
+  confirmPhone: string;
   year: string;
   month: string;
   day: string;
@@ -59,6 +60,13 @@ export interface SignUpRequest {
   age: string;
 }
 
+export interface UpdateMemberRequest {
+  email: string;
+  newPassword: string;
+  validNewPassword: string;
+  phone: string;
+}
+
 export interface ResultPackageType {
   title: string;
   image: string;
@@ -73,4 +81,24 @@ export interface TestResultProductType {
   period: number;
   briefExplanation: string;
   thumbnail: string;
+}
+
+// 상품 조회 request
+export interface ProductRequestType {
+  category: [
+    {
+      mainCategory: string;
+    },
+  ];
+  minPeriod?: number;
+  maxPeriod?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  sort?: string;
+}
+
+// 상품 조회 response
+export interface ProductResponseType {
+  dataSize: number;
+  data: { products: object[]; totalElements: number };
 }

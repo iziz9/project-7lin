@@ -36,7 +36,7 @@ const MobileFolatingDiv = styled.div`
   position: fixed;
   right: 10px;
   bottom: 80px;
-  z-index: 99;
+  z-index: 9;
   display: flex;
   justify-content: center;
 
@@ -53,7 +53,7 @@ const FloatingDiv = styled.div`
   position: fixed;
   right: 10px;
   bottom: 10px;
-  z-index: 99;
+  z-index: 9;
   display: flex;
   justify-content: center;
 
