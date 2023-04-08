@@ -95,14 +95,14 @@ export interface TestResultProductType {
 export interface ProductRequestType {
   category: [
     {
-      mainCategory: string;
+      mainCategory: string | null;
     },
   ];
-  minPeriod?: number;
-  maxPeriod?: number;
-  minPrice?: number;
-  maxPrice?: number;
-  sort?: string;
+  minPeriod?: number | null;
+  maxPeriod?: number | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  sort?: string | null;
 }
 
 // 상품 조회 response
