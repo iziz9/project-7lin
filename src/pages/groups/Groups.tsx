@@ -6,7 +6,7 @@ import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
 import { ProductRequestType } from "../../@types/data";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 // 페이지네이션 함수
 const pagenation = (
@@ -30,11 +30,31 @@ const pagenation = (
   return arr;
 };
 
+// 주소로 요청 카테고리명 받아오기
+const getCategoryName = (pathname: string) => {
+  switch (pathname) {
+    // main category: 그룹별 여행 , 테마별 여행, 지역별 여행
+    case "groups":
+      return "GROUP";
+    case "themes":
+      return "THEME";
+    case "destination":
+      return "REGION";
+    // 예외
+    default:
+      return "NONE";
+  }
+};
+
 const Groups = () => {
+  const mainCategoryName = getCategoryName(
+    useLocation().pathname.split("/")[1],
+  );
+
   let testdata: ProductRequestType = {
     category: [
       {
-        mainCategory: "GROUP",
+        mainCategory: mainCategoryName,
       },
     ],
   };
