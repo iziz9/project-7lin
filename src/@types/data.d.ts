@@ -96,6 +96,7 @@ export interface ProductRequestType {
   category: [
     {
       mainCategory: string | null;
+      middleCategory: string | null;
     },
   ];
   minPeriod?: number | null;

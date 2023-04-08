@@ -1,13 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import SubMenu from "./SubMenu";
 import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
 import { ProductRequestType, ProductType } from "../../@types/data";
 import { Link, useLocation } from "react-router-dom";
-import { getCategoryName } from "../../utils/category";
+import {
+  getMainCategoryName,
+  getMiddleCategoryName,
+} from "../../utils/category";
 
 // 목업 데이터
 const mockupData = [
@@ -63,12 +66,16 @@ const pagenation = (
   pages: number,
   currentPage: number,
   setCurrentPage: Function,
+  mainCategory: string | null,
+  middleCategory: string | null,
 ) => {
   let arr = [];
   for (let i = 1; i <= pages; i++) {
     arr.push(
       <Link
-        to={`/groups/?page=${i}`}
+        to={`/${mainCategory}/${
+          middleCategory ? `${middleCategory}/` : ""
+        }?page=${i}`}
         key={i}
         onClick={() => setCurrentPage(i)}
         className={i === currentPage ? "selected" : ""}
@@ -81,33 +88,27 @@ const pagenation = (
 };
 
 const Groups = () => {
-  // 주소로 메인 카테고리명 받아오기
-  const mainCategoryName = getCategoryName(
-    useLocation().pathname.split("/")[1],
+  // url에서 현재 페이지값 받아오기(링크로 page를 입력했을 경우를 위함)
+  // const urlParams = new URL(location.href).searchParams.get("page");
+  // const [currentPage, setCurrentPage] = useState(
+  //   urlParams ? Number(urlParams) : 1,
+  // );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  // request용 메인 카테고리 데이터(페이지 시작 시 한 번만 호출)
+  const mainCategory = useLocation().pathname.split("/")[1];
+  const requestMainCategory = getMainCategoryName(mainCategory);
+
+  // State값
+  const [middleCategory, setMiddleCategory] = useState(
+    useLocation().pathname.split("/")[2],
   );
-  // 주소로 미들 카테고리명 받아오기(해야함)
-
-  // 그룹별 상품 조회 API request 데이터
-  let testdata: ProductRequestType = {
-    category: [
-      {
-        mainCategory: mainCategoryName,
-      },
-    ],
-  };
-
-  // url에서 현재 페이지값 받아오기
-  const urlParams = new URL(location.href).searchParams.get("page");
-
-  const [currentPage, setCurrentPage] = useState(
-    urlParams ? Number(urlParams) : 1,
-  ); // 현재 페이지
   const [pages, setPages] = useState(1); // 총 페이지 수
-  const [items, setItems] = useState<ProductType[]>(mockupData); // product 컴포넌트로 내려줄 상품 (response data의 상품 데이터)
+  const [items, setItems] = useState<ProductType[]>(mockupData); // product 컴포넌트로 내려줄 상품 데이터
 
   // 상품 조회 api 호출 및 state 변경
-  const getProductsData = async () => {
-    const result = await postProductResult(testdata, currentPage);
+  const getProductsData = async (requestData: ProductRequestType) => {
+    const result = await postProductResult(requestData, currentPage);
     // 네트워크 에러시
     if (result === "Network Error") {
       console.log("네트워크 에러");
@@ -121,12 +122,30 @@ const Groups = () => {
   };
 
   useEffect(() => {
-    getProductsData();
-  }, [currentPage]);
+    const requestMiddleCategory = getMiddleCategoryName(middleCategory);
+
+    // Api request 데이터
+    const requestData: ProductRequestType = {
+      category: [
+        {
+          mainCategory: requestMainCategory,
+          middleCategory: requestMiddleCategory,
+        },
+      ],
+    };
+    // Api 호출
+    getProductsData(requestData);
+
+    console.log(mainCategory, requestMainCategory);
+    console.log(middleCategory, requestMiddleCategory);
+  }, [middleCategory, currentPage]);
 
   return (
     <Container>
-      <SubMenu />
+      <SubMenu
+        mainCategory={mainCategory}
+        setMiddleCategory={setMiddleCategory}
+      />
       <div className="body">
         <Filter />
         <ProductContainer>
@@ -137,7 +156,13 @@ const Groups = () => {
       </div>
       <Pages>
         <li>{"<"}</li>
-        {pagenation(pages, currentPage, setCurrentPage)}
+        {pagenation(
+          pages,
+          currentPage,
+          setCurrentPage,
+          mainCategory,
+          middleCategory,
+        )}
         <li>{">"}</li>
       </Pages>
     </Container>

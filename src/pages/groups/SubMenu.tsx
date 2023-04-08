@@ -1,18 +1,63 @@
-import React from "react";
+import React, { ReactElement } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const subMenu = ["5070끼리", "남자끼리", "여자끼리", "가족끼리", "누구든지"];
+const middleCategoryData = {
+  groups: {
+    "5070": "5070끼리",
+    gentlemen: "남자끼리",
+    ladies: "여자끼리",
+    family: "가족끼리",
+    anyone: "누구든지",
+  },
+  // themes: ["문화탐방", "골프여행", "휴양지", "트레킹", "성지순례"],
+  // destination: [
+  //   "동남아/태평양",
+  //   "인도/중앙아시아",
+  //   "아프리카/중동",
+  //   "유럽/코카서스",
+  //   "중남미/북미",
+  // ],
+};
 
 interface ContainerProps {
   length: number;
 }
 
-const SubMenu = () => {
+interface SubMenuProps {
+  mainCategory: string;
+  setMiddleCategory: Function;
+}
+
+interface middleCategoryType {
+  groups: object;
+}
+
+const SubMenu = ({ mainCategory, setMiddleCategory }: SubMenuProps) => {
+  const middleCategoryList: middleCategoryType = eval(
+    "middleCategoryData." + mainCategory,
+  );
+
+  const onClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setMiddleCategory(event.currentTarget.id);
+  };
+
   return (
     <>
-      <Container length={subMenu.length}>
-        {subMenu.map((element, index) => (
-          <li key={index}>{element}</li>
+      <Container
+        length={Object.keys(eval("middleCategoryData." + mainCategory)).length}
+      >
+        {Object.entries(middleCategoryList).map(([key, value]) => (
+          <Link
+            className="submenu"
+            to={`/${mainCategory}/${key}`}
+            id={key}
+            key={key}
+            onClick={onClick}
+          >
+            {value}
+          </Link>
         ))}
       </Container>
       <Line></Line>
@@ -20,7 +65,7 @@ const SubMenu = () => {
   );
 };
 
-const Container = styled.ul<ContainerProps>`
+const Container = styled.div<ContainerProps>`
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(${(props) => props.length}, 1fr);
@@ -35,7 +80,7 @@ const Container = styled.ul<ContainerProps>`
     z-index: 10;
   }
 
-  li {
+  .submenu {
     text-align: center;
     display: flex;
     justify-content: center;
@@ -56,7 +101,7 @@ const Container = styled.ul<ContainerProps>`
     grid-auto-rows: 40px;
     width: 100%;
 
-    li {
+    .submenu {
       font-size: 16px;
       border: 1px solid var(--color-grayscale10);
       &:nth-child(4),
