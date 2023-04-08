@@ -20,6 +20,7 @@ import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
+import Cart from "./../pages/cart/Cart";
 import KakaoLogin from "../pages/sociallogin/KakaoLogin";
 import NotFoundPage from "../pages/not-found/NotFoundPage";
 import NaverLogin from "../pages/sociallogin/NaverLogin";
@@ -123,8 +124,12 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: "/product/:id",
+        path: "product/:id",
         element: <ProductDetail />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
       {
         path: "*",

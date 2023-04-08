@@ -1,18 +1,9 @@
 import { atom } from "recoil";
 
+// 챗봇 실행 단계
 interface ChatbotStepType {
   step: number;
 }
-
-interface chatNumberType {
-  orderNumber: number;
-  answerNumber: number | null;
-}
-
-//step0: firstOpen, 시작하기 버튼 생성됨
-//step1: 시작하기 버튼 누른 후, 개인정보동의 텍스트박스 및 버튼 생성됨
-//step2: 개인정보 동의 버튼 누른 후, 설문 시작
-//step3: 설문완료 후, 설문이 완료되었습니다 안내 텍스트 띄우고 다시 설문하기 버튼 생성
 export const chatbotStepState = atom<ChatbotStepType>({
   key: "chatbotStepState",
   default: {
@@ -20,11 +11,40 @@ export const chatbotStepState = atom<ChatbotStepType>({
   },
 });
 
-//step3의 ordernumber, answernumber +(질문 / 응답)
-export const chatNumberState = atom<chatNumberType>({
-  key: "chatNumberState",
+//step2의 전체 채팅 리스트, 질문번호, 응답내용
+// 불러올때, api 전송할 때는 +1해서 홀수 질문, 짝수 답변으로
+// 내용 저장은 usestate에서 가져오기 (orderNumber, answer, 시간빼버린다)
+interface ChatListType {
+  chatList: ChatBubbleType[];
+}
+interface ChatBubbleType {
+  question: boolean;
+  time: string;
+  text: string;
+}
+export const chatListState = atom<ChatListType>({
+  key: "chatListState",
   default: {
-    orderNumber: 0,
-    answerNumber: null,
+    chatList: [],
   },
 });
+
+//api요청예시
+// {
+//   "name": "홍길동",
+//   "phone": "010111",
+//   "ageGroup": [
+//       "aaaaaa,bbbbbb,ccccc"
+//   ],
+//   "travelGroup": [
+//       "aaaaa,bbbbb"
+//   ],
+//   "companionGroup": [
+//       "aaa, bbb"
+//   ],
+//   "religion": "aaaaa",
+//   "politics": "aaaaaa",
+//   "travelTheme": "aaaaaa",
+//   "travelPeriod": "aaaaaa",
+//   "travelNumber": "aaaaaa"
+// },

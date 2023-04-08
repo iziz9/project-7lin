@@ -72,6 +72,14 @@ export interface ResultPackageType {
   image: string;
   desc: string;
   category: string;
+  backgroundImg: string;
+}
+
+export interface lastAnswersType {
+  golf: string;
+  trekking: string;
+  ocean: string;
+  culture: string;
 }
 
 export interface TestResultProductType {
