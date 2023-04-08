@@ -15,33 +15,36 @@ const Modal = () => {
   }, [modalDataState.isOpen]);
 
   const modalStyle = {
-    overlay: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(79, 77, 77, 0.7)",
-    },
-    content: {
-      padding: "40px",
-      border: "none",
-      borderRadius: "8px",
-      width: "50%",
-      maxWidth: "400px",
-      minWidth: "248px",
-      maxHeight: "80%",
-      margin: "auto",
-      // position: "relative",
-      top: "none",
-      left: "none",
-      right: "none",
-      bottom: "none",
-    },
+    /* position, zIndex 옵션을 넣는 과정에서 overload 오류로 인라인으로 넣음 */
   };
   return (
     <ReactModal
       isOpen={modalDataState.isOpen}
       onRequestClose={closeModal}
-      style={modalStyle}
+      style={{
+        overlay: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(79, 77, 77, 0.7)",
+          position: "fixed",
+          zIndex: "1000000",
+        },
+        content: {
+          padding: "40px",
+          border: "none",
+          borderRadius: "8px",
+          width: "70%",
+          maxWidth: "600px",
+          minWidth: "300px",
+          maxHeight: "80%",
+          margin: "auto",
+          top: "none",
+          left: "none",
+          right: "none",
+          bottom: "none",
+        },
+      }}
     >
       <ModalClose onClick={closeModal}>
         <IoMdClose />

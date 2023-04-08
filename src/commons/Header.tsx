@@ -9,6 +9,7 @@ import { userInfoState } from "../store/userInfoAtom";
 import { loginState } from "../store/loginAtom";
 import { removeLocalStorage } from "../utils/localStorage";
 import { removeCookie } from "../utils/cookie";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -97,7 +98,9 @@ const Header = () => {
               </div>
               <ul>
                 <li>알림</li>
-                <li>장바구니</li>
+                <Link to="/cart">
+                  <li>장바구니</li>
+                </Link>
                 {loginStatus.isLogin ? (
                   <li onClick={handleLogout}>로그아웃</li>
                 ) : (

@@ -6,7 +6,7 @@ import test from "/review.png";
 const ReviewItems = () => {
   const data = new Array();
 
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 12; i++) {
     data.push(i);
   }
 
@@ -36,7 +36,9 @@ const ReviewItems = () => {
             </Text>
           </Content>
 
-          <ReviewTitle>남미 여행이 어땠냐면</ReviewTitle>
+          <ReviewTitle>
+            남미 여행이 어땠냐면 끝내줘요 죽여줘요 사랑해요 또 가고 싶어요
+          </ReviewTitle>
         </Link>
       ))}
     </List>
@@ -44,24 +46,35 @@ const ReviewItems = () => {
 };
 
 const List = styled.ul`
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   grid-gap: 50px 20px;
-  margin-top: 80px;
+  @media screen and (max-width: 850px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
 `;
 const Content = styled.div`
   position: relative;
 `;
 const Img = styled.div`
-  width: 290px;
-  height: 290px;
+  width: 100%;
+  height: calc(1240px / 4.5);
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   border-radius: 10px;
-
+  @media screen and (max-width: 1240px) {
+    height: calc(100vw / 4.5);
+  }
+  @media screen and (max-width: 850px) {
+    height: calc(100vw / 2.5);
+  }
   img {
+    width: 100%;
     height: 100%;
   }
 `;
@@ -71,14 +84,24 @@ const Text = styled.div`
   left: 20px;
   p {
     margin-bottom: 10px;
-    font-size: 13px;
+    font-size: 17px;
     color: white;
   }
 `;
 const ReviewTitle = styled.h2`
+  width: 100%;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
+  overflow: hidden;
+  line-height: 25px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  /* 말줄임 적용 */
 `;
 
 export default ReviewItems;

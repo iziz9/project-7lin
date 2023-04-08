@@ -21,6 +21,7 @@ import Point from "../pages/mypage/Point";
 import PrivateRoute from "./PrivateRoute";
 import RecommendPage from "../pages/recommend/RecommendPage";
 import Search from "../pages/search/Search";
+import Cart from "./../pages/cart/Cart";
 
 const router = createBrowserRouter([
   {
@@ -116,8 +117,12 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: "/product/:id",
+        path: "product/:id",
         element: <ProductDetail />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
     ],
   },
