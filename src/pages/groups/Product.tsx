@@ -48,7 +48,8 @@ const Item = styled.li`
   }
   .image {
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    aspect-ratio: 1 / 1; // 가로세로 길이가 다른 썸네일용
     &:hover {
       opacity: 0.4;
     }
