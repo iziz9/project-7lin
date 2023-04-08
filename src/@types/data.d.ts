@@ -110,3 +110,11 @@ export interface ProductResponseType {
   dataSize: number;
   data: { products: object[]; totalElements: number };
 }
+
+export interface MemberInfoResponse {
+  email: string;
+  name: string;
+  gender: string;
+  age: number;
+  phone: string;
+}
