@@ -108,5 +108,14 @@ export interface ProductRequestType {
 // 상품 조회 response
 export interface ProductResponseType {
   dataSize: number;
-  data: { products: object[]; totalElements: number };
+  data: { products: ProductType[]; totalElements: number };
+}
+
+export interface ProductType {
+  briefExplanation: string;
+  period: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  thumbnail: string;
 }

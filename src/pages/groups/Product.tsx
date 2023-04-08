@@ -4,11 +4,11 @@ import { useMediaQuery } from "react-responsive";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
 import { render } from "react-dom";
-import { ProductType } from "./Groups";
+import { ProductType } from "../../@types/data";
 
-type ProductProps = {
+interface ProductProps {
   product: ProductType; // 부모 컴포넌트에서 import한 타입
-};
+}
 
 const Product = ({ product }: ProductProps) => {
   return (

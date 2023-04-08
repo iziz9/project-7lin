@@ -5,8 +5,9 @@ import SubMenu from "./SubMenu";
 import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
-import { ProductRequestType } from "../../@types/data";
+import { ProductRequestType, ProductType } from "../../@types/data";
 import { Link, useLocation } from "react-router-dom";
+import { getCategoryName } from "../../utils/category";
 
 // 목업 데이터
 const mockupData = [
@@ -79,32 +80,6 @@ const pagenation = (
   return arr;
 };
 
-// 주소로 요청 카테고리명 받아오기
-const getCategoryName = (pathname: string) => {
-  switch (pathname) {
-    // main category: 그룹별 여행 , 테마별 여행, 지역별 여행
-    case "groups":
-      return "GROUP";
-    case "themes":
-      return "THEME";
-    case "destination":
-      return "REGION";
-    // 예외
-    default:
-      return null;
-  }
-};
-
-// 자식인 Product 컴포넌트로 넘겨주기 위해 export
-export type ProductType = {
-  briefExplanation: string;
-  period: number;
-  productId: number;
-  productName: string;
-  productPrice: number;
-  thumbnail: string;
-};
-
 const Groups = () => {
   // 주소로 메인 카테고리명 받아오기
   const mainCategoryName = getCategoryName(
@@ -125,7 +100,8 @@ const Groups = () => {
   const [pages, setPages] = useState(1); // 총 페이지 수
   const [items, setItems] = useState<ProductType[]>(mockupData); // product 컴포넌트로 내려줄 상품 (response data의 상품 데이터)
 
-  const renderProduct = async () => {
+  // 상품 조회 api 호출 및 state 변경
+  const getProductsData = async () => {
     const result = await postProductResult(testdata, currentPage);
     // 네트워크 에러시
     if (result === "Network Error") {
@@ -140,7 +116,7 @@ const Groups = () => {
   };
 
   useEffect(() => {
-    renderProduct();
+    getProductsData();
   }, [currentPage]);
 
   return (
@@ -187,12 +163,10 @@ const Container = styled.div`
     align-items: center;
     margin: 0;
     gap: 18px;
-
     .body {
       flex-direction: column;
     }
   }
-
   .selected {
     font-weight: 700;
   }
