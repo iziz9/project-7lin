@@ -53,6 +53,12 @@ ${reset}
       padding: 0 20px;
     }
   }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 `;
 
 export default GlobalStyles;

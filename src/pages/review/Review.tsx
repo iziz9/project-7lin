@@ -1,9 +1,15 @@
+import { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
 import styled from "styled-components";
 import ReviewItems from "./ReviewItems";
 import { useState } from "react";
 import ReviewFilterItem from "./ReviewFilterItem";
 import { ReviewFilterData } from "../../@types/data";
+import { useDragScroll } from "../../utils/useDragScroll";
+import { useMediaQuery } from "react-responsive";
+import { useModal } from "../../hooks/useModal";
+import Modal from "../../commons/Modal";
+import ReviewModal from "./ReviewModal";
 
 const reviewFilterData: ReviewFilterData = {
   group: {
@@ -48,7 +54,16 @@ const Review = () => {
   const [paging, setPaging] = useState<number[]>([0, 5]);
   const [selectPage, setSelectPage] = useState<number>(1);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useDragScroll(scrollRef);
+
   const pageNum = new Array<number>();
+
+  const { openModal } = useModal();
+
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:850px)",
+  });
 
   for (let i = 1; i <= 10; i++) {
     pageNum.push(i);
@@ -59,13 +74,35 @@ const Review = () => {
   };
 
   const prevPageClick = () => {
+    if (selectPage !== 1) {
+      setSelectPage((prev) => prev - 1);
+    }
     if (paging[0] !== 0) {
       setPaging((prev) => [prev[0] - 1, prev[1] - 1]);
     }
   };
   const nextPageClick = () => {
+    if (selectPage !== 10) {
+      setSelectPage((prev) => prev + 1);
+    }
     if (paging[1] !== 10) {
       setPaging((prev) => [prev[0] + 1, prev[1] + 1]);
+    }
+  };
+  const prevEndPageClick = () => {
+    if (selectPage !== 1) {
+      setSelectPage(1);
+    }
+    if (paging[0] !== 0) {
+      setPaging([0, 5]);
+    }
+  };
+  const nextEndPageClick = () => {
+    if (selectPage !== 10) {
+      setSelectPage(10);
+    }
+    if (paging[1] !== 10) {
+      setPaging([5, 10]);
     }
   };
 
@@ -74,30 +111,43 @@ const Review = () => {
       <Head>
         <Title>여행 후기</Title>
         <Contents>
-          <Search>
-            <input
-              type="text"
-              name="review"
-              placeholder="검색어를 입력하세요"
-            />
-            <button>
-              <BsSearch size={23} color="#939393" />
-            </button>
-          </Search>
-          <ReviewBtn onClick={handleClick}>후기 작성하기</ReviewBtn>
+          {isMobile ? null : (
+            <Search isMobile={isMobile}>
+              <input
+                type="text"
+                name="review"
+                placeholder="검색어를 입력하세요"
+              />
+              <button>
+                <BsSearch size={23} color="#939393" />
+              </button>
+            </Search>
+          )}
+          <ReviewBtn
+            onClick={() =>
+              openModal({
+                title: "예약번호를 입력해주세요",
+                content: <ReviewModal />,
+              })
+            }
+          >
+            후기 작성하기
+          </ReviewBtn>
         </Contents>
-        {modalOpen && (
-          <Modal>
-            <form>
-              <span>예약번호</span>
-              <input type="text" />
-              <button type="submit">인증</button>
-            </form>
-            <Button>후기 작성하기</Button>
-          </Modal>
-        )}
+
+        <Modal />
       </Head>
-      <Filtering>
+
+      {isMobile ? (
+        <Search isMobile={isMobile}>
+          <input type="text" name="review" placeholder="검색어를 입력하세요" />
+          <button>
+            <BsSearch size={23} color="#939393" />
+          </button>
+        </Search>
+      ) : null}
+
+      <Filtering ref={scrollRef}>
         {Object.keys(reviewFilterData).map((key: string) => (
           <ReviewFilterItem
             key={key}
@@ -110,7 +160,7 @@ const Review = () => {
       <ReviewItems />
 
       <Paging>
-        <Btn onClick={() => (paging[0] !== 0 ? setPaging([0, 5]) : null)}>
+        <Btn onClick={prevEndPageClick}>
           <img src="/front_icon.svg" alt="맨 앞 페이지로 가기" />
         </Btn>
         <Btn onClick={prevPageClick}>
@@ -118,9 +168,12 @@ const Review = () => {
         </Btn>
         {/* 최대 5개 페이지만 보이고 이동할때마다 해당 페이지를 중심으로 5개씩만 보여주기 */}
         {pageNum.slice(paging[0], paging[1]).map((item) => (
-          <Numbers key={item} selectPage={selectPage}>
+          <Numbers key={item}>
             <span
-              style={{ fontWeight: selectPage === item ? "bold" : "normal" }}
+              style={{
+                fontWeight: selectPage === item ? "bold" : "normal",
+                borderColor: selectPage === item ? "black" : "transparent",
+              }}
               onClick={() => setSelectPage(item)}
             >
               {item}
@@ -130,7 +183,7 @@ const Review = () => {
         <Btn onClick={nextPageClick}>
           <img src="/Arrow-Right_icon.svg" alt="다음 페이지로 가기" />
         </Btn>
-        <Btn onClick={() => (paging[1] !== 10 ? setPaging([5, 10]) : null)}>
+        <Btn onClick={nextEndPageClick}>
           <img src="/back_icon.svg" alt="맨 뒤 페이지로 가기" />
         </Btn>
       </Paging>
@@ -139,19 +192,14 @@ const Review = () => {
 };
 
 const Wrap = styled.div`
-  width: 1225px;
+  width: 100%;
   margin: 80px auto;
+  padding: 0 10px;
+  box-sizing: border-box;
 `;
 const Head = styled.div`
   display: flex;
   justify-content: space-between;
-  position: relative;
-`;
-
-const Filtering = styled.div`
-  width: 100%;
-  display: flex;
-  margin-top: 50px;
   position: relative;
 `;
 
@@ -164,68 +212,13 @@ const Contents = styled.div`
   display: flex;
 `;
 
-const Modal = styled.div`
-  position: absolute;
-  right: 0;
-  top: 100%;
-  width: 350px;
-  padding: 25px;
-  border: 1px solid #939393;
-  border-radius: 8px;
-  z-index: 5;
-  background-color: white;
-  form {
-    position: relative;
-    display: flex;
-    margin-bottom: 30px;
-    span {
-      position: absolute;
-      bottom: 16px;
-      left: 10px;
-      font-size: 17px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      padding-left: 25%;
-      border: none;
-      outline: none;
-      border-bottom: 1px solid black;
-      font-size: 17px;
-    }
-    button {
-      flex-shrink: 0;
-      margin-left: 10px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 2px solid #0d99ff;
-      outline: none;
-      background-color: white;
-      color: #0d99ff;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  }
-`;
-const Button = styled.button`
-  width: 100%;
-  padding: 15px;
-  background-color: #0d99ff;
-  outline: none;
-  border: none;
-  border-radius: 8px;
-  font-size: 17px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-`;
-
-const Search = styled.form`
+const Search = styled.form<{ isMobile: boolean }>`
   position: relative;
+  width: ${({ isMobile }) => (isMobile ? "100%" : "")};
+  margin-top: ${({ isMobile }) => (isMobile ? "30px" : "")};
   input {
     display: inline-block;
-    width: 300px;
+    width: ${({ isMobile }) => (isMobile ? "95%" : "300px")};
     padding: 15px;
     outline: none;
     border: none;
@@ -258,31 +251,38 @@ const ReviewBtn = styled.button`
   cursor: pointer;
 `;
 
+const Filtering = styled.div`
+  width: 100%;
+  display: flex;
+  margin: 30px 0;
+  position: relative;
+  @media screen and (max-width: 900px) {
+    overflow-x: scroll;
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+`;
+
 const Paging = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 50px;
 `;
-const Numbers = styled.div<{ selectPage: number }>`
+const Numbers = styled.div`
   span {
     display: inline-block;
     margin: 0 2px;
     border-radius: 5px;
-    padding: 1px 3px;
+    padding: 2px 3px;
     box-sizing: border-box;
     border: 1px solid transparent;
     cursor: pointer;
-    :nth-child(
-        ${({ selectPage }) => {
-            return selectPage;
-          }}
-      ) {
-      font-weight: bold;
-    }
-    :hover {
-      border: 1px solid black;
-    }
+  }
+  :hover span {
+    font-weight: bold;
   }
 `;
 
