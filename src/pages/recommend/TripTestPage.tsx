@@ -4,13 +4,7 @@ import { scrollToTop } from "../../utils/scroll";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import { useNavigate } from "react-router";
 import TestResult from "./TestResult";
-
-export const lastAnswers = {
-  golf: "이날을 위해 스크린에서 연습했지. 라운딩 가자!",
-  trekking: "멋진 풍경을 배경삼아 한번 걸어볼까?",
-  ocean: "따뜻한 햇볕 아래 해변을 산책하고 싶어!",
-  culture: "남들이 안 가본 새로운 곳을 찾아",
-};
+import { lastAnswers } from "./ResultPack";
 
 const TripTest = () => {
   const navigate = useNavigate();

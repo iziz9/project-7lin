@@ -1,5 +1,12 @@
-export const intro: string =
-  "안녕하세요. 고투게더 여행 그룹 추천 상담봇입니다. \n 아직 여행지와 동행 그룹을 정하지 못하셨다면 설문을 통해 추천받아보세요! \n 총 10개의 문항이 있으며, 모든 항목은 중복 선택이 가능합니다. \n 응답 제출 시 SMS 또는 전화로 여행 그룹을 추천받으실 수 있습니다.";
+export const ChatbotIntro1: string =
+  "안녕하세요! \n 고투게더 여행 그룹 추천 상담봇 입니다.";
+
+export const ChatbotIntro2: string =
+  "아직 여행지와 동행 그룹을 정하지 못하셨다면 설문을 통해 추천받아보세요!";
+export const ChatbotIntro3: string =
+  "총 10개의 문항이 있으며, 모든 항목은 중복 선택이 가능합니다.";
+export const ChatbotIntro4: string =
+  "응답 제출 시 SMS 또는 전화로 여행 그룹을 추천받으실 수 있습니다.";
 
 export const questions: string[] = [
   "정확한 결과 발송을 위해 연락처를 남겨주세요. \n ex) 01012345678",

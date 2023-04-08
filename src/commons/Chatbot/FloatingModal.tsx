@@ -3,11 +3,18 @@ import styled from "styled-components";
 import FloatingInput from "./FloatingInput";
 import { PersonalData } from "../Terms";
 import { TimeFormatEnum, currentTime } from "../../utils/CurrentTime";
-import { useMediaQuery } from "react-responsive";
-import { intro, questions } from "./questionsAndAnswers";
+import {
+  ChatbotIntro1,
+  ChatbotIntro2,
+  ChatbotIntro3,
+  ChatbotIntro4,
+  questions,
+} from "./questionsAndAnswers";
 import { useRecoilState } from "recoil";
-import { chatbotStepState } from "../../store/chatbotAtom";
+import { chatListState, chatbotStepState } from "../../store/chatbotAtom";
 import { BasicBtn } from "../Button";
+import { FcVoicePresentation, FcIdea, FcApproval } from "react-icons/fc";
+import ChatList from "./ChatList";
 
 export interface ChatListType {
   person: string;
@@ -17,42 +24,96 @@ export interface ChatListType {
 
 const FloatingModal = () => {
   const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
-
+  const [chatList, setChatList] = useRecoilState(chatListState);
   const [orderNumber, setOrderNumber] = useState(0);
-  const [recievedMessage, setRecievedMessage] = useState<string>(
-    questions[orderNumber],
-  );
+
+  const [answer, setAnswer] = useState([]);
+
+  // const [recievedMessage, setRecievedMessage] = useState<string>(
+  //   questions[chatNumber.questionNumber],
+  // );
   const [myMessage, setMyMessage] = useState<string>("");
-  const [chatList, setChatList] = useState<Array<ChatListType>>([]);
+  // const [chatList, setChatList] = useState<Array<ChatListType>>([]);
+  const [startTime, setStartTime] = useState("");
   const time = currentTime(1000, TimeFormatEnum.HHmm);
 
   useEffect(() => {
-    myMessage.length >= 1 &&
-      setChatList((prev) => [
-        ...prev,
-        { person: "me", time: time, message: myMessage },
-      ]);
-  }, [myMessage]);
-
-  useEffect(() => {
-    recievedMessage.length >= 1 &&
-      setChatList((prev) => [
-        ...prev,
-        { person: "question", time: time, message: recievedMessage },
-      ]);
-  }, [recievedMessage]);
+    // myMessage.length >= 1 && setChatList({ chatList: chatList.chatList.concat()});
+    // setChatList((prev) => [
+    //   ...prev,
+    //   { person: "me", time: time, message: myMessage },
+    // ]);
+  }, [answer]);
 
   return (
     <Modal>
       <div className="inner">
-        <div className="check-terms">
-          <h2>개인정보 수집이용 동의</h2>
-          <PersonalData />
-          <CheckTermsBtn onClick={() => console.log("step2로 이동")}>
-            동의하고 시작하기
-          </CheckTermsBtn>
-        </div>
-        {/* <FloatingInput setMyMessage={setMyMessage} orderNumber={orderNumber} /> */}
+        {chatbotStep.step === 0 && (
+          <IntroContainer>
+            <div className="intro-text">
+              <div className="blue">
+                <FcVoicePresentation className="icon1" />
+                <span>{ChatbotIntro1}</span>
+              </div>
+              <div className="col">
+                <span>
+                  <FcIdea className="icon2" />
+                  {ChatbotIntro2}
+                </span>
+                <span>
+                  <FcIdea className="icon2" />
+                  {ChatbotIntro3}
+                </span>
+                <span>
+                  <FcIdea className="icon2" />
+                  {ChatbotIntro4}
+                </span>
+              </div>
+            </div>
+            <IntroBtn onClick={() => setChatbotStep({ step: 1 })}>
+              여행그룹 추천 설문 시작하기
+            </IntroBtn>
+          </IntroContainer>
+        )}
+
+        {chatbotStep.step === 1 && (
+          <IntroContainer>
+            <h2>개인정보 수집이용 동의</h2>
+            <PersonalData />
+            <IntroBtn
+              onClick={() => {
+                setChatbotStep({ step: 2 });
+                setStartTime(time);
+              }}
+            >
+              동의하고 시작하기
+            </IntroBtn>
+          </IntroContainer>
+        )}
+
+        {chatbotStep.step === 2 && (
+          <div>
+            <ChatList startTime={startTime} />
+            <FloatingInput
+              orderNumber={orderNumber}
+              setOrderNumber={setOrderNumber}
+              answer={answer}
+              setAnswer={setAnswer}
+            />
+          </div>
+        )}
+
+        {chatbotStep.step === 3 && (
+          <IntroContainer>
+            <div className="intro-text">
+              <FcApproval className="complete" />
+              <span className="complete-text">설문 제출이 완료되었습니다.</span>
+            </div>
+            <IntroBtn onClick={() => setChatbotStep({ step: 0 })}>
+              설문 다시 시작하기
+            </IntroBtn>
+          </IntroContainer>
+        )}
       </div>
     </Modal>
   );
@@ -60,7 +121,7 @@ const FloatingModal = () => {
 
 const Modal = styled.div`
   width: 450px;
-  height: 700px;
+  height: 600px;
   z-index: -99;
   position: absolute;
   right: 60px;
@@ -76,27 +137,6 @@ const Modal = styled.div`
     width: 420px;
     height: 530px;
     margin: 20px auto;
-
-    .check-terms {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      pre {
-        height: 500px;
-      }
-
-      button {
-        margin: 25px auto 0;
-      }
-    }
   }
 
   @media (max-width: 850px) {
@@ -109,19 +149,6 @@ const Modal = styled.div`
       width: 350px;
       height: 300px;
       margin: 15px auto;
-
-      .check-terms {
-        h2 {
-          text-align: center;
-          margin-bottom: 20px;
-          font-size: 20px;
-          font-weight: bold;
-        }
-
-        pre {
-          height: 300px;
-        }
-      }
     }
   }
 
@@ -134,12 +161,117 @@ const Modal = styled.div`
     .inner {
       width: 250px;
       height: 300px;
-      margin: 15px auto;
     }
   }
 `;
 
-const CheckTermsBtn = styled(BasicBtn)`
+const IntroContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  pre {
+    height: 400px;
+  }
+
+  button {
+    margin: 50px auto 0;
+  }
+
+  .intro-text {
+    width: 85%;
+    background-color: white;
+    margin: auto;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    white-space: pre-line;
+    font-size: 18px;
+    line-height: 22px;
+    border-radius: 8px;
+
+    .blue {
+      color: var(--color-blue);
+      display: flex;
+      gap: 10px;
+
+      .icon1 {
+        width: 40px;
+        height: 40px;
+      }
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+
+      .icon2 {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+      }
+    }
+
+    .complete {
+      width: 50px;
+      height: 50px;
+      margin: auto;
+    }
+
+    .complete-text {
+      color: var(--color-blue);
+      margin: auto;
+      font-size: 20px;
+    }
+  }
+
+  @media (max-width: 850px) {
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    pre {
+      height: 300px;
+    }
+
+    .intro-text {
+      font-size: 15px;
+      line-height: 18px;
+      gap: 10px;
+    }
+
+    button {
+      margin-top: 30px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .intro-text {
+      font-size: 14px;
+      line-height: 18px;
+      gap: 5px;
+      .complete-text {
+        font-size: 18px;
+      }
+    }
+  }
+`;
+
+const IntroBtn = styled(BasicBtn)`
   margin-top: 30px;
   width: 85%;
 `;

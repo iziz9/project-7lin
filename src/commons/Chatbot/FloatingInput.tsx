@@ -1,42 +1,53 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { IoIosPaperPlane } from "react-icons/io";
-import { useMediaQuery } from "react-responsive";
 import { answers } from "./questionsAndAnswers";
+import { chatListState, chatbotStepState } from "../../store/chatbotAtom";
+import { useRecoilState } from "recoil";
 
-type PropsType = {
-  setMyMessage: any;
+type FloatingInputPropsType = {
   orderNumber: number;
+  setOrderNumber: any;
+  answer: string[];
+  setAnswer: any;
 };
 
-const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
-  const isMobile: boolean = useMediaQuery({
-    query: "(max-width:850px)",
-  });
-  // 질문 3번째부터는 text input 대신 button형식으로 변경하기
+const FloatingInput = ({
+  orderNumber,
+  setOrderNumber,
+  answer,
+  setAnswer,
+}: FloatingInputPropsType) => {
+  const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
+  const [chatList, setChatList] = useRecoilState(chatListState);
+  const [selectedButton, setSelectedButton] = useState([]);
 
-  const [text, setText] = useState("");
+  const onSubmit = (aaa: string[]) => {
+    console.log(aaa);
+    setChatList({ chatList: [] });
+    // setAnswer("");
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(text);
-    setMyMessage(text);
-    setText("");
+    if (orderNumber === 7) {
+      // api연결코드 작성
+      setChatbotStep({ step: 3 });
+    }
   };
 
   return (
     <InputSection>
-      {orderNumber < 2 ? (
+      {orderNumber > 2 ? ( //<
         <TextForm
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit(e);
+            let aaa: string[] = [];
+            onSubmit(aaa);
           }}
         >
           <input
             type="text"
             placeholder="여기에 메시지 입력"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
           />
           <button type="submit">
             <IoIosPaperPlane className="send" />
@@ -46,13 +57,17 @@ const FloatingInput = ({ setMyMessage, orderNumber }: PropsType) => {
         <ButtonsForm
           onSubmit={(e) => {
             e.preventDefault();
+            // console.log(e);
             const formData = new FormData(e.currentTarget);
             let entries = formData.entries();
+            let aaa: string[] = [];
             for (const pair of entries) {
               console.log(String(pair[0]));
-              setText(String(pair[0]));
+              aaa.push(String(pair[0]));
+              // setAnswer((prev: any) => [...prev, String(pair[0])]);
             }
-            onSubmit(e);
+
+            onSubmit(aaa);
           }}
         >
           <div className="formInner">
@@ -108,7 +123,7 @@ const ButtonsForm = styled.form`
 
   .formInner {
     .innerSection {
-      width: 380px;
+      width: 370px;
       align-items: center;
       gap: 10px;
       flex-wrap: wrap;
@@ -165,6 +180,38 @@ const ButtonsForm = styled.form`
   }
 
   @media (max-width: 850px) {
+    width: 350px;
+    height: 130px;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .formInner {
+      .innerSection {
+        width: 300px;
+        gap: 8px;
+      }
+    }
+
+    label {
+      padding: 8px 10px;
+    }
+
+    button {
+      width: 40px;
+      height: 40px;
+      top: 0px;
+      right: 0px;
+
+      .send {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
     width: 250px;
     height: 130px;
     font-size: 12px;
