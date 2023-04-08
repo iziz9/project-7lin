@@ -6,6 +6,9 @@ import { BsSearch } from "react-icons/bs";
 import { SlBag, SlLogin, SlLogout } from "react-icons/sl";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../store/userInfoAtom";
+import { loginState } from "../store/loginAtom";
+import { removeLocalStorage } from "../utils/localStorage";
+import { Link } from "react-router-dom";
 import { getCookie, removeCookie } from "../utils/cookie";
 
 const Header = () => {
@@ -91,7 +94,9 @@ const Header = () => {
               </div>
               <ul>
                 <li>알림</li>
-                <li>장바구니</li>
+                <Link to="/cart">
+                  <li>장바구니</li>
+                </Link>
                 {accessToken ? (
                   <li onClick={handleLogout}>로그아웃</li>
                 ) : (

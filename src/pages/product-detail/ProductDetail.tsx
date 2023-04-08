@@ -3,11 +3,12 @@ import { useLocation, useParams } from "react-router";
 import styled from "styled-components";
 import BreadCrumb from "../../commons/Breadcrumb";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
-import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import RecommendSlider from "./../review-detail/RecommendSlider";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../../commons/Modal";
 import ProductDetailModal from "./ProductDetailModal";
+import ProductDetailReviews from "./ProductDetailReviews";
+import { useMediaQuery } from "react-responsive";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -16,11 +17,14 @@ const ProductDetail = () => {
   } = useLocation();
 
   const [isMore, setIsMore] = useState(false);
-  const [isModal, setIsModal] = useState(false);
 
   console.log(image, title, price, discription);
 
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
+
+  const isMobile: boolean = useMediaQuery({
+    query: "(max-width:850px)",
+  });
 
   return (
     <Wrap>
@@ -96,30 +100,7 @@ const ProductDetail = () => {
 
       <hr />
 
-      <Review>
-        <div>
-          <h2>여행 후기</h2>
-          <IoIosArrowDropright size={30} />
-        </div>
-
-        <List>
-          {[1, 2, 3].map((item) => (
-            <Item key={item}>
-              <img src="/product_detail_6.png" alt="후기 이미지" />
-              <div>
-                <div>
-                  <p>김영****</p>
-                  <p>
-                    <span>2023-04-11</span>
-                    <span>조회수 1003</span>
-                  </p>
-                </div>
-                <h3>남미 여행이 어땠냐면</h3>
-              </div>
-            </Item>
-          ))}
-        </List>
-      </Review>
+      <ProductDetailReviews />
 
       <hr />
 
@@ -164,22 +145,24 @@ const ProductDetail = () => {
           <button
             onClick={() => {
               openModal({
-                title: "",
+                title: "옵션 선택",
                 content: (
                   <ProductDetailModal
                     image={image}
                     title={title}
                     price={price}
+                    closeModal={closeModal}
+                    type="선택"
                   />
                 ),
               });
             }}
           >
-            예약하기
+            {isMobile ? "예약" : "예약하기"}
           </button>
-          <button>장바구니 추가</button>
-          <button>위시리스트 추가</button>
-          <button>공유하기</button>
+          <button>{isMobile ? "장바구니" : "장바구니 추가"}</button>
+          <button>{isMobile ? "찜" : "찜에 추가하기"}</button>
+          <button>{isMobile ? "공유" : "공유하기"}</button>
         </div>
       </BottomBar>
 
@@ -189,10 +172,18 @@ const ProductDetail = () => {
 };
 
 const Wrap = styled.div`
-  padding-top: 100px;
+  width: 100%;
+  padding: 100px 10px 0;
+  box-sizing: border-box;
   hr {
     width: 90%;
     margin: 30px auto;
+  }
+  img {
+    width: 100%;
+  }
+  @media screen and (max-width: 850px) {
+    padding-bottom: 200px;
   }
 `;
 const Img = styled.div`
@@ -221,6 +212,15 @@ const Infos = styled.div`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, 1fr);
+    @media screen and (max-width: 850px) {
+      width: 100%;
+    }
+    @media screen and (max-width: 500px) {
+      display: block;
+      li {
+        margin-bottom: 20px;
+      }
+    }
     li {
       display: flex;
       align-items: center;
@@ -239,51 +239,7 @@ const Rating = styled.div`
     margin-right: 10px;
   }
 `;
-const Review = styled.div`
-  > div {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-    h2 {
-      margin-right: 10px;
-      font-size: 25px;
-      font-weight: bold;
-    }
-  }
-`;
-const List = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-const Item = styled.div`
-  width: 30%;
-  position: relative;
-  img {
-    width: 100%;
-    border-radius: 10px;
-  }
-  > div {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 40px 0 59px 40px;
-    box-sizing: border-box;
-    color: white;
-    font-weight: bold;
-    div {
-      p {
-        line-height: 24px;
-      }
-    }
-    h3 {
-      font-size: 23px;
-    }
-  }
-`;
+
 const Discription = styled.div<{ isMore: boolean }>`
   display: flex;
   flex-direction: column;
@@ -329,18 +285,28 @@ const BottomBar = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 200px;
+  height: 150px;
   background-color: #0d99ff;
+  @media screen and (max-width: 850px) {
+    bottom: 80px;
+    p {
+      font-size: 20px;
+    }
+  }
   p {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     font-size: 30px;
     color: white;
     font-weight: bold;
+    @media screen and (max-width: 850px) {
+      font-size: 25px;
+    }
   }
   div {
     width: 100%;
@@ -348,11 +314,18 @@ const BottomBar = styled.div`
     display: flex;
     justify-content: space-between;
     box-sizing: border-box;
+    @media screen and (max-width: 850px) {
+      padding: 0 10px;
+      button {
+        padding: 10px 0;
+        border-radius: 10px;
+      }
+    }
   }
   button {
     width: 100%;
     margin-right: 10px;
-    padding: 10px 40px;
+    padding: 10px 0;
     border: 3px solid white;
     border-radius: 60px;
     background-color: transparent;

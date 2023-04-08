@@ -1,6 +1,5 @@
 export interface IReviewModalProps {
   title: string;
-  setModalOpen: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface IReviewFilterItemProps {
@@ -9,5 +8,6 @@ export interface IReviewFilterItemProps {
 }
 
 export interface IMainContentsProps {
+  title: string;
   thumnail: string;
 }

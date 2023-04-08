@@ -86,7 +86,7 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
     },
     onError: (error) => {
       alert("비밀번호 찾기 실패: " + error);
-      openModal(showPwModalData);
+      // openModal(showPwModalData);
     },
   });
 

@@ -44,6 +44,8 @@ const axiosApi = (url: string) => {
               return Promise.reject("이미 존재하는 아이디 입니다");
             case "ENTITY_NOT_FOUND":
               return Promise.reject("존재하지 않는 회원입니다");
+            case "PASSWORD_NOT_MATCHS":
+              return Promise.reject("비밀번호를 잘못 입력했습니다");
             default:
               break;
           }
@@ -87,6 +89,9 @@ const axiosApi = (url: string) => {
               break;
           }
           break;
+        case 500:
+          alert("서버 에러 ");
+          return (window.location.href = "/login");
         default:
           break;
       }
