@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BasicBtn } from "../../../commons/Button";
 import { BasicInput } from "../../../commons/Input";
@@ -9,7 +9,7 @@ import { ChangeInfoFormValue, UpdateMemberRequest } from "../../../@types/data";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../../store/userInfoAtom";
 import { useMutation } from "react-query";
-import { updateMemberInfo } from "../../../apis/auth";
+import { phoneCheck, updateMemberInfo } from "../../../apis/auth";
 import { useModal } from "../../../hooks/useModal";
 
 const ChangeInfoModal = () => {
@@ -35,6 +35,10 @@ const ChangeInfoModal = () => {
   const {
     register,
     handleSubmit,
+    getValues,
+    setError,
+    clearErrors,
+    setFocus,
     formState: { errors },
   } = useForm<ChangeInfoFormValue>({
     resolver: yupResolver(validationSchema),
@@ -43,6 +47,17 @@ const ChangeInfoModal = () => {
 
   const onSubmitHandler: SubmitHandler<ChangeInfoFormValue> = (data) => {
     console.log(JSON.stringify(data, null, 2));
+    if (!isCheckPhoneDuplicate) {
+      alert("전화번호 중복검사를 해주세요!");
+      setFocus("phone");
+      return;
+    }
+
+    if (isPhoneDuplicate) {
+      alert("이미 존재하는 전화번호입니다!");
+      setFocus("phone");
+      return;
+    }
 
     if (confirm("정말로 정보를 수정하시겠습니까?")) {
       const updateMemberPayload: UpdateMemberRequest = {
@@ -61,7 +76,6 @@ const ChangeInfoModal = () => {
   const updateMembreInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: (res: any) => {
       if (res.message === "회원정보를 수정했습니다.") {
-        console.log(res);
         const { phone } = res.data;
         setUserInfo({ ...userInfo, phone });
         alert("회원정보 수정 성공");
@@ -73,7 +87,54 @@ const ChangeInfoModal = () => {
     },
   });
 
-  if (updateMembreInfoMutation.isLoading) return <div>회원정보 수정 중</div>;
+  const [isCheckPhoneDuplicate, setIsCheckPhoneDuplicate] =
+    useState<boolean>(true);
+  const [isPhoneDuplicate, setIsPhoneDuplicate] = useState<boolean>(false);
+
+  const checkPhoneDuplicate = async () => {
+    setIsCheckPhoneDuplicate(true);
+    const { phone } = getValues();
+    if (phone === userInfo.phone) return;
+
+    if (errors.phone || !phone) {
+      alert("전화번호를 제데로 입력해주세요");
+      return;
+    }
+
+    try {
+      const data = await phoneCheck(phone);
+      setIsPhoneDuplicate(data);
+
+      if (data === true) {
+        clearErrors("phone");
+        setError("phone", { message: "이미 존재하는 전화번호입니다!" });
+        alert("이미 존재하는 전화번호입니다!");
+        return;
+      } else {
+        clearErrors("phone");
+      }
+    } catch (e) {
+      alert("전화번호 중복검사 실패");
+      setIsCheckPhoneDuplicate(false);
+    }
+  };
+
+  const [phone, setPhone] = useState<string>(userInfo.phone);
+
+  useEffect(() => {
+    if (userInfo.phone === phone) {
+      setIsCheckPhoneDuplicate(true);
+      setIsPhoneDuplicate(false);
+      return;
+    }
+    setIsCheckPhoneDuplicate(false);
+    if (!isPhoneDuplicate) {
+      setIsPhoneDuplicate(true);
+      clearErrors(["password", "confirmPassword", "phone"]);
+    }
+  }, [phone]);
+
+  // if (updateMembreInfoMutation.isLoading) return <div>회원정보 수정 중</div>;
 
   return (
     <Container>
@@ -126,13 +187,31 @@ const ChangeInfoModal = () => {
             {errors.phone ? (
               <div className="invalid">{errors.phone?.message}</div>
             ) : null}
-            <div>
-              <BasicInput
-                className={errors.phone ? "warning" : ""}
-                type="tel"
-                defaultValue={userInfo.phone}
-                {...register("phone")}
-              />
+            {isPhoneDuplicate ||
+            !isCheckPhoneDuplicate ||
+            errors.phone ? null : (
+              <div className="valid">사용 가능한 전화번호입니다!</div>
+            )}
+            <div className="phone-area">
+              <div className="phone-input">
+                <BasicInput
+                  className={errors.phone ? "warning" : ""}
+                  type="tel"
+                  defaultValue={userInfo.phone}
+                  {...register("phone", {
+                    onChange: (e) => setPhone(e.target.value),
+                  })}
+                />
+              </div>
+              <div className="btn-wrapper" onClick={checkPhoneDuplicate}>
+                <BasicBtn
+                  type="button"
+                  style={{ height: "49px" }}
+                  // disabled={isIdDuplicate ? true : false}
+                >
+                  중복확인
+                </BasicBtn>
+              </div>
             </div>
           </div>
         </section>
@@ -172,6 +251,15 @@ const Container = styled.div`
       display: flex;
       flex-direction: column;
       gap: 8px;
+
+      .phone-area {
+        display: flex;
+        gap: 10px;
+
+        .phone-input {
+          width: 85%;
+        }
+      }
     }
   }
 
@@ -192,6 +280,14 @@ const Container = styled.div`
     /* @media (max-width: 850px) {
       font-size: 14px;
     } */
+  }
+
+  .valid {
+    width: 100%;
+    /* padding: 0.8rem 0; */
+    font-size: 16px;
+    font-weight: bold;
+    color: #0d99ff;
   }
 `;
 

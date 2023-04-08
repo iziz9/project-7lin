@@ -2,6 +2,7 @@ import {
   FindIdFormValue,
   FindPwFormValue,
   LoginFormValue,
+  MemberInfoResponse,
   SignUpRequest,
   UpdateMemberRequest,
 } from "../@types/data";
@@ -52,7 +53,9 @@ export const findPassword = async (arg: FindPwFormValue) => {
 };
 
 export const getMemberInfo = async (email: string) => {
-  const data = await axiosInstance.get(`/member?email=${email}`);
+  const data: MemberInfoResponse = await axiosInstance.get(
+    `/member?email=${email}`,
+  );
   console.log(data);
   return data;
 };
