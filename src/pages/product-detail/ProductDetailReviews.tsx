@@ -2,11 +2,29 @@ import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import { IoIosArrowDropright } from "react-icons/io";
 import { useDragScroll } from "../../utils/useDragScroll";
+import { Link } from "react-router-dom";
 
-const ProductDetailReviews = () => {
+export interface IProductDetailReviewsProps {
+  reviewData: IProductDetailReviewData[];
+  thumnail: string;
+}
+
+export interface IProductDetailReviewData {
+  createdDate: string;
+  reviewId: number;
+  thumbnail: string;
+  title: string;
+  viewCount: number;
+}
+
+const ProductDetailReviews = ({
+  reviewData,
+  thumnail,
+}: IProductDetailReviewsProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useDragScroll(ref);
+
   return (
     <>
       <Head>
@@ -16,23 +34,30 @@ const ProductDetailReviews = () => {
 
       <Review ref={ref}>
         <List>
-          {[1, 2, 3].map((item) => (
-            <Item key={item}>
-              <img src="/product_detail_6.png" alt="후기 이미지" />
-              <div>
-                <div>
-                  <p>김영****</p>
-                  <p>
-                    <span>2023-04-11 </span>
-                    <span>조회수 1003</span>
-                  </p>
-                </div>
-                <h3>
-                  남미 여행이 어땠냐면 sdfasdfasd fasdfasdfasdf sdfsdfadsfadsf
-                </h3>
-              </div>
-            </Item>
-          ))}
+          {reviewData.length === 0 ? (
+            <p>여행후기가 없습니다</p>
+          ) : (
+            reviewData.map((item: IProductDetailReviewData) => (
+              <Link key={item.reviewId} to={`/review/${item.reviewId}`}>
+                <Item>
+                  <img
+                    onError={(e) => (e.currentTarget.src = thumnail)}
+                    src={item.thumbnail}
+                    alt="후기 이미지"
+                  />
+                  <div>
+                    <div>
+                      <p>
+                        <span>{item.createdDate}</span>{" "}
+                        <span>조회수 {item.viewCount}</span>
+                      </p>
+                    </div>
+                    <h3>{item.title}</h3>
+                  </div>
+                </Item>
+              </Link>
+            ))
+          )}
         </List>
       </Review>
     </>
@@ -58,9 +83,17 @@ const Review = styled.div`
 const List = styled.div`
   display: flex;
   justify-content: space-between;
-
+  > p {
+    margin: 30px auto;
+    font-size: 30px;
+    font-weight: bold;
+  }
   @media screen and (max-width: 850px) {
     width: 850px;
+    > p {
+      margin: 30px 0;
+      margin-left: 50px;
+    }
   }
 `;
 const Item = styled.div`
