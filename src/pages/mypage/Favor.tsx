@@ -5,15 +5,15 @@ import { getWishList } from "../../apis/auth";
 import WishListProductCard from "./components/WishListProductCard";
 
 const Favor = () => {
-  const { data, isLoading } = useQuery("memberReservation", getWishList, {
-    onSuccess(data) {
-      console.log(data);
-    },
-    onError(error) {
-      console.log("찜 리스트 조회 실패: " + error);
-    },
-    retry: 0,
-  });
+  // const { data, isLoading } = useQuery("memberReservation", getWishList, {
+  //   onSuccess(data) {
+  //     console.log(data);
+  //   },
+  //   onError(error) {
+  //     console.log("찜 리스트 조회 실패: " + error);
+  //   },
+  //   retry: 0,
+  // });
 
   // const wishList = data?.map((product) => (
   //   <WishListProductCard product={product} />
