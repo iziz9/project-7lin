@@ -134,7 +134,7 @@ const Groups = () => {
           key={i}
           id={i.toString()}
           onClick={clickPage}
-          className={i === page.pageNumber ? "selected" : ""}
+          className={i === page.pageNumber ? "selectedPage" : ""}
         >
           {i}
         </Link>,
@@ -166,7 +166,11 @@ const Groups = () => {
           <SubMenu length={subMenu["groups"].length}>
             {subMenu["groups"].map((value) => (
               <Link
-                className="submenu"
+                className={
+                  category.categories.middleCategory === value
+                    ? "selectedMenu submenu"
+                    : "submenu"
+                }
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
@@ -181,7 +185,11 @@ const Groups = () => {
           <SubMenu length={subMenu["themes"].length}>
             {subMenu["themes"].map((value) => (
               <Link
-                className="submenu"
+                className={
+                  category.categories.middleCategory === value
+                    ? "selectedMenu submenu"
+                    : "submenu"
+                }
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
@@ -196,7 +204,11 @@ const Groups = () => {
           <SubMenu length={subMenu["destination"].length}>
             {subMenu["destination"].map((value) => (
               <Link
-                className="submenu"
+                className={
+                  category.categories.middleCategory === value
+                    ? "selectedMenu submenu"
+                    : "submenu"
+                }
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
@@ -283,7 +295,7 @@ const Container = styled.div`
       gap: 0;
     }
   }
-  .selected {
+  .selectedPage {
     font-weight: 700;
   }
 `;
@@ -329,6 +341,10 @@ const SubMenu = styled.div<ContainerProps>`
       color: #0080c6;
       background-color: #e9e9e9;
     }
+  }
+  .selectedMenu {
+    color: #0080c6;
+    background-color: #e9e9e9;
   }
 
   // 모바일 환경
