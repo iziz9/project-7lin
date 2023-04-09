@@ -1,16 +1,65 @@
-import { AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart } from "react-icons/ai";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ProductType } from "../../@types/data";
 import { useRecoilValue } from "recoil";
 import { itemState } from "../../store/categoryAtom";
+import { getCookie } from "../../utils/cookie";
+import useWishlistQuery from "../../hooks/useWishlistQuery";
+import useDeleteWishlistMutation from "../../hooks/useDeleteWishlistMutation";
+import useAddWishlistMutation from "../../hooks/useAddWishlistMutation";
 
 interface ProductProps {
   product: ProductType; // 부모 컴포넌트에서 import한 타입
 }
 
 const Product = () => {
+  const navigate = useNavigate();
   const items = useRecoilValue(itemState);
+  const token = getCookie("accessToken");
+
+  const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
+    onSuccess(data) {
+      console.log(data);
+    },
+    onError(error) {
+      console.log("찜 리스트 조회 실패: " + error);
+    },
+    enabled: token ? true : false,
+  });
+
+  const addWishListMutation = useAddWishlistMutation({
+    onSuccess(res) {
+      if (res.message === "success") {
+        alert("찜 추가 완료");
+        return refetchWishlist();
+      }
+    },
+    onError(error) {
+      alert("찜 추가 에러: " + error);
+    },
+  });
+
+  const deleteWishListMutation = useDeleteWishlistMutation({
+    onSuccess(res) {
+      if (res.message === "success") {
+        alert("찜 삭제 완료");
+        return refetchWishlist();
+      }
+    },
+    onError(error) {
+      alert("찜 삭제 에러: " + error);
+    },
+  });
+
+  const toggleWishlist = (productId: number) => {
+    if (wishlistData?.find((product) => product.productId === productId)) {
+      deleteWishListMutation.mutate(productId);
+    } else {
+      addWishListMutation.mutate(productId);
+    }
+  };
+
   if (items.length === 0) {
     return (
       <NoContainer>
@@ -31,10 +80,28 @@ const Product = () => {
             },
             index,
           ) => (
-            <Link to={`/product/${productId}`} key={index}>
+            <div
+              className="link"
+              onClick={() => navigate(`/product/${productId}`)}
+              key={index}
+            >
               <Item>
                 <img className="image" src={thumbnail} alt={productName} />
-                <AiOutlineHeart />
+                {token ? (
+                  <AiFillHeart
+                    className={
+                      wishlistData?.find(
+                        (product) => product.productId === productId,
+                      )
+                        ? "favor active"
+                        : "favor"
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWishlist(productId);
+                    }}
+                  />
+                ) : null}
                 <h3 className="title">{productName}</h3>
                 <span className="price">
                   {productPrice
@@ -46,7 +113,7 @@ const Product = () => {
                   dangerouslySetInnerHTML={{ __html: briefExplanation }}
                 ></p>
               </Item>
-            </Link>
+            </div>
           ),
         )}
       </Container>
@@ -69,6 +136,10 @@ export const Container = styled.ul`
   gap: 20px;
   row-gap: 40px;
   max-width: 970px;
+
+  .link {
+    cursor: pointer;
+  }
 
   @media (max-width: 1000px) {
     grid-template-columns: repeat(2, 1fr);
@@ -95,7 +166,15 @@ const Item = styled.li`
     position: absolute;
     right: 16px;
     top: 16px;
-    font-size: 25px;
+    font-size: 35px;
+    color: var(--color-grayscale30);
+    transition: 0.6s;
+    &.active {
+      color: red;
+    }
+    &:hover {
+      transform: scale(1.3);
+    }
   }
   .image {
     width: 100%;
@@ -122,9 +201,9 @@ const Item = styled.li`
 
   @media (max-width: 850px) {
     svg {
-      right: 8px;
-      top: 8px;
-      font-size: 20px;
+      /* right: 8px; */
+      /* top: 8px; */
+      font-size: 35px;
     }
     .title {
       margin-top: 14px;
