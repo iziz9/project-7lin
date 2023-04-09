@@ -8,7 +8,15 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
 import Modal from "react-modal";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // refetchOnMount: false,
+      // refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <QueryClientProvider client={queryClient}>
     <RecoilRoot>

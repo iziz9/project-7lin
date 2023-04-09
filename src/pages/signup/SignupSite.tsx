@@ -193,6 +193,7 @@ const SignupSite = () => {
       if (res) {
         console.log(res);
         // 자동 로그인 시도해보기
+        scrollToTop();
         navigate("/login");
       }
     },

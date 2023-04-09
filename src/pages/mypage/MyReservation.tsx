@@ -1,56 +1,100 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import ProductCard from "./components/ProductCard";
+import { useQuery } from "react-query";
+import { getMemberReservation } from "../../apis/auth";
+import { ReservationProduct } from "../../@types/data";
+import ReservationProductCard from "./components/ReservationProductCard";
 
 const Reservation = () => {
   const [tab, setTab] = useState<0 | 1 | 2>(0);
 
+  const handleTab = (num: 0 | 1 | 2) => {
+    setTab(num);
+  };
+
+  const { data, isLoading } = useQuery(
+    "memberReservation",
+    getMemberReservation,
+    {
+      onSuccess(data) {
+        console.log(data);
+      },
+      onError(error) {
+        console.log("회원 예약 조회 실패: " + error);
+      },
+    },
+  );
+
+  const waitingReservation = data?.data
+    .filter((product: ReservationProduct) => product.status === "WAITING")
+    .map((product: ReservationProduct) => (
+      <ReservationProductCard
+        key={product.reservationId}
+        tab={tab}
+        handleTab={handleTab}
+        product={product}
+      />
+    ));
+
+  const completeReservation = data?.data
+    .filter((product: ReservationProduct) => product.status === "COMPLETE")
+    .map((product: ReservationProduct) => (
+      <ReservationProductCard
+        key={product.reservationId}
+        tab={tab}
+        handleTab={handleTab}
+        product={product}
+      />
+    ));
+
+  const cancelReservation = data?.data
+    .filter((product: ReservationProduct) => product.status === "CANCEL")
+    .map((product: ReservationProduct) => (
+      <ReservationProductCard
+        key={product.reservationId}
+        tab={tab}
+        handleTab={handleTab}
+        product={product}
+      />
+    ));
+
   const getListElement = () => {
     switch (tab) {
       case 0:
-        return (
-          <>
-            <ProductCard tab={tab} reservation={true} />
-            <ProductCard tab={tab} reservation={true} />
-            <ProductCard tab={tab} reservation={true} />
-            <ProductCard tab={tab} reservation={true} />
-            <ProductCard tab={tab} reservation={true} />
-            <ProductCard tab={tab} reservation={true} />
-          </>
-        );
+        return waitingReservation;
+
       case 1:
-        return (
-          <>
-            <ProductCard tab={tab} reservation={true} />
-            <ProductCard tab={tab} reservation={true} />
-          </>
-        );
+        return completeReservation;
+
       case 2:
-        return (
-          <>
-            <ProductCard tab={tab} reservation={true} />
-          </>
-        );
+        return cancelReservation;
     }
   };
 
   const listElement = getListElement();
+  const noProduct = (
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      예약 내역이 없습니다.
+    </div>
+  );
 
   return (
     <Container tab={tab}>
       <div className="title">예약 내역</div>
       <div className="type-wrapper">
         <div className="type yet" onClick={() => setTab(0)}>
-          준비중인 예약 (2)
+          준비중인 예약 ({waitingReservation?.length})
         </div>
         <div className="type ready" onClick={() => setTab(1)}>
-          완료된 예약 (1)
+          완료된 예약 ({completeReservation?.length})
         </div>
         <div className="type cancel" onClick={() => setTab(2)}>
-          취소된 예약 (1)
+          취소된 예약 ({cancelReservation?.length})
         </div>
       </div>
-      <div className="list">{listElement}</div>
+      <div className="list">
+        {listElement?.length === 0 ? noProduct : listElement}
+      </div>
     </Container>
   );
 };

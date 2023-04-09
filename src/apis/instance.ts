@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import { getCookie, setCookie } from "../utils/cookie";
+import { getCookie, removeCookie, setCookie } from "../utils/cookie";
 
 const API_BASE_URL: string = import.meta.env.VITE_BASE_URL;
 
@@ -44,6 +44,8 @@ const axiosApi = (url: string) => {
               return Promise.reject("이미 존재하는 아이디 입니다");
             case "ENTITY_NOT_FOUND":
               return Promise.reject("존재하지 않는 회원입니다");
+            case "PASSWORD_NOT_MATCHS":
+              return Promise.reject("비밀번호를 잘못 입력했습니다");
             default:
               break;
           }
@@ -83,10 +85,16 @@ const axiosApi = (url: string) => {
               return Promise.reject("비밀번호를 잘못 입력했습니다");
             case "ENTITY_NOT_FOUND":
               return Promise.reject("해당하는 아이디가 존재하지 않습니다");
+            case "RESERVATION-002":
+              return Promise.reject("존재하지 않는 예약 내역 입니다.");
             default:
               break;
           }
           break;
+        case 500:
+          alert("서버 에러 ");
+          removeCookie("accessToken");
+          return (window.location.href = "/login");
         default:
           break;
       }
