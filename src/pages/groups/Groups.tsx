@@ -44,66 +44,56 @@ const Groups = () => {
   const [page, setPage] = useRecoilState(pageState);
   // 정렬(전역)
   const [sort, setSort] = useRecoilState(sortState);
-
-  // 상품
+  // 상품(전역)
   const [items, setItems] = useRecoilState(itemState);
 
   const navigate = useNavigate();
 
-  const onClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    console.log("클릭됐땅", event.currentTarget.id);
-
-    // api 호출
-    getProductsData(1, event.currentTarget.id, sort.sort);
-
-    // Link to가 안먹혀서 작성
-    navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
-  };
-
   // 상품 조회 api 호출 및 state 변경
   const getProductsData = async (
-    changePage: number,
-    middleCategory: string | null,
-    sortParam?: string | null,
+    paramsPageNumber: number,
+    paramsMiddleCategory: string | null,
+    paramsSort: string | null,
   ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
       category: [
         {
           mainCategory: getMainCategoryName(category.categories.mainCategory),
-          middleCategory: getMiddleCategoryName(middleCategory),
+          middleCategory: getMiddleCategoryName(paramsMiddleCategory),
         },
       ],
-      sort: sortParam,
+      sort: paramsSort,
     };
 
-    const result = await postProductResult(requestData, changePage);
+    const result = await postProductResult(requestData, paramsPageNumber);
     // 네트워크 에러시
     if (result === "Network Error") {
       console.log("네트워크 에러");
       return;
     } else {
-      // 현재 카테고리 값 저장
       const { pageNumber, totalPages } = result.data;
-      // console.log("test..", pageNumber, totalPages);
+
+      // 페이지 값 저장
       setPage({
+        // pageNumber= paramsPageNumber ?
         pageNumber,
         totalPages,
       });
 
+      // 카테고리 값 저장
       setCategory({
         categories: {
           mainCategory: categoryLevel[1],
-          middleCategory: middleCategory,
+          middleCategory: paramsMiddleCategory,
         },
       });
 
-      // 상품 저장
+      // 호출 결과 상품 값 저장
       setItems(result.data.products);
 
-      // 정렬방식 저장
-      setSort;
+      // 정렬 값 저장
+      setSort({ sort: paramsSort });
     }
   };
 
@@ -115,7 +105,7 @@ const Groups = () => {
       },
     });
     // Api 호출
-    getProductsData(page.pageNumber, categoryLevel[2]);
+    getProductsData(page.pageNumber, categoryLevel[2], null);
     // console.log("아이템은", items);
     // console.log("카테고리는", category);
   }, []);
@@ -153,10 +143,20 @@ const Groups = () => {
     return arr;
   };
 
+  const subMenuClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    getProductsData(1, event.currentTarget.id, null);
+    // Link to가 안먹혀서 작성
+    navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
+  };
+
   const sortClick = (event: React.MouseEvent<HTMLLIElement>) => {
-    const sortValue = getSortName(event.currentTarget.id);
-    setSort({ sort: sortValue });
-    getProductsData(page.pageNumber, categoryLevel[2], sortValue);
+    event.preventDefault();
+    getProductsData(
+      page.pageNumber,
+      category.categories.middleCategory,
+      getSortName(event.currentTarget.id),
+    );
   };
 
   return (
@@ -170,7 +170,7 @@ const Groups = () => {
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
-                onClick={onClick}
+                onClick={subMenuClick}
               >
                 {getMiddleCategoryName(value)}
               </Link>
@@ -185,7 +185,7 @@ const Groups = () => {
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
-                onClick={onClick}
+                onClick={subMenuClick}
               >
                 {getMiddleCategoryName(value)}
               </Link>
@@ -200,7 +200,7 @@ const Groups = () => {
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
-                onClick={onClick}
+                onClick={subMenuClick}
               >
                 {getMiddleCategoryName(value)}
               </Link>

@@ -1,8 +1,15 @@
+// 현재 안쓰는 파일!!
+
 import React, { ReactElement, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { categoryState, itemState, pageState } from "../../store/categoryAtom";
+import {
+  categoryState,
+  itemState,
+  pageState,
+  sortState,
+} from "../../store/categoryAtom";
 import {
   getMainCategoryName,
   getMiddleCategoryName,
@@ -19,13 +26,14 @@ const subMenu = {
 interface ContainerProps {
   length: number;
 }
-
+// 현재 안쓰는 파일!!
 const SubMenu = () => {
   const navigate = useNavigate();
   const [category, setCategory] = useRecoilState(categoryState);
   const { mainCategory } = category.categories;
   const [items, setItems] = useRecoilState(itemState);
   const setPage = useSetRecoilState(pageState);
+  const resetItemState = useResetRecoilState(itemState);
 
   // 상품 조회 api 호출 및 state 변경
   const getProductsData = async (changePage: number) => {
@@ -64,7 +72,6 @@ const SubMenu = () => {
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     console.log("클릭됐땅", event.currentTarget.id);
-
     setCategory({
       categories: {
         mainCategory: mainCategory,

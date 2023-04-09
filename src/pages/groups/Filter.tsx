@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { GrPowerReset, GrClose } from "react-icons/gr";
 import { useMediaQuery } from "react-responsive";
+import { BiFilterAlt } from "react-icons/bi";
 
 const filterData = [
   {
@@ -58,14 +59,16 @@ const Filter = () => {
 
   // 필터 버튼 클릭
   const filterClicked = () => {
-    setIsFilterOpened(true);
+    setIsFilterOpened((prev) => !prev);
   };
 
   return (
     <>
       {isMobile ? (
         <MobileContainer>
-          <h4 onClick={filterClicked}>필터</h4>
+          <h4 onClick={filterClicked}>
+            필터 <BiFilterAlt />
+          </h4>
           {isFilterOpened && (
             <div className="modal">
               <ResetButton type="reset">
@@ -141,12 +144,20 @@ const MobileContainer = styled.form`
 
   // 필터
   h4 {
-    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin: 0 20px;
     font-weight: 700;
     font-size: 18px;
     padding: 16px 0;
     &:hover {
       cursor: pointer;
+    }
+    svg {
+      font-size: 22px;
+      /* color: var(--color-grayscale60); */
     }
   }
 
@@ -249,7 +260,7 @@ const ResetButton = styled.button`
 
   @media (max-width: 850px) {
     top: -40px;
-    right: 80px;
+    right: 60px;
   }
   &:hover {
     cursor: pointer;
@@ -261,9 +272,9 @@ const CloseButton = styled.button`
   border: none;
   position: absolute;
   top: -40px;
-  right: 20px;
+  right: 10px;
   font-size: 26px;
-  opacity: 0.7;
+
   &:hover {
     cursor: pointer;
   }

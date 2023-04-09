@@ -19,6 +19,23 @@ interface CategoryState {
   categories: { mainCategory: string; middleCategory: string | null };
 }
 
+interface FilterState {
+  minPeriod: number | null;
+  maxPeriod: number | null;
+  minPrice: number | null;
+  maxPrice: number | null;
+}
+
+export const filterState = atom<FilterState>({
+  key: "filterState",
+  default: {
+    minPeriod: null,
+    maxPeriod: null,
+    minPrice: null,
+    maxPrice: null,
+  },
+});
+
 export const pageState = atom<PageState>({
   key: "pageState",
   default: {
