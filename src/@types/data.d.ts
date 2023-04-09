@@ -120,3 +120,11 @@ export interface ProductType {
   productPrice: number;
   thumbnail: string;
 }
+
+export interface MemberInfoResponse {
+  email: string;
+  name: string;
+  gender: string;
+  age: number;
+  phone: string;
+}

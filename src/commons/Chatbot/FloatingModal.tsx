@@ -3,42 +3,29 @@ import styled from "styled-components";
 import FloatingInput from "./FloatingInput";
 import { PersonalData } from "../Terms";
 import { TimeFormatEnum, currentTime } from "../../utils/CurrentTime";
-import {
-  ChatbotIntro1,
-  ChatbotIntro2,
-  ChatbotIntro3,
-  ChatbotIntro4,
-  questions,
-} from "./questionsAndAnswers";
+import { chatbotIntro, questions } from "./questionsAndAnswers";
 import { useRecoilState } from "recoil";
-import { chatListState, chatbotStepState } from "../../store/chatbotAtom";
+import {
+  chatListState,
+  chatbotStepState,
+  orderNumberState,
+} from "../../store/chatbotAtom";
 import { BasicBtn } from "../Button";
 import { FcVoicePresentation, FcIdea, FcApproval } from "react-icons/fc";
 import ChatList from "./ChatList";
 
-export interface ChatListType {
-  person: string;
-  time: string;
-  message: string;
-}
-
 const FloatingModal = () => {
+  const time = currentTime(1000, TimeFormatEnum.HHmm);
   const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
   const [chatList, setChatList] = useRecoilState(chatListState);
-  const [orderNumber, setOrderNumber] = useState(0);
+  const [orderNumber, setOrderNumber] = useRecoilState(orderNumberState);
 
   const [answer, setAnswer] = useState([]);
-
-  // const [recievedMessage, setRecievedMessage] = useState<string>(
-  //   questions[chatNumber.questionNumber],
-  // );
   const [myMessage, setMyMessage] = useState<string>("");
-  // const [chatList, setChatList] = useState<Array<ChatListType>>([]);
-  const [startTime, setStartTime] = useState("");
-  const time = currentTime(1000, TimeFormatEnum.HHmm);
 
   useEffect(() => {
-    // myMessage.length >= 1 && setChatList({ chatList: chatList.chatList.concat()});
+    // myMessage.length >= 1 &&
+    //   setChatList({ chatList: chatList.chatList.concat() });
     // setChatList((prev) => [
     //   ...prev,
     //   { person: "me", time: time, message: myMessage },
@@ -53,20 +40,20 @@ const FloatingModal = () => {
             <div className="intro-text">
               <div className="blue">
                 <FcVoicePresentation className="icon1" />
-                <span>{ChatbotIntro1}</span>
+                <span>{chatbotIntro[0]}</span>
               </div>
               <div className="col">
                 <span>
                   <FcIdea className="icon2" />
-                  {ChatbotIntro2}
+                  {chatbotIntro[1]}
                 </span>
                 <span>
                   <FcIdea className="icon2" />
-                  {ChatbotIntro3}
+                  {chatbotIntro[2]}
                 </span>
                 <span>
                   <FcIdea className="icon2" />
-                  {ChatbotIntro4}
+                  {chatbotIntro[3]}
                 </span>
               </div>
             </div>
@@ -82,8 +69,7 @@ const FloatingModal = () => {
             <PersonalData />
             <IntroBtn
               onClick={() => {
-                setChatbotStep({ step: 2 });
-                setStartTime(time);
+                setChatbotStep({ step: 2, time: time });
               }}
             >
               동의하고 시작하기
@@ -93,13 +79,8 @@ const FloatingModal = () => {
 
         {chatbotStep.step === 2 && (
           <div>
-            <ChatList startTime={startTime} />
-            <FloatingInput
-              orderNumber={orderNumber}
-              setOrderNumber={setOrderNumber}
-              answer={answer}
-              setAnswer={setAnswer}
-            />
+            <ChatList />
+            <FloatingInput answer={answer} setAnswer={setAnswer} />
           </div>
         )}
 

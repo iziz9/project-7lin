@@ -2,44 +2,38 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { TimeFormatEnum, currentTime } from "../../utils/CurrentTime";
 import { useRecoilState } from "recoil";
-import { chatListState } from "../../store/chatbotAtom";
+import {
+  chatListState,
+  chatbotStepState,
+  orderNumberState,
+} from "../../store/chatbotAtom";
+import { questions } from "./questionsAndAnswers";
 
-type ChatPropsType = {
-  startTime: string;
-};
-
-const ChatList = ({ startTime }: ChatPropsType) => {
+const ChatList = () => {
   const [chatList, setChatList] = useRecoilState(chatListState);
+  const [chatbotStep] = useRecoilState(chatbotStepState);
+  const [orderNumber, setOrderNumber] = useRecoilState(orderNumberState);
 
   return (
     <ChatListContainer>
-      <div className="start-time">{"오늘 " + startTime}</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
-      <div>sdfdsfsd</div>
+      <section className="start-time">{"오늘 " + chatbotStep.time}</section>
+      <section className="chat-list">
+        {chatList.map((chatItem, index) => (
+          <div key={index} className={chatItem.question ? "question" : "me"}>
+            {chatItem.question ? (
+              <div className="chat-bubble">
+                <div className="text">{chatItem.text}</div>
+                <div className="time">{chatItem.time}</div>
+              </div>
+            ) : (
+              <div className="chat-bubble">
+                <div className="time">{chatItem.time}</div>
+                <div className="text">{chatItem.text}</div>
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
     </ChatListContainer>
   );
 };
@@ -48,6 +42,38 @@ const ChatListContainer = styled.div`
   height: 430px;
   overflow: auto;
   padding: 0 10px;
+
+  .question {
+    display: flex;
+    align-items: center;
+  }
+  .me {
+  }
+
+  .chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .chat-bubble {
+      display: flex;
+
+      .text {
+        background-color: var(--color-blue);
+        padding: 10px 15px;
+        font-size: 16px;
+      }
+      .time {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .start-time {
+    text-align: center;
+    margin-bottom: 15px;
+    color: var(--color-blue);
+  }
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -62,12 +88,6 @@ const ChatListContainer = styled.div`
   ::-webkit-scrollbar-track {
     background: rgba(126, 126, 126, 0.432);
     border-radius: 8px;
-  }
-
-  .start-time {
-    text-align: center;
-    margin-bottom: 15px;
-    color: var(--color-blue);
   }
 
   @media (max-width: 850px) {

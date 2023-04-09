@@ -1,46 +1,80 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { IoIosPaperPlane } from "react-icons/io";
-import { answers } from "./questionsAndAnswers";
-import { chatListState, chatbotStepState } from "../../store/chatbotAtom";
+import { questions, answers } from "./questionsAndAnswers";
+import {
+  chatListState,
+  orderNumberState,
+  chatbotStepState,
+} from "../../store/chatbotAtom";
 import { useRecoilState } from "recoil";
+import { currentTime, TimeFormatEnum } from "../../utils/CurrentTime";
 
 type FloatingInputPropsType = {
-  orderNumber: number;
-  setOrderNumber: any;
   answer: string[];
   setAnswer: any;
 };
 
-const FloatingInput = ({
-  orderNumber,
-  setOrderNumber,
-  answer,
-  setAnswer,
-}: FloatingInputPropsType) => {
+const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
   const [chatbotStep, setChatbotStep] = useRecoilState(chatbotStepState);
   const [chatList, setChatList] = useRecoilState(chatListState);
-  const [selectedButton, setSelectedButton] = useState([]);
+  const [orderNumber, setOrderNumber] = useRecoilState(orderNumberState);
+  const time = currentTime(1000, TimeFormatEnum.HHmm);
 
-  const onSubmit = (aaa: string[]) => {
-    console.log(aaa);
-    setChatList({ chatList: [] });
-    // setAnswer("");
+  const handleSubmit = (answers: string[]) => {
+    console.log(answers);
 
-    if (orderNumber === 7) {
+    setChatList((prev) => [
+      ...prev,
+      { question: false, time: time, text: [...(answers + " ")] },
+    ]);
+
+    setChatList((prev) => [
+      ...prev,
+      {
+        question: false,
+        time: time,
+        text: [...questions[orderNumber.totalNumbering + 1]],
+      },
+    ]);
+
+    orderNumber.textNumbering < 2 &&
+      setOrderNumber({
+        totalNumbering: orderNumber.totalNumbering + 1,
+        buttonNumbering: 0,
+        textNumbering: orderNumber.textNumbering + 1,
+      });
+
+    orderNumber.textNumbering === 2 &&
+      setOrderNumber({
+        totalNumbering: orderNumber.totalNumbering + 1,
+        buttonNumbering: orderNumber.buttonNumbering + 1,
+        textNumbering: 2,
+      });
+
+    if (orderNumber.buttonNumbering === 7) {
       // api연결코드 작성
-      setChatbotStep({ step: 3 });
+
+      setChatbotStep({ step: 3 }); // step3 제출 완료 안내화면으로
+      setOrderNumber({
+        totalNumbering: 0,
+        buttonNumbering: 0,
+        textNumbering: 0,
+      }); //초기화
+      setChatList([]); // 저장된 채팅리스트 지우기
     }
   };
 
   return (
     <InputSection>
-      {orderNumber > 2 ? ( //<
+      {orderNumber.textNumbering < 2 ? ( //<
         <TextForm
           onSubmit={(e) => {
             e.preventDefault();
-            let aaa: string[] = [];
-            onSubmit(aaa);
+            answer.length < 1
+              ? alert("정확한 답변을 작성해주세요.")
+              : handleSubmit(answer);
+            setAnswer([]);
           }}
         >
           <input
@@ -57,30 +91,32 @@ const FloatingInput = ({
         <ButtonsForm
           onSubmit={(e) => {
             e.preventDefault();
-            // console.log(e);
             const formData = new FormData(e.currentTarget);
             let entries = formData.entries();
-            let aaa: string[] = [];
+            let clickedArr: string[] = [];
             for (const pair of entries) {
-              console.log(String(pair[0]));
-              aaa.push(String(pair[0]));
-              // setAnswer((prev: any) => [...prev, String(pair[0])]);
+              clickedArr.push(String(pair[1]));
             }
 
-            onSubmit(aaa);
+            clickedArr.length < 1
+              ? alert("원하는 유형을 최소 1개 선택해주세요.")
+              : handleSubmit(clickedArr);
           }}
         >
           <div className="formInner">
             <div className="innerSection">
-              {answers[orderNumber].map((answer) => (
+              {answers[orderNumber.buttonNumbering].map((answer) => (
                 <div key={answer}>
                   <input
                     type="checkbox"
-                    id={answer}
-                    name={answer}
+                    id={answer + orderNumber.buttonNumbering}
+                    name={answer + orderNumber.buttonNumbering} //default checked false로 바뀌게 해야됨....
                     value={answer}
+                    defaultChecked={false}
                   />
-                  <label htmlFor={answer}>{answer}</label>
+                  <label htmlFor={answer + orderNumber.buttonNumbering}>
+                    {answer}
+                  </label>
                 </div>
               ))}
             </div>

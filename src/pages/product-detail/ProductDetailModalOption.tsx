@@ -17,15 +17,17 @@ const ProductDetailModalOption = () => {
       </p>
       {drop ? (
         <ul>
-          <li>
+          <li onClick={() => setDrop(false)}>
             <span>인천 출발 3박5일 07.20.수~07.24.일</span>
             <span>+100,000원</span>
           </li>
-          <li>
+          <li onClick={() => setDrop(false)}>
             <span>인천 출발 3박5일 07.20.수~07.24.일</span>
             <span>+100,000원</span>
           </li>
-          <li>인천 출발 3박5일 07.20.수~07.24.일</li>
+          <li onClick={() => setDrop(false)}>
+            인천 출발 3박5일 07.20.수~07.24.일
+          </li>
         </ul>
       ) : null}
     </Option>
@@ -56,6 +58,7 @@ const Option = styled.li`
     border: 1px solid #e6e6e6;
     border-radius: 8px;
     box-sizing: border-box;
+    cursor: pointer;
   }
   ul {
     border: 1px solid #000;
@@ -65,6 +68,7 @@ const Option = styled.li`
       display: flex;
       justify-content: space-between;
       border-radius: 8px;
+      cursor: pointer;
       :hover {
         background-color: #f5f5f5;
         color: #48484a;

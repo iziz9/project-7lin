@@ -58,6 +58,9 @@ const Items = styled.ul`
   :last-child {
     position: absolute;
     right: 0;
+    @media screen and (max-width: 900px) {
+      position: static;
+    }
   }
   ul {
     margin-top: 10px;
@@ -106,6 +109,5 @@ const Item = styled.li`
     border-radius: 0 0 10px 10px;
   }
 `;
-const Right = styled.div``;
 
 export default ReviewFilterItem;
