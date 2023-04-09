@@ -222,3 +222,18 @@ export interface Option3 {
   optionId: number;
   amount: number;
 }
+
+export interface WishListProductResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: WishListProduct[];
+}
+
+export interface WishListProduct {
+  productId: number;
+  thumbnail: string;
+  productName: string;
+  productPrice: number;
+  tagList: string[];
+}
