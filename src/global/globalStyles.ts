@@ -25,6 +25,7 @@ ${reset}
   #root {
     /* Color */
     --color-blue: #0D99FF;
+    --color-yellow: #fdb813;
     --color-inputGray: #F5F6F7;
     --color-buttonGray: #D9D9D9;
     --color-grayscale10: #F5F5F5;
