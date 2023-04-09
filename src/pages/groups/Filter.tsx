@@ -130,35 +130,31 @@ const Filter = () => {
 };
 
 const MobileContainer = styled.form`
-  /* background-color: #eb7185; */
-  position: sticky;
-  background-color: #fff;
-
-  @supports (position: sticky) or (position: -webkit-sticky) {
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-  }
+  z-index: 100;
 
   .modal {
+    background-color: #fff;
+    position: absolute;
     height: 100vh;
+    width: 100%;
   }
 
   // 필터
   h4 {
+    margin-left: 20px;
     font-weight: 700;
     font-size: 18px;
-    padding: 16px 20px;
-    margin: 0px -20px;
-    border-bottom: 1px solid var(--color-grayscale10);
+    padding: 16px 0;
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   // 필터 상세
   section {
     display: flex;
     gap: 10px;
-    padding: 20px 0;
+    padding: 20px;
     border-bottom: 1px solid var(--color-grayscale20);
     flex-wrap: wrap;
     flex-direction: column;
@@ -184,6 +180,10 @@ const MobileContainer = styled.form`
 
       input {
         zoom: 1.2;
+      }
+      &:hover,
+      input:hover {
+        cursor: pointer;
       }
     }
   }
@@ -225,6 +225,10 @@ const PCContainer = styled.form`
       input {
         zoom: 1.2;
       }
+      &:hover,
+      input:hover {
+        cursor: pointer;
+      }
     }
   }
 `;
@@ -244,8 +248,11 @@ const ResetButton = styled.button`
   border-radius: 3px;
 
   @media (max-width: 850px) {
-    top: 10px;
-    right: 40px;
+    top: -40px;
+    right: 80px;
+  }
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -253,10 +260,13 @@ const CloseButton = styled.button`
   background-color: #fff;
   border: none;
   position: absolute;
-  top: 10px;
-  right: -10px;
+  top: -40px;
+  right: 20px;
   font-size: 26px;
   opacity: 0.7;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default Filter;

@@ -94,23 +94,60 @@ export interface TestResultProductType {
 export interface ProductRequestType {
   category: [
     {
-      mainCategory: string;
+      mainCategory: string | null;
+      middleCategory: string | null;
     },
   ];
-  minPeriod?: number;
-  maxPeriod?: number;
-  minPrice?: num;
-  ber;
-  maxPrice?: number;
-  sort?: string;
+  minPeriod?: number | null;
+  maxPeriod?: number | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  sort?: string | null;
 }
 
 // 상품 조회 response
 export interface ProductResponseType {
   dataSize: number;
-  data: { products: object[]; totalElements: number };
+  data: { products: ProductType[]; totalElements: number };
 }
 
+export interface ProductType {
+  briefExplanation: string;
+  period: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  thumbnail: string;
+}
+
+// 상품 상세 조회 response
+export interface IProductDetailDataResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: IProductDetailData;
+  response: null;
+}
+
+export interface IProductDetailData {
+  productId: number;
+  thumbnail: string;
+  productName: string;
+  price: number;
+  briefExplanation: string;
+  region: string;
+  feature: string;
+  flight: string;
+  period: IProductDetailDataPeriod[];
+  contents: IProductDetailDataContents[];
+  options: IProductDetailDataOptions[];
+}
+
+export interface IProductDetailDataPeriod {
+  productPeriodId: number;
+  startDate: string;
+  endDate: string;
+}
 export interface MemberInfoResponse {
   email: string;
   name: string;
@@ -181,6 +218,18 @@ export interface Period2 {
   endDate: string;
 }
 
+export interface IProductDetailDataContents {
+  content: string;
+  type: string;
+  priority: number;
+}
+
+export interface IProductDetailDataOptions {
+  productOptionId: number;
+  content: string;
+  price: number;
+  type: string;
+}
 export interface Option {
   option: Option2;
   amount: number;
@@ -191,6 +240,33 @@ export interface Option2 {
   content: string;
   price: number;
   type: string;
+}
+
+export interface IProductDetailDataOptionsFilter {
+  content: string;
+  price: number;
+  productOptionId: number;
+  type: string;
+}
+
+export interface IProductDetailSelectOptionData {
+  period: {
+    periodId: number;
+    content: string;
+    amount: number;
+  };
+  optionRoom: {
+    optionId: number;
+    content: string;
+    price: number;
+    amount: number;
+  };
+  optionFlight: {
+    optionId: number;
+    content: string;
+    price: number;
+    amount: number;
+  };
 }
 
 export interface Product {
