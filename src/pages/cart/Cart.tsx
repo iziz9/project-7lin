@@ -15,18 +15,18 @@ const Cart = () => {
   });
 
   const handleModal = () => {
-    openModal({
-      title: "옵션 변경",
-      content: (
-        <ProductDetailModal
-          image={"/product_img.png"}
-          title={"중앙아시아 3국 15일 중앙아시아 3국 15일 중앙아시아 3국 15일"}
-          price={"2,860,000"}
-          closeModal={closeModal}
-          type="변경"
-        />
-      ),
-    });
+    // openModal({
+    //   title: "옵션 변경",
+    //   content: (
+    //     <ProductDetailModal
+    //       image={"/product_img.png"}
+    //       title={"중앙아시아 3국 15일 중앙아시아 3국 15일 중앙아시아 3국 15일"}
+    //       price={"2,860,000"}
+    //       closeModal={closeModal}
+    //       type="변경"
+    //     />
+    //   ),
+    // });
   };
 
   return (

@@ -6,10 +6,14 @@ import { useModal } from "../../hooks/useModal";
 import PaymentModal from "./PaymentModal";
 import { PersonalData } from "../../commons/Terms";
 import EditUserInfoModal from "./EditUserInfoModal";
+import { useLocation } from "react-router";
 
 type Props = {};
 
 const Reservation = (props: Props) => {
+  const { state } = useLocation();
+  console.log(state);
+
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
