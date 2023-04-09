@@ -57,7 +57,7 @@ const Login = () => {
         const { email, name, age, gender, phone, tokenDto } = res; // res
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
-          maxAge: 1800,
+          maxAge: 60 * 60 * 24 * 7,
         });
         setUserInfo({ email, name, age, gender, phone });
         alert("로그인 성공");

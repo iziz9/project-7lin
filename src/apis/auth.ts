@@ -37,6 +37,15 @@ export const phoneCheck = async (phone: string) => {
   return data;
 };
 
+// 정보 수정 시 전화번호 중복 체크
+export const phoneCheckUpdate = async (phone: string) => {
+  const data: boolean = await axiosInstance.post("/member/update/checkPhone", {
+    phone,
+  });
+  console.log(data);
+  return data;
+};
+
 // 로그인
 export const login = async (arg: LoginFormValue) => {
   const data = await axiosInstance.post("/login", arg);
@@ -48,7 +57,6 @@ export const login = async (arg: LoginFormValue) => {
 export const findId = async (arg: FindIdFormValue) => {
   const data = await axiosInstance.get(
     `/findId?name=${arg.name}&phone=${arg.phone}`,
-    {},
   );
   console.log(data);
   return data;
@@ -65,35 +73,29 @@ export const findPassword = async (arg: FindPwFormValue) => {
 };
 
 // 회원정보 조회
-export const getMemberInfo = async (email: string) => {
-  const data: MemberInfoResponse = await axiosInstance.get(
-    `/member?email=${email}`,
-  );
+export const getMemberInfo = async () => {
+  const data: MemberInfoResponse = await axiosInstance.get(`/member`);
   console.log(data);
   return data;
 };
 
 // 회원정보 수정
 export const updateMemberInfo = async (arg: UpdateMemberRequest) => {
-  const data = await axiosInstance.put(`/member/update?email=${arg.email}`, {
-    newPassword: arg.newPassword,
-    validNewPassword: arg.validNewPassword,
-    phone: arg.phone,
-  });
+  const data = await axiosInstance.put(`/member/update`, arg);
   console.log(data);
   return data;
 };
 
 // 로그아웃
 export const logout = async () => {
-  const data: string = await axiosInstance.post(`/logouts`);
+  const data: string = await axiosInstance.post(`/logouts`, {});
   console.log(data);
   return data;
 };
 
 // 회원 탈퇴
-export const widthdrawal = async (email: string) => {
-  const data = await axiosInstance.put(`/deleteMember?email=${email}`, {});
+export const widthdrawal = async () => {
+  const data = await axiosInstance.put(`/deleteMember`, {});
   console.log(data);
   return data;
 };

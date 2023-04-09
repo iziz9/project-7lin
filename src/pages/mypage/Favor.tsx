@@ -62,9 +62,11 @@ const Favor = () => {
           </div>
         )}
       </div>
-      <div className="list">
-        {wishList?.length === 0 ? noProduct : wishList}
-      </div>
+      {isLoading ? null : (
+        <div className="list">
+          {wishList?.length === 0 ? noProduct : wishList}
+        </div>
+      )}
     </Container>
   );
 };
