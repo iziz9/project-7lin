@@ -251,23 +251,22 @@ export interface IProductDetailDataOptionsFilter {
 }
 
 export interface IProductDetailSelectOptionData {
-  period: {
-    periodId: number;
-    content: string;
-    amount: number;
-  };
-  optionRoom: {
-    optionId: number;
-    content: string;
-    price: number;
-    amount: number;
-  };
-  optionFlight: {
-    optionId: number;
-    content: string;
-    price: number;
-    amount: number;
-  };
+  period: IProductDetailSelectOptionPeriod;
+  optionRoom: IProductDetailSelectOption;
+  optionFlight: IProductDetailSelectOption;
+}
+
+export interface IProductDetailSelectOptionPeriod {
+  periodId: number;
+  content: string;
+  amount: number;
+}
+
+export interface IProductDetailSelectOption {
+  optionId: number;
+  content: string;
+  price: number;
+  amount: number;
 }
 
 export interface Product {
@@ -312,4 +311,16 @@ export interface WishListProduct {
   productName: string;
   productPrice: number;
   tagList: string[];
+}
+
+export interface CartState {
+  productId: number;
+  title: string;
+  image: string;
+  productPrice: number;
+  totalPrice: number;
+  selectPeriod: IProductDetailSelectOption;
+  selectOptions: IProductDetailSelectOption[];
+  allOption: IProductDetailSelectOption[];
+  allPeriod: IProductDetailSelectOption;
 }
