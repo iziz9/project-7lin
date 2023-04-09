@@ -66,16 +66,14 @@ const ProductDetailModal = ({
 
     if (funcType === "예약") {
       navigate("/reservation", {
-        state: [
-          {
-            productId: id,
-            title,
-            image,
-            totalPrice,
-            periods: { ...selectItem.period },
-            options,
-          },
-        ],
+        state: {
+          productId: id,
+          title,
+          image,
+          totalPrice,
+          periods: { ...selectItem.period },
+          options,
+        },
       });
     } else if (funcType === "장바구니") {
       navigate("/cart");
