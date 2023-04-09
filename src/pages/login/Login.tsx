@@ -54,7 +54,7 @@ const Login = () => {
     onSuccess: (res: any) => {
       if (res) {
         console.log(res);
-        const { email, name, age, gender, phone, tokenDto } = res.response; // res.response
+        const { email, name, age, gender, phone, tokenDto } = res; // res
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
           maxAge: 1800,
