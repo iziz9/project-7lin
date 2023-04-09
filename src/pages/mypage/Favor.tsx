@@ -44,6 +44,16 @@ const Favor = () => {
     </div>
   );
 
+  if (isLoading)
+    return (
+      <Container>
+        <div className="delete-all">
+          <div className="title">찜</div>
+        </div>
+        <div className="list"></div>
+      </Container>
+    );
+
   return (
     <Container>
       <div className="delete-all">
@@ -62,11 +72,9 @@ const Favor = () => {
           </div>
         )}
       </div>
-      {isLoading ? null : (
-        <div className="list">
-          {wishList?.length === 0 ? noProduct : wishList}
-        </div>
-      )}
+      <div className="list">
+        {wishList?.length === 0 ? noProduct : wishList}
+      </div>
     </Container>
   );
 };

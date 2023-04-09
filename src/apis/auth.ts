@@ -9,6 +9,7 @@ import {
   NonMemberFormValue,
   Product,
   SignUpRequest,
+  SignUpResponse,
   UpdateMemberRequest,
   WishListProductResponse,
 } from "../@types/data";
@@ -16,7 +17,7 @@ import { axiosInstance } from "./instance";
 
 // 회원가입
 export const signUp = async (arg: SignUpRequest) => {
-  const data = await axiosInstance.post("/signUp", arg);
+  const data: SignUpResponse = await axiosInstance.post("/signUp", arg);
   console.log(data);
   return data;
 };

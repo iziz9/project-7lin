@@ -8,14 +8,10 @@ import * as Yup from "yup";
 import { ChangeInfoFormValue, UpdateMemberRequest } from "../../../@types/data";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../../store/userInfoAtom";
-import { useMutation, useQuery } from "react-query";
-import {
-  getMemberInfo,
-  phoneCheck,
-  phoneCheckUpdate,
-  updateMemberInfo,
-} from "../../../apis/auth";
+import { useMutation } from "react-query";
+import { phoneCheck, updateMemberInfo } from "../../../apis/auth";
 import { useModal } from "../../../hooks/useModal";
+import useUserInfoQuery from "../../../hooks/useUserInfoQuery";
 
 const ChangeInfoModal = () => {
   const validationSchema = Yup.object().shape({
@@ -77,8 +73,8 @@ const ChangeInfoModal = () => {
   const { closeModal } = useModal();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  const { refetch: userInfoRefetch } = useQuery("getUserInfo", getMemberInfo, {
-    onSuccess(res: any) {
+  const { userInfoData, refetch: userInfoRefetch } = useUserInfoQuery({
+    onSuccess(res) {
       setUserInfo(res.data);
     },
     onError(error) {

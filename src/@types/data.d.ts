@@ -60,6 +60,19 @@ export interface SignUpRequest {
   age: string;
 }
 
+export interface SignUpResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: {
+    email: string;
+    name: string;
+    gender: string;
+    age: number;
+    phone: string;
+  };
+}
+
 export interface UpdateMemberRequest {
   newPassword: string;
   validNewPassword: string;
@@ -148,12 +161,20 @@ export interface IProductDetailDataPeriod {
   startDate: string;
   endDate: string;
 }
-export interface MemberInfoResponse {
+
+export interface MemberInfo {
   email: string;
   name: string;
   gender: string;
   age: number;
   phone: string;
+}
+
+export interface MemberInfoResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: MemberInfo;
 }
 
 export interface ReservationProduct {
