@@ -11,6 +11,8 @@ import {
   getMainCategoryName,
   getMiddleCategoryName,
 } from "../../utils/category";
+import { useRecoilState } from "recoil";
+import { categoryState, itemState, pageState } from "../../store/categoryAtom";
 
 // 목업 데이터
 const mockupData = [
@@ -61,32 +63,6 @@ const mockupData = [
   },
 ];
 
-// 페이지네이션 함수
-const pagenation = (
-  pages: number,
-  currentPage: number,
-  setCurrentPage: Function,
-  mainCategory: string | null,
-  middleCategory: string | null,
-) => {
-  let arr = [];
-  for (let i = 1; i <= pages; i++) {
-    arr.push(
-      <Link
-        to={`/${mainCategory}/${
-          middleCategory ? `${middleCategory}/` : ""
-        }?page=${i}`}
-        key={i}
-        onClick={() => setCurrentPage(i)}
-        className={i === currentPage ? "selected" : ""}
-      >
-        {i}
-      </Link>,
-    );
-  }
-  return arr;
-};
-
 const Groups = () => {
   // url에서 현재 페이지값 받아오기(링크로 page를 입력했을 경우를 위함)
   // const urlParams = new URL(location.href).searchParams.get("page");
@@ -94,75 +70,105 @@ const Groups = () => {
   //   urlParams ? Number(urlParams) : 1,
   // );
 
-  const [currentPage, setCurrentPage] = useState(1);
   // request용 메인 카테고리 데이터(페이지 시작 시 한 번만 호출)
-  const mainCategory = useLocation().pathname.split("/")[1];
-  const requestMainCategory = getMainCategoryName(mainCategory);
+  const categoryLevel = useLocation().pathname.split("/");
 
-  // State값
-  const [middleCategory, setMiddleCategory] = useState(
-    useLocation().pathname.split("/")[2],
-  );
-  const [pages, setPages] = useState(1); // 총 페이지 수
-  const [items, setItems] = useState<ProductType[]>(mockupData); // product 컴포넌트로 내려줄 상품 데이터
+  // 카테고리(전역)
+  const [category, setCategory] = useRecoilState(categoryState);
+  // 페이지(전역)
+  const [page, setPage] = useRecoilState(pageState);
+  // 상품
+  const [items, setItems] = useRecoilState(itemState);
 
   // 상품 조회 api 호출 및 state 변경
-  const getProductsData = async (requestData: ProductRequestType) => {
-    const result = await postProductResult(requestData, currentPage);
+  const getProductsData = async (changePage: number) => {
+    // Api request 데이터. recoil 합쳐서 만들기
+    const requestData: ProductRequestType = {
+      category: [
+        {
+          mainCategory: getMainCategoryName(category.categories.mainCategory),
+          middleCategory: getMiddleCategoryName(
+            category.categories.middleCategory,
+          ),
+        },
+      ],
+    };
+
+    const result = await postProductResult(requestData, changePage);
     // 네트워크 에러시
     if (result === "Network Error") {
       console.log("네트워크 에러");
       return;
     } else {
-      // items에 상품 데이터 저장
+      // 현재 카테고리 값 저장
+      const { pageNumber, totalPages } = result.data;
+      // console.log("test..", pageNumber, totalPages);
+      setPage({
+        pageNumber,
+        totalPages,
+      });
+
+      // 상품 저장
       setItems(result.data.products);
-      // 총 페이지 개수 저장
-      setPages(Math.round(result.data.totalElements / 12));
     }
   };
 
   useEffect(() => {
-    const requestMiddleCategory = getMiddleCategoryName(middleCategory);
-
-    // Api request 데이터
-    const requestData: ProductRequestType = {
-      category: [
-        {
-          mainCategory: requestMainCategory,
-          middleCategory: requestMiddleCategory,
-        },
-      ],
-    };
+    setCategory({
+      categories: {
+        mainCategory: categoryLevel[1],
+        middleCategory: categoryLevel[2],
+      },
+    });
     // Api 호출
-    getProductsData(requestData);
+    getProductsData(page.pageNumber);
+    // console.log("아이템은", items);
+    // console.log("카테고리는", category);
+  }, []);
 
-    console.log(mainCategory, requestMainCategory);
-    console.log(middleCategory, requestMiddleCategory);
-  }, [middleCategory, currentPage]);
+  // 페이지네이션 함수
+  const pagenation = () => {
+    let arr = [];
 
+    const clickPage = (event: React.MouseEvent<HTMLAnchorElement>) => {
+      getProductsData(Number(event.currentTarget.id));
+    };
+
+    for (let i = 1; i <= page.totalPages; i++) {
+      arr.push(
+        <Link
+          to={`/${category.categories.mainCategory}/${
+            category.categories.middleCategory
+              ? `${category.categories.middleCategory}/`
+              : ""
+          }?page=${i}`}
+          key={i}
+          id={i.toString()}
+          onClick={clickPage}
+          className={i === page.pageNumber ? "selected" : ""}
+        >
+          {i}
+        </Link>,
+      );
+    }
+    return arr;
+  };
   return (
     <Container>
-      <SubMenu
-        mainCategory={mainCategory}
-        setMiddleCategory={setMiddleCategory}
-      />
+      <SubMenu />
+      <div>{category.categories.middleCategory}</div>
+      <div>{page.pageNumber}</div>
       <div className="body">
         <Filter />
         <ProductContainer>
-          {items.map((value) => (
-            <Product key={value.productId} product={value} />
+          {items.map((value, index) => (
+            <Product key={index} product={value} />
           ))}
         </ProductContainer>
       </div>
       <Pages>
         <li>{"<"}</li>
-        {pagenation(
-          pages,
-          currentPage,
-          setCurrentPage,
-          mainCategory,
-          middleCategory,
-        )}
+        {pagenation()}
         <li>{">"}</li>
       </Pages>
     </Container>

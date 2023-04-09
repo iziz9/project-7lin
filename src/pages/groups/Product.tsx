@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
-import { useMediaQuery } from "react-responsive";
 import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
-import { render } from "react-dom";
 import { ProductType } from "../../@types/data";
 
 interface ProductProps {
@@ -11,22 +8,22 @@ interface ProductProps {
 }
 
 const Product = ({ product }: ProductProps) => {
+  const { briefExplanation, productId, productName, productPrice, thumbnail } =
+    { ...product };
   return (
-    <Link to={`/product/${product.productId}`}>
+    <Link to={`/product/${productId}`}>
       <Item>
-        <img
-          className="image"
-          src={product.thumbnail}
-          alt={product.productName}
-        />
+        <img className="image" src={thumbnail} alt={productName} />
         <AiOutlineHeart />
-        <h3 className="title">{product.productName}</h3>
+        <h3 className="title">{productName}</h3>
         <span className="price">
-          {product.productPrice.toLocaleString("ko-KR")}원
+          {productPrice
+            ? `${productPrice.toLocaleString("ko-KR")}원`
+            : "가격문의"}
         </span>
         <p
           className="body"
-          dangerouslySetInnerHTML={{ __html: product.briefExplanation }}
+          dangerouslySetInnerHTML={{ __html: briefExplanation }}
         ></p>
       </Item>
     </Link>

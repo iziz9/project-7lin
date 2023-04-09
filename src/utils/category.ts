@@ -1,5 +1,5 @@
 // 메인 카테고리명 받아오기
-export const getMainCategoryName = (pathname: string) => {
+export const getMainCategoryName = (pathname: string | null) => {
   switch (pathname) {
     // 그룹별 여행 , 테마별 여행, 지역별 여행
     case "groups":
@@ -15,7 +15,7 @@ export const getMainCategoryName = (pathname: string) => {
 };
 
 // 미들 카테고리명 받아오기
-export const getMiddleCategoryName = (pathname: string) => {
+export const getMiddleCategoryName = (pathname: string | null) => {
   switch (pathname) {
     // 그룹별 여행 하위 카테고리
     case "5070":

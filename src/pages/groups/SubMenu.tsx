@@ -1,65 +1,133 @@
-import React, { ReactElement } from "react";
-import { Link } from "react-router-dom";
+import React, { ReactElement, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { categoryState, itemState, pageState } from "../../store/categoryAtom";
+import {
+  getMainCategoryName,
+  getMiddleCategoryName,
+} from "../../utils/category";
+import { ProductRequestType } from "../../@types/data";
+import { postProductResult } from "../../apis/request";
 
-const middleCategoryData = {
-  groups: {
-    "5070": "5070끼리",
-    gentlemen: "남자끼리",
-    ladies: "여자끼리",
-    family: "가족끼리",
-    anyone: "누구든지",
-  },
-  // themes: ["문화탐방", "골프여행", "휴양지", "트레킹", "성지순례"],
-  // destination: [
-  //   "동남아/태평양",
-  //   "인도/중앙아시아",
-  //   "아프리카/중동",
-  //   "유럽/코카서스",
-  //   "중남미/북미",
-  // ],
+const subMenu = {
+  groups: ["5070", "gentlemen", "ladies", "family", "anyone"],
+  themes: ["culture", "golf", "vacation", "trekking", "pilgrimage"],
+  destination: ["asia", "india", "africa", "europe", "america"],
 };
 
 interface ContainerProps {
   length: number;
 }
 
-interface SubMenuProps {
-  mainCategory: string;
-  setMiddleCategory: Function;
-}
+const SubMenu = () => {
+  const navigate = useNavigate();
+  const [category, setCategory] = useRecoilState(categoryState);
+  const { mainCategory } = category.categories;
+  const [items, setItems] = useRecoilState(itemState);
+  const setPage = useSetRecoilState(pageState);
 
-interface middleCategoryType {
-  groups: object;
-}
+  // 상품 조회 api 호출 및 state 변경
+  const getProductsData = async (changePage: number) => {
+    // Api request 데이터
+    const requestData: ProductRequestType = {
+      category: [
+        {
+          mainCategory: getMainCategoryName(category.categories.mainCategory),
+          middleCategory: getMiddleCategoryName(
+            category.categories.middleCategory,
+          ),
+        },
+      ],
+    };
 
-const SubMenu = ({ mainCategory, setMiddleCategory }: SubMenuProps) => {
-  const middleCategoryList: middleCategoryType = eval(
-    "middleCategoryData." + mainCategory,
-  );
+    const result = await postProductResult(requestData, changePage);
+    // 네트워크 에러시
+    if (result === "Network Error") {
+      console.log("네트워크 에러");
+      return;
+    } else {
+      // 현재 카테고리 값 저장
+      const { pageNumber, totalPages } = result.data;
+      // console.log("test..", pageNumber, totalPages);
+      setPage({
+        pageNumber,
+        totalPages: result.data.totalPages,
+      });
+      // console.log("test..", page);
+
+      // 상품 저장
+      setItems(result.data.products);
+    }
+  };
 
   const onClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    setMiddleCategory(event.currentTarget.id);
+    console.log("클릭됐땅", event.currentTarget.id);
+
+    setCategory({
+      categories: {
+        mainCategory: mainCategory,
+        middleCategory: event.currentTarget.id,
+      },
+    });
+
+    // api 호출
+    getProductsData(1);
+
+    // Link to가 안먹혀서 작성
+    navigate(`/${mainCategory}/${event.currentTarget.id}`);
   };
 
   return (
     <>
-      <Container
-        length={Object.keys(eval("middleCategoryData." + mainCategory)).length}
-      >
-        {Object.entries(middleCategoryList).map(([key, value]) => (
-          <Link
-            className="submenu"
-            to={`/${mainCategory}/${key}`}
-            id={key}
-            key={key}
-            onClick={onClick}
-          >
-            {value}
-          </Link>
-        ))}
-      </Container>
+      {/* 반복문을 어떻게 돌려야할지 몰라서 하드코딩 */}
+      {mainCategory === "groups" && (
+        <Container length={subMenu["groups"].length}>
+          {subMenu["groups"].map((value) => (
+            <Link
+              className="submenu"
+              to={`/${mainCategory}/${value}`}
+              id={value}
+              key={value}
+              onClick={onClick}
+            >
+              {getMiddleCategoryName(value)}
+            </Link>
+          ))}
+        </Container>
+      )}
+      {mainCategory === "themes" && (
+        <Container length={subMenu["themes"].length}>
+          {subMenu["themes"].map((value) => (
+            <Link
+              className="submenu"
+              to={`/${mainCategory}/${value}`}
+              id={value}
+              key={value}
+              onClick={onClick}
+            >
+              {getMiddleCategoryName(value)}
+            </Link>
+          ))}
+        </Container>
+      )}
+      {mainCategory === "destination" && (
+        <Container length={subMenu["destination"].length}>
+          {subMenu["destination"].map((value) => (
+            <Link
+              className="submenu"
+              to={`/${mainCategory}/${value}`}
+              id={value}
+              key={value}
+              onClick={onClick}
+            >
+              {getMiddleCategoryName(value)}
+            </Link>
+          ))}
+        </Container>
+      )}
+
       <Line></Line>
     </>
   );
