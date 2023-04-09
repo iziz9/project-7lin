@@ -1,15 +1,28 @@
 import React from "react";
 import styled from "styled-components";
-import ProductCard from "./components/ProductCard";
+import { useQuery } from "react-query";
+import { getWishList } from "../../apis/auth";
+import WishListProductCard from "./components/WishListProductCard";
 
 const Favor = () => {
+  // const { data, isLoading } = useQuery("memberReservation", getWishList, {
+  //   onSuccess(data) {
+  //     console.log(data);
+  //   },
+  //   onError(error) {
+  //     console.log("찜 리스트 조회 실패: " + error);
+  //   },
+  //   retry: 0,
+  // });
+
+  // const wishList = data?.map((product) => (
+  //   <WishListProductCard product={product} />
+  // ));
+
   return (
     <Container>
       <div className="title">찜</div>
-      <div className="list">
-        <ProductCard favor={true} />
-        <ProductCard favor={true} />
-      </div>
+      <div className="list"></div>
     </Container>
   );
 };

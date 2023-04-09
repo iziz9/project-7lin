@@ -1,51 +1,13 @@
 import React from "react";
-import styled from "styled-components";
+import { Product } from "../../../@types/data";
 import { BasicBtn } from "../../../commons/Button";
+import styled from "styled-components";
 
 interface Props {
-  reservation?: boolean;
-  favor?: boolean;
-  tab?: number;
+  product: Product;
 }
 
-const ProductCard = ({ tab, reservation, favor }: Props) => {
-  const getReservationButtonElement = () => {
-    switch (tab) {
-      case 0:
-        return (
-          <>
-            <BasicBtn>상세보기</BasicBtn>
-            <BasicBtn backgroundColor="#b5b4b4">취소하기</BasicBtn>
-          </>
-        );
-      case 1:
-        return (
-          <>
-            <BasicBtn>후기쓰가</BasicBtn>
-          </>
-        );
-      case 2:
-        return (
-          <>
-            <BasicBtn>다시 예약하기</BasicBtn>
-          </>
-        );
-    }
-  };
-
-  const getFavorButtonElement = () => {
-    return (
-      <>
-        <BasicBtn>예약하기</BasicBtn>
-        <BasicBtn backgroundColor="#b5b4b4">취소하기</BasicBtn>
-      </>
-    );
-  };
-
-  const buttonElement = reservation
-    ? getReservationButtonElement()
-    : getFavorButtonElement();
-
+const WishListProductCard = ({ product }: Props) => {
   return (
     <Container>
       <div className="wrapper">
@@ -54,16 +16,15 @@ const ProductCard = ({ tab, reservation, favor }: Props) => {
             <img src="/product_img.png" />
           </div>
           <div className="info">
-            <div className="date">
-              {reservation ? "2023. 04. 15" : "# 자연 친화"}
-            </div>
+            <div className="date"># 자연 친화</div>
             <div className="title">제주도 이호등대</div>
-            <div className="num">
-              {reservation ? "예약번호: 364927 예약 인원: 2인" : "394,204원"}
-            </div>
+            <div className="num">394,204원</div>
           </div>
         </div>
-        <div className="button-wrapper">{buttonElement}</div>
+        <div className="button-wrapper">
+          <BasicBtn>예약하기</BasicBtn>
+          <BasicBtn backgroundColor="#b5b4b4">취소하기</BasicBtn>
+        </div>
       </div>
     </Container>
   );
@@ -162,4 +123,4 @@ const Container = styled.div`
   }
 `;
 
-export default ProductCard;
+export default WishListProductCard;
