@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import styled from "styled-components";
@@ -6,8 +6,13 @@ import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
 import ProductDetailModal from "../product-detail/ProductDetailModal";
 import { useMediaQuery } from "react-responsive";
+import { useLocation } from "react-router";
+import { CartState, IProductDetailSelectOption } from "../../@types/data";
 
 const Cart = () => {
+  const data: CartState[] = JSON.parse(localStorage.getItem("cart") || "[]");
+  console.log(data);
+
   const { openModal, closeModal } = useModal();
 
   const isMobile: boolean = useMediaQuery({
@@ -29,13 +34,18 @@ const Cart = () => {
     // });
   };
 
+  let reservationPrice = 0;
+  for (const item of data) {
+    reservationPrice += item.totalPrice;
+  }
+
   return (
-    <Wrap>
+    <>
       {isMobile ? (
-        <>
+        <Wrap>
           <MobHead>
             <h1>장바구니</h1>
-            <span>12</span>
+            <span>{data.length}</span>
           </MobHead>
           <MobDelete>
             <label htmlFor="check_all">
@@ -47,55 +57,72 @@ const Cart = () => {
               <button>품절 상품 삭제</button>
             </div>
           </MobDelete>
-          <MobProduct>
-            <label htmlFor="check_each">
-              <input type="checkbox" id="check_each" />
-              <span></span>
-            </label>
-            <div>
-              <MobProductHead>
-                <img src="/product_img.png" alt="상품 이미지" />
-                <div>
-                  <h2>중앙아시아 3국 15일</h2>
-                  <p>2,860,000원</p>
-                </div>
-                <IoMdClose size={25} />
-              </MobProductHead>
-              <MobOption>
-                <strong>필수</strong>
-                <span>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</span>
-              </MobOption>
-              <MobOption>
-                <strong>추가</strong>
-                <span>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</span>
-              </MobOption>
-              <MobOption>
-                <strong>추가</strong>
-                <span>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</span>
-              </MobOption>
-              <MobEachBtns>
-                <button onClick={handleModal}>옵션/수량 변경</button>
-                <button>예약하기</button>
-              </MobEachBtns>
-            </div>
-          </MobProduct>
+          <MobProducts>
+            {data && data.length === 0 ? (
+              <p>장바구니에 상품이 없습니다</p>
+            ) : (
+              data.map((item: CartState) => (
+                <MobProduct>
+                  <label htmlFor="check_each">
+                    <input type="checkbox" id="check_each" />
+                    <span></span>
+                  </label>
+                  <div>
+                    <MobProductHead>
+                      <img src={item.image} alt="상품 이미지" />
+                      <div>
+                        <h2>{item.title}</h2>
+                        <p>{item.totalPrice.toLocaleString()}원</p>
+                      </div>
+                      <IoMdClose size={25} />
+                    </MobProductHead>
+
+                    <MobOption>
+                      <strong>필수</strong>
+                      <span>
+                        {item.selectPeriod.content} - {item.selectPeriod.amount}
+                        개
+                      </span>
+                    </MobOption>
+
+                    {item.selectOptions &&
+                      item.selectOptions.map(
+                        (optionItem: IProductDetailSelectOption) => (
+                          <MobOption>
+                            <strong>추가</strong>
+                            <span>
+                              {optionItem.content} - {optionItem.amount}개
+                            </span>
+                            <IoMdClose />
+                          </MobOption>
+                        ),
+                      )}
+                    <MobEachBtns>
+                      <button onClick={handleModal}>옵션/수량 변경</button>
+                      <button>예약하기</button>
+                    </MobEachBtns>
+                  </div>
+                </MobProduct>
+              ))
+            )}
+          </MobProducts>
           <MobResArea>
             <div>
               <span>총 주문 상품</span>
-              <strong>1개</strong>
+              <strong>{data.length}개</strong>
             </div>
             <div>
               <span>총 예약 금액</span>
-              <h3>2,860,000원</h3>
+              <h3>{reservationPrice.toLocaleString()}원</h3>
             </div>
           </MobResArea>
           <MobBtns>
             <button>예약하기</button>
             <button>계속 둘러보기</button>
           </MobBtns>
-        </>
+        </Wrap>
       ) : (
-        <>
+        <Wrap>
           <Head>
             <h1>장바구니</h1>
             <div>
@@ -118,50 +145,61 @@ const Cart = () => {
           </TableHead>
 
           <TableBody>
-            <TableItem>
-              {/* 10, 50, 15, 25 */}
-              <label htmlFor="check_each">
-                <input type="checkbox" id="check_each" />
-                <span></span>
-              </label>
-              <Product>
-                <img src="/product_img.png" alt="상품 이미지" />
-                <Text>
-                  <div>
-                    <h3>
-                      중앙아시아 3국 15일 중앙아시아 3국 15일 중앙아시아 3국
-                      15일
-                    </h3>
-                    <IoMdClose size={25} />
-                  </div>
-                  <p>
-                    <strong>필수옵션</strong>
-                    <span>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</span>
-                    <IoMdClose />
-                  </p>
-                  <p>
-                    <strong>추가옵션</strong>
-                    <span>1인 싱글룸 사용시 추가 - 3개</span>
-                    <IoMdClose />
-                  </p>
-                </Text>
-              </Product>
+            {data && data.length === 0 ? (
+              <p>장바구니에 상품이 없습니다</p>
+            ) : (
+              data.map((item: CartState) => (
+                <TableItem key={item.productId}>
+                  <label htmlFor="check_each">
+                    <input type="checkbox" id="check_each" />
+                    <span></span>
+                  </label>
+                  <Product>
+                    <img src={item.image} alt="상품 이미지" />
+                    <Text>
+                      <div>
+                        <h3>{item.title}</h3>
+                        <IoMdClose size={25} />
+                      </div>
+                      <p>
+                        <strong>필수옵션</strong>
+                        <span>
+                          {item.selectPeriod.content} -{" "}
+                          {item.selectPeriod.amount}개
+                        </span>
+                      </p>
+                      {item.selectOptions &&
+                        item.selectOptions.map(
+                          (optionItem: IProductDetailSelectOption) => (
+                            <p key={optionItem.optionId}>
+                              <strong>추가옵션</strong>
+                              <span>
+                                {optionItem.content} - {optionItem.amount}개
+                              </span>
+                              <IoMdClose />
+                            </p>
+                          ),
+                        )}
+                    </Text>
+                  </Product>
 
-              <Personnel>
-                <BiMinus size={20} />
-                <p>212</p>
-                <BiPlus size={20} />
-              </Personnel>
+                  <Personnel>
+                    <BiMinus size={20} />
+                    <p>{item.selectPeriod.amount}</p>
+                    <BiPlus size={20} />
+                  </Personnel>
 
-              <Price>
-                <div>
-                  <strong>2,860,000원</strong>
-                </div>
-                <div>
-                  <button onClick={handleModal}>옵션 변경</button>
-                </div>
-              </Price>
-            </TableItem>
+                  <Price>
+                    <div>
+                      <strong>{item.totalPrice.toLocaleString()}원</strong>
+                    </div>
+                    <div>
+                      <button onClick={handleModal}>옵션 변경</button>
+                    </div>
+                  </Price>
+                </TableItem>
+              ))
+            )}
           </TableBody>
 
           <DeleteBtns>
@@ -176,17 +214,17 @@ const Cart = () => {
             <Middle>
               <p>
                 <strong>총 주문 상품</strong>
-                <span>1개</span>
+                <span>{data.length}개</span>
               </p>
               <p>
                 <strong>예약 금액</strong>
-                <span>2,860,000원</span>
+                <span>{reservationPrice.toLocaleString()}원</span>
               </p>
             </Middle>
             <End>
               <p>
                 <strong>총 예약 금액</strong>
-                <span>2,860,000원</span>
+                <span>{reservationPrice.toLocaleString()}원</span>
               </p>
             </End>
           </ResultArea>
@@ -195,11 +233,10 @@ const Cart = () => {
             <button>계속 둘러보기</button>
             <button>예약하기</button>
           </Btns>
-        </>
+        </Wrap>
       )}
-
       <Modal />
-    </Wrap>
+    </>
   );
 };
 
@@ -240,12 +277,17 @@ const MobDelete = styled.div`
     border-radius: 8px;
   }
 `;
+const MobProducts = styled.div``;
 const MobProduct = styled.div`
   width: 100%;
   display: flex;
+  margin-bottom: 20px;
   padding: 15px;
   background-color: #f5f5f5;
   border-radius: 8px;
+  :last-child {
+    margin-bottom: 0;
+  }
   > div {
     width: 100%;
     margin-left: 10px;
@@ -281,6 +323,8 @@ const MobProductHead = styled.div`
   }
 `;
 const MobOption = styled.p`
+  width: 90%;
+  display: flex;
   padding: 10px;
   background-color: white;
   border-radius: 8px;
@@ -297,9 +341,13 @@ const MobOption = styled.p`
     margin-bottom: 0;
   }
   strong {
+    flex-shrink: 0;
     margin-right: 10px;
   }
   span {
+  }
+  svg {
+    margin-left: auto;
   }
 `;
 const MobEachBtns = styled.div`
@@ -309,6 +357,9 @@ const MobEachBtns = styled.div`
     padding: 15px 0;
     font-size: 18px;
     border-radius: 8px;
+    @media screen and (max-width: 450px) {
+      font-size: 15px;
+    }
     :first-child {
       margin-right: 10px;
       color: #48484a;
@@ -459,11 +510,15 @@ const TableBody = styled.div`
   box-sizing: border-box;
 `;
 const TableItem = styled.div`
+  margin-bottom: 24px;
   padding: 30px 0;
   display: flex;
   align-items: center;
   background-color: #f5f5f5;
   border-radius: 8px;
+  :last-child {
+    margin-bottom: 0;
+  }
   label {
     align-self: flex-start;
   }
@@ -491,6 +546,7 @@ const Product = styled.div`
   }
 `;
 const Text = styled.div`
+  width: 100%;
   padding-right: 25px;
   box-sizing: border-box;
 
