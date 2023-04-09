@@ -76,7 +76,7 @@ const ReviewWrite = () => {
         <h1>여행후기</h1>
         <div>
           <button>취소하기</button>
-          <button>등록하기</button>
+          <button type="submit">등록하기</button>
         </div>
       </Head>
 
@@ -90,7 +90,18 @@ const ReviewWrite = () => {
         <ProductInfosCard />
       </ProductInfo>
 
-      <Form>
+      <Form
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          // formData 로 하면 원하는대로 안됨 그냥 state 로 해주고 onvalid 에 보내주기
+          // const formData = new FormData(e.currentTarget);
+          // let entries = formData.entries();
+          // for (const pair of entries) {
+          //   console.log(pair);
+          //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
+          // }
+        }}
+      >
         <input type="text" placeholder="제목을 입력하세요" />
         <Rating>
           <strong>별점</strong>
@@ -107,11 +118,13 @@ const ReviewWrite = () => {
             type="file"
             accept="image/*"
             id="add-img"
+            name="imgfile"
             onChange={saveImgFile}
           />
           <span>사진 첨부하기</span>
         </label>
         {/* 사진 첨부하기 */}
+        <button type="submit">등록하기</button>
       </Form>
 
       <UpdateImg>
@@ -201,7 +214,7 @@ const ProductInfo = styled.div`
     font-weight: bold;
   }
 `;
-const Form = styled.div`
+const Form = styled.form`
   margin-top: 50px;
   input[type="text"] {
     width: 100%;

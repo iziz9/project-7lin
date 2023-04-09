@@ -110,3 +110,72 @@ export interface ProductResponseType {
   dataSize: number;
   data: { products: object[]; totalElements: number };
 }
+
+// 상품 상세 조회 response
+export interface IProductDetailDataResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: IProductDetailData;
+  response: null;
+}
+
+export interface IProductDetailData {
+  productId: number;
+  thumbnail: string;
+  productName: string;
+  price: number;
+  briefExplanation: string;
+  region: string;
+  feature: string;
+  flight: string;
+  period: IProductDetailDataPeriod[];
+  contents: IProductDetailDataContents[];
+  options: IProductDetailDataOptions[];
+}
+
+export interface IProductDetailDataPeriod {
+  productPeriodId: number;
+  startDate: string;
+  endDate: string;
+}
+
+export interface IProductDetailDataContents {
+  content: string;
+  type: string;
+  priority: number;
+}
+
+export interface IProductDetailDataOptions {
+  productOptionId: number;
+  content: string;
+  price: number;
+  type: string;
+}
+
+export interface IProductDetailDataOptionsFilter {
+  content: string;
+  price: number;
+  productOptionId: number;
+  type: string;
+}
+
+export interface IProductDetailSelectOptionData {
+  period: {
+    periodId: number;
+    content: string;
+    amount: number;
+  };
+  optionRoom: {
+    optionId: number;
+    content: string;
+    price: number;
+    amount: number;
+  };
+  optionFlight: {
+    optionId: number;
+    content: string;
+    price: number;
+    amount: number;
+  };
+}

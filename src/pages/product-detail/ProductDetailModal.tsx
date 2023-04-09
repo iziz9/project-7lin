@@ -4,27 +4,88 @@ import ProductDetailModalOption from "./ProductDetailModalOption";
 import { IoMdClose } from "react-icons/io";
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { useMediaQuery } from "react-responsive";
+import { IProductDetailModalProps } from "../../@types/props";
+import { IProductDetailSelectOptionData } from "../../@types/data";
+import ProductDetailModalOptionCard from "./ProductDetailModalOptionCard";
+import { useNavigate } from "react-router";
 
-interface IProductDetailModalProps {
-  image: string;
-  title: string;
-  price: string;
-  closeModal: () => any;
-  type: string;
-}
+export const selectOptionData = {
+  period: {
+    periodId: 0,
+    content: "",
+    amount: 1,
+  },
+  optionRoom: {
+    optionId: 0,
+    content: "",
+    price: 0,
+    amount: 1,
+  },
+  optionFlight: {
+    optionId: 0,
+    content: "",
+    price: 0,
+    amount: 1,
+  },
+};
 
 const ProductDetailModal = ({
+  id,
   image,
   title,
   price,
   closeModal,
   type,
+  funcType,
+  options,
+  period,
 }: IProductDetailModalProps) => {
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
 
-  const [count, setCount] = useState<number>(1);
+  const navigate = useNavigate();
+
+  const [selectItem, setSelectItem] =
+    useState<IProductDetailSelectOptionData>(selectOptionData);
+
+  const filterRoom = options?.filter((item) => item.type === "room");
+  const filterFlight = options?.filter((item) => item.type === "flight");
+
+  const handleSubmit = () => {
+    console.log(funcType);
+    let options;
+    if (selectItem.optionRoom?.content && selectItem.optionFlight?.content)
+      options = [{ ...selectItem.optionRoom }, { ...selectItem.optionFlight }];
+    else if (selectItem.optionRoom?.content)
+      options = [{ ...selectItem.optionRoom }];
+    else if (selectItem.optionFlight?.content)
+      options = [{ ...selectItem.optionFlight }];
+    else options = null;
+
+    if (funcType === "예약") {
+      navigate("/reservation", {
+        state: {
+          productId: id,
+          title,
+          image,
+          totalPrice,
+          periods: { ...selectItem.period },
+          options,
+        },
+      });
+    }
+    closeModal();
+  };
+
+  const totalPrice =
+    price * selectItem.period.amount +
+    (filterRoom?.length !== 0 && selectItem.optionRoom?.content
+      ? selectItem.optionRoom.amount * selectItem.optionRoom.price
+      : 0) +
+    (filterFlight?.length !== 0 && selectItem.optionFlight?.content
+      ? selectItem.optionFlight.amount * selectItem.optionFlight.price
+      : 0);
 
   return (
     <Wrap>
@@ -44,10 +105,30 @@ const ProductDetailModal = ({
           <p>{Number(price).toLocaleString()}원</p>
         </div>
       </ProductCard>
+
       <Options>
-        {[1, 2, 3].map((item) => (
-          <ProductDetailModalOption key={item} />
-        ))}
+        <ProductDetailModalOption
+          type="필수"
+          data={period}
+          selectItem={selectItem}
+          setSelectItem={setSelectItem}
+        />
+        {filterRoom?.length !== 0 && (
+          <ProductDetailModalOption
+            type="룸선택"
+            data={filterRoom}
+            selectItem={selectItem}
+            setSelectItem={setSelectItem}
+          />
+        )}
+        {filterFlight?.length !== 0 && (
+          <ProductDetailModalOption
+            type="좌석선택"
+            data={filterFlight}
+            selectItem={selectItem}
+            setSelectItem={setSelectItem}
+          />
+        )}
       </Options>
 
       <ChangeWrap>
@@ -59,47 +140,53 @@ const ProductDetailModal = ({
               <h5>{title}</h5>
               <p>
                 <strong>여행 기간</strong>
-                <span>2023.05.30(화) 출발 ~ 06.30(화) 도착</span>
+                <span>{selectItem.period.content}</span>
               </p>
             </div>
           </ProductInfo>
 
           <OptionCards>
-            <OptionCard>
-              <Top>
-                <strong>필수옵션</strong>
-                <p>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</p>
-                <IoMdClose />
-              </Top>
-              <Bottom>
-                <p>
-                  <BiMinus
-                    size={23}
-                    onClick={() =>
-                      setCount((prev) => (prev === 1 ? 1 : prev - 1))
-                    }
-                  />
-                  <span>{count}</span>
-                  <BiPlus
-                    size={23}
-                    onClick={() => setCount((prev) => prev + 1)}
-                  />
-                </p>
-                <h2>1,190,000원</h2>
-              </Bottom>
-            </OptionCard>
+            <ProductDetailModalOptionCard
+              title={selectItem.period?.content}
+              basicPrice={price}
+              type="period"
+              selectItem={selectItem}
+              setSelectItem={setSelectItem}
+            />
+            {filterRoom?.length !== 0 && selectItem.optionRoom?.content && (
+              <ProductDetailModalOptionCard
+                title={selectItem.optionRoom?.content}
+                type="optionRoom"
+                selectItem={selectItem}
+                setSelectItem={setSelectItem}
+              />
+            )}
+            {filterFlight?.length !== 0 && selectItem.optionFlight?.content && (
+              <ProductDetailModalOptionCard
+                title={selectItem.optionFlight?.content}
+                type="optionFlight"
+                selectItem={selectItem}
+                setSelectItem={setSelectItem}
+              />
+            )}
           </OptionCards>
 
           <p>
             <span>총 예약 금액</span>
-            <strong>2,990,000원</strong>
+            <strong>{totalPrice.toLocaleString()}원</strong>
           </p>
         </div>
       </ChangeWrap>
 
       <Buttons>
         {!isMobile && <button onClick={() => closeModal()}>취소하기</button>}
-        <button>변경하기</button>
+        <button onClick={handleSubmit}>
+          {type === "변경"
+            ? "선택하기"
+            : funcType === "장바구니"
+            ? funcType + "에 넣기"
+            : funcType + "하기"}
+        </button>
       </Buttons>
     </Wrap>
   );
@@ -166,11 +253,6 @@ const ProductCard = styled.div`
     }
   }
 `;
-const Options = styled.ul`
-  width: 100%;
-  align-self: flex-start;
-  margin-top: 30px;
-`;
 const Buttons = styled.div`
   width: 100%;
   display: flex;
@@ -199,6 +281,17 @@ const Buttons = styled.div`
         right: 6px;
         border-radius: 0;
       }
+    }
+  }
+`;
+
+const Options = styled.ul`
+  width: 100%;
+  align-self: flex-start;
+  margin-top: 30px;
+  li:first-child {
+    strong {
+      color: #0d99ff; // 필수옵션만 이 색상
     }
   }
 `;
@@ -275,62 +368,9 @@ const ProductInfo = styled.div`
     }
   }
 `;
-const OptionCards = styled.div`
-  div :first-child strong {
+const OptionCards = styled.ul`
+  li:first-child strong {
     color: #0d99ff;
-  }
-`;
-const OptionCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-`;
-const Top = styled.div`
-  width: 100%;
-  margin-bottom: 20px;
-  display: flex;
-  color: #48484a;
-  strong {
-    margin-right: 17px;
-    flex-shrink: 0;
-  }
-  svg {
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-`;
-const Bottom = styled.div`
-  width: 85%;
-  align-self: flex-end;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  > p {
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    > svg {
-      border: 1px solid #0d99ff;
-      border-radius: 100%;
-      color: #0d99ff;
-      cursor: pointer;
-    }
-    span {
-      width: 50px;
-      font-size: 21px;
-      text-align: center;
-    }
-  }
-  h2 {
-    font-size: 23px;
-    font-weight: bold;
-    @media screen and (max-width: 450px) {
-      font-size: 16px;
-    }
   }
 `;
 
