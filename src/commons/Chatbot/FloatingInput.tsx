@@ -22,21 +22,22 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
   const time = currentTime(1000, TimeFormatEnum.HHmm);
 
   const handleSubmit = (answers: string[]) => {
-    console.log(answers);
-
     setChatList((prev) => [
       ...prev,
       { question: false, time: time, text: [...(answers + " ")] },
     ]);
 
-    setChatList((prev) => [
-      ...prev,
-      {
-        question: false,
-        time: time,
-        text: [...questions[orderNumber.totalNumbering + 1]],
-      },
-    ]);
+    orderNumber.buttonNumbering < 7 &&
+      setTimeout(() => {
+        setChatList((prev) => [
+          ...prev,
+          {
+            question: true,
+            time: time,
+            text: [...questions[orderNumber.totalNumbering + 1]],
+          },
+        ]);
+      }, 300);
 
     orderNumber.textNumbering < 2 &&
       setOrderNumber({
@@ -53,6 +54,12 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
       });
 
     if (orderNumber.buttonNumbering === 7) {
+      const filteredList = chatList
+        .filter((item) => {
+          return !item.question;
+        })
+        .map((item) => item.text.join(""));
+      console.log(filteredList);
       // api연결코드 작성
 
       setChatbotStep({ step: 3 }); // step3 제출 완료 안내화면으로

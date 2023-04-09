@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 import { questions } from "../commons/Chatbot/questionsAndAnswers";
 
 // 챗봇 실행 단계
@@ -30,10 +30,6 @@ export const orderNumberState = atom<ChatOrderNumberType>({
 });
 
 //step2의 전체 채팅 리스트, 질문번호, 응답내용
-const day = new Date();
-const time = day.getHours();
-const minutes = day.getMinutes();
-
 interface ChatBubbleType {
   question: boolean; //true면 챗봇, false면 나 (false인 text 모아서 api보내기)
   time: string;
@@ -41,9 +37,7 @@ interface ChatBubbleType {
 }
 export const chatListState = atom<ChatBubbleType[]>({
   key: "chatListState",
-  default: [
-    { question: true, time: `${time}:${minutes}`, text: [questions[0]] },
-  ],
+  default: [],
 });
 
 //api요청예시

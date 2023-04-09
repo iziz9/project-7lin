@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
-import Product from "../groups/Product";
 import { getLocalStorage } from "../../utils/localStorage";
+import Product from "../groups/Product";
+import { useResetRecoilState } from "recoil";
+import { itemState } from "../../store/categoryAtom";
 
 interface TestResultType {
   title: string;
@@ -12,6 +14,9 @@ interface TestResultType {
 const RecommendPage = () => {
   const navigate = useNavigate();
   const savedTestResult: TestResultType = getLocalStorage("testResult");
+
+  // 목데이터로 리셋
+  useResetRecoilState(itemState)();
 
   return (
     <Container>
@@ -25,7 +30,7 @@ const RecommendPage = () => {
             <button onClick={() => navigate("/test")}>테스트 다시 하기</button>
           </section>
           <section>
-            <Product count={13} />
+            <Product />
           </section>
         </HasResult>
       ) : (
@@ -44,7 +49,7 @@ const RecommendPage = () => {
           </section>
           <section className="content-section">
             <h1>이런 상품은 어떠세요?</h1>
-            <Product count={13} />
+            <Product />
           </section>
         </NoResult>
       )}
