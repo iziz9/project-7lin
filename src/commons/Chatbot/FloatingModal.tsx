@@ -24,13 +24,9 @@ const FloatingModal = () => {
   const [myMessage, setMyMessage] = useState<string>("");
 
   useEffect(() => {
-    // myMessage.length >= 1 &&
-    //   setChatList({ chatList: chatList.chatList.concat() });
-    // setChatList((prev) => [
-    //   ...prev,
-    //   { person: "me", time: time, message: myMessage },
-    // ]);
-  }, [answer]);
+    orderNumber.totalNumbering === 0 &&
+      setChatList([{ question: true, time: time, text: [questions[0]] }]);
+  }, [orderNumber]);
 
   return (
     <Modal>

@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io";
 import { BiPlus, BiMinus } from "react-icons/bi";
 import { useMediaQuery } from "react-responsive";
 import { IProductDetailModalProps } from "../../@types/props";
-import { IProductDetailSelectOptionData } from "../../@types/data";
+import { CartState, IProductDetailSelectOptionData } from "../../@types/data";
 import ProductDetailModalOptionCard from "./ProductDetailModalOptionCard";
 import { useNavigate } from "react-router";
 
@@ -54,6 +54,7 @@ const ProductDetailModal = ({
 
   const handleSubmit = () => {
     console.log(funcType);
+
     let options;
     if (selectItem.optionRoom?.content && selectItem.optionFlight?.content)
       options = [{ ...selectItem.optionRoom }, { ...selectItem.optionFlight }];
@@ -65,16 +66,51 @@ const ProductDetailModal = ({
 
     if (funcType === "예약") {
       navigate("/reservation", {
-        state: {
-          productId: id,
-          title,
-          image,
-          totalPrice,
-          periods: { ...selectItem.period },
-          options,
-        },
+        state: [
+          {
+            productId: id,
+            title,
+            image,
+            totalPrice,
+            periods: { ...selectItem.period },
+            options,
+          },
+        ],
       });
+    } else if (funcType === "장바구니") {
+      navigate("/cart");
+
+      const storeCart = {
+        productId: id,
+        title,
+        image,
+        productPrice: price,
+        totalPrice,
+        selectPeriod: { ...selectItem.period },
+        selectOptions: options,
+        allOption: options,
+        allPeriod: period,
+      };
+
+      const loadCart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const isDuplication = loadCart.filter(
+        (item: CartState) => item.productId === id,
+      );
+      if (isDuplication.length !== 0) {
+        confirm(
+          "장바구니에 해당 상품이 추가되어 있습니다. 장바구니로 이동하시겠습니까?",
+        )
+          ? navigate("/cart")
+          : navigate(`/product/${id}`);
+
+        closeModal();
+        return;
+      }
+
+      const addCart = [...loadCart, { ...storeCart }];
+      localStorage.setItem("cart", JSON.stringify(addCart));
     }
+
     closeModal();
   };
 

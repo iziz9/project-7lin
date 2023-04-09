@@ -1,12 +1,46 @@
-import React from "react";
+import React, { ReactHTMLElement } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 import styled from "styled-components";
+import { useNavigate } from "react-router";
+
+interface ProductsType {
+  productId: number;
+  img: string;
+  tags: string[];
+  title: string;
+}
 
 const BannerSlider = () => {
-  const banners = ["banner0.png", "banner1.png", "banner2.png", "banner3.png"];
+  const navigate = useNavigate();
+  const products: ProductsType[] = [
+    {
+      productId: 12,
+      img: "banner-product12.png",
+      tags: ["#동아프리카3개국", "#남아프리카5개국"],
+      title: "액티브 시니어들만의\n아프리카 8개국 27일",
+    },
+    {
+      productId: 10,
+      img: "banner-product10.png",
+      tags: ["#대부", "#시네마천국", "#그랑블루"],
+      title: "영화를 보신 분들만\n시칠리아 일주 9일",
+    },
+    {
+      productId: 8,
+      img: "banner-product8.png",
+      tags: ["#링로드일주", "#하이랜드", "#빙하하이킹"],
+      title: "5070들만 출발!\n아이슬란드 11일",
+    },
+    {
+      productId: 6,
+      img: "banner-product6.png",
+      tags: ["#조지아", "#아르메니아", "#아제르바이잔", "#와이너리투어"],
+      title: "와인러버들끼리 떠나는\n코카서스 3개국 18일",
+    },
+  ];
 
   const PrevArrow = (props: any) => {
     return <GoChevronLeft onClick={props.onClick} className="left-button" />;
@@ -47,7 +81,7 @@ const BannerSlider = () => {
     pauseOnHover: true,
     responsive: [
       {
-        // breakpoints: 480,
+        // breakpoints: 850,
       },
     ],
   };
@@ -55,16 +89,21 @@ const BannerSlider = () => {
   return (
     <SliderDiv>
       <Slider {...settings}>
-        {banners.map((banner) => (
-          <div key={banner} className="container">
-            <img src={`/${banner}`} />
+        {products.map((product) => (
+          <div
+            key={product.productId}
+            className="container"
+            onClick={() => navigate("product/:" + product.productId)}
+          >
+            <img src={`/${product.img}`} />
             <div className="tags">
-              <span>#시칠리아</span>
-              <span>#5070</span>
-              <span>#골프여행</span>
+              <span>{product.tags[0]}</span>
+              <span>{product.tags[1]}</span>
+              {product.tags[2] && <span>{product.tags[2]}</span>}
+              {product.tags[3] && <span>{product.tags[3]}</span>}
             </div>
             <div className="title">
-              <span>시칠리아 5070 여행</span>
+              <span>{product.title}</span>
             </div>
           </div>
         ))}
@@ -74,13 +113,14 @@ const BannerSlider = () => {
 };
 
 const SliderDiv = styled.div`
+  cursor: pointer;
   .container {
     position: relative;
   }
 
   .tags {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     position: absolute;
     color: white;
     text-align: center;
@@ -91,10 +131,13 @@ const SliderDiv = styled.div`
     right: 50%;
     transform: translateX(50%);
     white-space: pre;
+    font-size: 18px;
+    border-radius: 8px;
   }
 
   .title {
-    font-size: 50px;
+    font-size: 55px;
+    line-height: 60px;
     position: absolute;
     top: 35%;
     display: flex;
@@ -104,6 +147,7 @@ const SliderDiv = styled.div`
     white-space: pre;
 
     span {
+      border-radius: 8px;
       background-color: #0d99ff66;
       padding: 10px 20px;
     }
