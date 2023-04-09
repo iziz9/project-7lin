@@ -10,6 +10,7 @@ import {
   Product,
   SignUpRequest,
   UpdateMemberRequest,
+  WishListProductResponse,
 } from "../@types/data";
 import { axiosInstance } from "./instance";
 
@@ -152,7 +153,31 @@ export const reservateAgain = async (code: string) => {
 
 // 찜 조회
 export const getWishList = async () => {
-  const data: Product[] = await axiosInstance.get("/wishlist");
+  const data: WishListProductResponse = await axiosInstance.get("/mywishlist");
+  console.log(data);
+  return data;
+};
+
+// 찜 등록
+export const addWishList = async (productId: number) => {
+  const data: { status: number; message: string; dataSize: number } =
+    await axiosInstance.post("/wishlist", { productId });
+  console.log(data);
+  return data;
+};
+
+// 찜 삭제
+export const deleteWishList = async (productId: number) => {
+  const data: { status: number; message: string; dataSize: number } =
+    await axiosInstance.delete("/wishlist", { data: { productId } });
+  console.log(data);
+  return data;
+};
+
+// 찜 전체 삭제
+export const deleteAllWishList = async () => {
+  const data: { httpStatus: string; message: string } =
+    await axiosInstance.delete("/wishlistall");
   console.log(data);
   return data;
 };
