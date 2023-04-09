@@ -31,7 +31,7 @@ const pagenation = (
 };
 
 const Groups = () => {
-  let testdata: ProductRequestType = {
+  let testdata: any = {
     category: [
       {
         mainCategory: "GROUP",
