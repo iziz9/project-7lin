@@ -1,18 +1,27 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
-import SubMenu from "./SubMenu";
 import Product from "./Product";
 import Filter from "./Filter";
 import { postProductResult } from "../../apis/request";
-import { ProductRequestType, ProductType } from "../../@types/data";
-import { Link, useLocation } from "react-router-dom";
+import { ProductRequestType } from "../../@types/data";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   getMainCategoryName,
   getMiddleCategoryName,
 } from "../../utils/category";
 import { useRecoilState } from "recoil";
 import { categoryState, itemState, pageState } from "../../store/categoryAtom";
+
+interface ContainerProps {
+  length: number;
+}
+
+const subMenu = {
+  groups: ["5070", "gentlemen", "ladies", "family", "anyone"],
+  themes: ["culture", "golf", "vacation", "trekking", "pilgrimage"],
+  destination: ["asia", "india", "africa", "europe", "america"],
+};
 
 // 목업 데이터
 const mockupData = [
@@ -80,16 +89,30 @@ const Groups = () => {
   // 상품
   const [items, setItems] = useRecoilState(itemState);
 
+  const navigate = useNavigate();
+
+  const onClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    console.log("클릭됐땅", event.currentTarget.id);
+
+    // api 호출
+    getProductsData(1, event.currentTarget.id);
+
+    // Link to가 안먹혀서 작성
+    navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
+  };
+
   // 상품 조회 api 호출 및 state 변경
-  const getProductsData = async (changePage: number) => {
+  const getProductsData = async (
+    changePage: number,
+    middleCategory: string | null,
+  ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
       category: [
         {
           mainCategory: getMainCategoryName(category.categories.mainCategory),
-          middleCategory: getMiddleCategoryName(
-            category.categories.middleCategory,
-          ),
+          middleCategory: getMiddleCategoryName(middleCategory),
         },
       ],
     };
@@ -108,6 +131,13 @@ const Groups = () => {
         totalPages,
       });
 
+      setCategory({
+        categories: {
+          mainCategory: categoryLevel[1],
+          middleCategory: middleCategory,
+        },
+      });
+
       // 상품 저장
       setItems(result.data.products);
     }
@@ -121,7 +151,7 @@ const Groups = () => {
       },
     });
     // Api 호출
-    getProductsData(page.pageNumber);
+    getProductsData(page.pageNumber, categoryLevel[2]);
     // console.log("아이템은", items);
     // console.log("카테고리는", category);
   }, []);
@@ -131,7 +161,11 @@ const Groups = () => {
     let arr = [];
 
     const clickPage = (event: React.MouseEvent<HTMLAnchorElement>) => {
-      getProductsData(Number(event.currentTarget.id));
+      getProductsData(
+        Number(event.currentTarget.id),
+        category.categories.middleCategory,
+      );
+      window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     for (let i = 1; i <= page.totalPages; i++) {
@@ -155,16 +189,67 @@ const Groups = () => {
   };
   return (
     <Container>
-      <SubMenu />
-      <div>{category.categories.middleCategory}</div>
-      <div>{page.pageNumber}</div>
+      <div>
+        {category.categories.mainCategory === "groups" && (
+          <SubMenu length={subMenu["groups"].length}>
+            {subMenu["groups"].map((value) => (
+              <Link
+                className="submenu"
+                to={`/${category.categories.mainCategory}/${value}`}
+                id={value}
+                key={value}
+                onClick={onClick}
+              >
+                {getMiddleCategoryName(value)}
+              </Link>
+            ))}
+          </SubMenu>
+        )}
+        {category.categories.mainCategory === "themes" && (
+          <SubMenu length={subMenu["themes"].length}>
+            {subMenu["themes"].map((value) => (
+              <Link
+                className="submenu"
+                to={`/${category.categories.mainCategory}/${value}`}
+                id={value}
+                key={value}
+                onClick={onClick}
+              >
+                {getMiddleCategoryName(value)}
+              </Link>
+            ))}
+          </SubMenu>
+        )}
+        {category.categories.mainCategory === "destination" && (
+          <SubMenu length={subMenu["destination"].length}>
+            {subMenu["destination"].map((value) => (
+              <Link
+                className="submenu"
+                to={`/${category.categories.mainCategory}/${value}`}
+                id={value}
+                key={value}
+                onClick={onClick}
+              >
+                {getMiddleCategoryName(value)}
+              </Link>
+            ))}
+          </SubMenu>
+        )}
+        <div className="line"></div>
+      </div>
       <div className="body">
         <Filter />
-        <ProductContainer>
-          {items.map((value, index) => (
-            <Product key={index} product={value} />
-          ))}
-        </ProductContainer>
+        {items.length ? (
+          <ProductContainer>
+            {items.map((value, index) => (
+              <Product key={index} product={value} />
+            ))}
+          </ProductContainer>
+        ) : (
+          <div style={{ textAlign: "center", width: "100%", margin: "60px 0" }}>
+            상품이 없습니다.
+          </div>
+        )}
       </div>
       <Pages>
         <li>{"<"}</li>
@@ -238,6 +323,64 @@ const Pages = styled.ul`
   @media (max-width: 850px) {
     justify-content: space-between;
     font-size: 14px;
+  }
+`;
+
+const SubMenu = styled.div<ContainerProps>`
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(${(props) => props.length}, 1fr);
+  grid-auto-rows: 50px;
+  position: sticky;
+  background-color: rgba(255, 255, 255, 0.7);
+
+  @supports (position: sticky) or (position: -webkit-sticky) {
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+  }
+
+  .submenu {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 0 -1px 0 0;
+    font-size: 20px;
+    &:hover {
+      color: #0080c6;
+      background-color: #e9e9e9;
+    }
+  }
+
+  .line {
+    width: 100%;
+    margin-top: -30px;
+    border-top: 1px solid var(--color-grayscale10);
+  }
+
+  // 모바일 환경
+  @media (max-width: 850px) {
+    position: absolute;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 40px;
+    width: 100%;
+
+    .submenu {
+      font-size: 16px;
+      border: 1px solid var(--color-grayscale10);
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(6) {
+        margin-top: -1px;
+      }
+    }
+    .line {
+      margin-top: 36px;
+      border-top: none;
+    }
   }
 `;
 
