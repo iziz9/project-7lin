@@ -30,6 +30,7 @@ export const postProductResult = async (
             middleCategory: testdata.category[0].middleCategory,
           },
         ],
+        sort: testdata.sort,
       },
     );
     console.log(res);

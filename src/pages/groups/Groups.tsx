@@ -11,7 +11,15 @@ import {
   getMiddleCategoryName,
 } from "../../utils/category";
 import { useRecoilState } from "recoil";
-import { categoryState, itemState, pageState } from "../../store/categoryAtom";
+import {
+  categoryState,
+  itemState,
+  pageState,
+  sortState,
+} from "../../store/categoryAtom";
+import { useMediaQuery } from "react-responsive";
+import Sort from "./Sort";
+import { getSortName } from "../../utils/sort";
 
 interface ContainerProps {
   length: number;
@@ -24,11 +32,8 @@ const subMenu = {
 };
 
 const Groups = () => {
-  // url에서 현재 페이지값 받아오기(링크로 page를 입력했을 경우를 위함)
-  // const urlParams = new URL(location.href).searchParams.get("page");
-  // const [currentPage, setCurrentPage] = useState(
-  //   urlParams ? Number(urlParams) : 1,
-  // );
+  // 반응형
+  const isMobile = useMediaQuery({ query: "(max-width:850px)" });
 
   // request용 메인 카테고리 데이터(페이지 시작 시 한 번만 호출)
   const categoryLevel = useLocation().pathname.split("/");
@@ -37,6 +42,9 @@ const Groups = () => {
   const [category, setCategory] = useRecoilState(categoryState);
   // 페이지(전역)
   const [page, setPage] = useRecoilState(pageState);
+  // 정렬(전역)
+  const [sort, setSort] = useRecoilState(sortState);
+
   // 상품
   const [items, setItems] = useRecoilState(itemState);
 
@@ -47,7 +55,7 @@ const Groups = () => {
     console.log("클릭됐땅", event.currentTarget.id);
 
     // api 호출
-    getProductsData(1, event.currentTarget.id);
+    getProductsData(1, event.currentTarget.id, sort.sort);
 
     // Link to가 안먹혀서 작성
     navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
@@ -57,6 +65,7 @@ const Groups = () => {
   const getProductsData = async (
     changePage: number,
     middleCategory: string | null,
+    sortParam?: string | null,
   ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
@@ -66,6 +75,7 @@ const Groups = () => {
           middleCategory: getMiddleCategoryName(middleCategory),
         },
       ],
+      sort: sortParam,
     };
 
     const result = await postProductResult(requestData, changePage);
@@ -91,6 +101,9 @@ const Groups = () => {
 
       // 상품 저장
       setItems(result.data.products);
+
+      // 정렬방식 저장
+      setSort;
     }
   };
 
@@ -115,6 +128,7 @@ const Groups = () => {
       getProductsData(
         Number(event.currentTarget.id),
         category.categories.middleCategory,
+        sort.sort,
       );
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -138,9 +152,16 @@ const Groups = () => {
     }
     return arr;
   };
+
+  const sortClick = (event: React.MouseEvent<HTMLLIElement>) => {
+    const sortValue = getSortName(event.currentTarget.id);
+    setSort({ sort: sortValue });
+    getProductsData(page.pageNumber, categoryLevel[2], sortValue);
+  };
+
   return (
     <Container>
-      <div>
+      <>
         {category.categories.mainCategory === "groups" && (
           <SubMenu length={subMenu["groups"].length}>
             {subMenu["groups"].map((value) => (
@@ -186,25 +207,27 @@ const Groups = () => {
             ))}
           </SubMenu>
         )}
-        <div className="line"></div>
-      </div>
+      </>
       <div className="body">
-        <Filter />
-        {items.length ? (
-          <Product />
+        {isMobile ? (
+          <StickySection>
+            <Filter /> <div className="line"></div>
+            <Sort sortClick={sortClick} /> <div className="line"></div>
+          </StickySection>
         ) : (
-          //   {items.map((value, index) => (
-          //     <Product key={index} product={value} />
-          //   ))}
-          // </Product>
-          <div style={{ textAlign: "center", width: "100%", margin: "60px 0" }}>
-            상품이 없습니다.
-          </div>
+          <Filter />
         )}
+        <div className="rightSection">
+          <div className="rightTop">
+            <span>{/* 총 10개 상품 */}</span>
+            {isMobile ? "" : <Sort sortClick={sortClick} />}
+          </div>
+          <Product />
+        </div>
       </div>
       <Pages>
         <li>{"<"}</li>
-        {pagenation()}
+        {pagenation().length ? pagenation() : <div>1</div>}
         <li>{">"}</li>
       </Pages>
     </Container>
@@ -228,7 +251,24 @@ const Container = styled.div`
   .body {
     display: flex;
     gap: 20px;
-    justify-content: space-between;
+  }
+
+  .rightSection {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    row-gap: 30px;
+
+    .rightTop {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      span {
+        font-size: 18px;
+      }
+    }
   }
 
   @media (max-width: 850px) {
@@ -237,6 +277,10 @@ const Container = styled.div`
     gap: 18px;
     .body {
       flex-direction: column;
+      gap: 0;
+    }
+    .rightSection {
+      gap: 0;
     }
   }
   .selected {
@@ -262,6 +306,7 @@ const SubMenu = styled.div<ContainerProps>`
   grid-auto-rows: 50px;
   position: sticky;
   background-color: rgba(255, 255, 255, 0.7);
+  width: 100%;
 
   @supports (position: sticky) or (position: -webkit-sticky) {
     top: 0;
@@ -278,16 +323,12 @@ const SubMenu = styled.div<ContainerProps>`
     box-sizing: border-box;
     margin: 0 -1px 0 0;
     font-size: 20px;
+    border-bottom: 1px solid var(--color-grayscale10);
+
     &:hover {
       color: #0080c6;
       background-color: #e9e9e9;
     }
-  }
-
-  .line {
-    width: 100%;
-    margin-top: -30px;
-    border-top: 1px solid var(--color-grayscale10);
   }
 
   // 모바일 환경
@@ -306,10 +347,23 @@ const SubMenu = styled.div<ContainerProps>`
         margin-top: -1px;
       }
     }
-    .line {
-      margin-top: 36px;
-      border-top: none;
-    }
+  }
+`;
+
+const StickySection = styled.section`
+  position: sticky;
+  background-color: #fff;
+  margin: 50px -20px 0;
+
+  .line {
+    height: 1px;
+    width: 100%;
+    background-color: var(--color-grayscale10);
+  }
+
+  @supports (position: sticky) or (position: -webkit-sticky) {
+    top: 0;
+    z-index: 10;
   }
 `;
 

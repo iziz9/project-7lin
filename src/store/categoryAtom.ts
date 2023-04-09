@@ -1,6 +1,10 @@
 import { atom } from "recoil";
 import { ProductType } from "../@types/data";
 
+interface SortState {
+  sort: string | null;
+}
+
 interface PageState {
   pageNumber: number;
   totalPages: number;
@@ -31,6 +35,13 @@ export const categoryState = atom<CategoryState>({
       mainCategory: "main",
       middleCategory: null,
     },
+  },
+});
+
+export const sortState = atom<SortState>({
+  key: "sortState",
+  default: {
+    sort: null,
   },
 });
 

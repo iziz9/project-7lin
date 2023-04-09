@@ -11,35 +11,56 @@ interface ProductProps {
 
 const Product = () => {
   const items = useRecoilValue(itemState);
-
-  return (
-    <Container>
-      {items.map(
-        (
-          { briefExplanation, productId, productName, productPrice, thumbnail },
-          index,
-        ) => (
-          <Link to={`/product/${productId}`} key={index}>
-            <Item>
-              <img className="image" src={thumbnail} alt={productName} />
-              <AiOutlineHeart />
-              <h3 className="title">{productName}</h3>
-              <span className="price">
-                {productPrice
-                  ? `${productPrice.toLocaleString("ko-KR")}원`
-                  : "가격문의"}
-              </span>
-              <p
-                className="body"
-                dangerouslySetInnerHTML={{ __html: briefExplanation }}
-              ></p>
-            </Item>
-          </Link>
-        ),
-      )}
-    </Container>
-  );
+  if (items.length === 0) {
+    return (
+      <NoContainer>
+        <p></p>상품이 없습니다<p></p>
+      </NoContainer>
+    );
+  } else {
+    return (
+      <Container>
+        {items.map(
+          (
+            {
+              briefExplanation,
+              productId,
+              productName,
+              productPrice,
+              thumbnail,
+            },
+            index,
+          ) => (
+            <Link to={`/product/${productId}`} key={index}>
+              <Item>
+                <img className="image" src={thumbnail} alt={productName} />
+                <AiOutlineHeart />
+                <h3 className="title">{productName}</h3>
+                <span className="price">
+                  {productPrice
+                    ? `${productPrice.toLocaleString("ko-KR")}원`
+                    : "가격문의"}
+                </span>
+                <p
+                  className="body"
+                  dangerouslySetInnerHTML={{ __html: briefExplanation }}
+                ></p>
+              </Item>
+            </Link>
+          ),
+        )}
+      </Container>
+    );
+  }
 };
+
+export const NoContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, minmax(auto, 310px));
+  max-width: 970px;
+  margin: 80px 0;
+  text-align: center;
+`;
 
 export const Container = styled.ul`
   display: grid;
@@ -58,8 +79,8 @@ export const Container = styled.ul`
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(1, minmax(auto, 310px));
+  @media (max-width: 420px) {
+    grid-template-columns: repeat(1, minmax(auto, 360px));
   }
 `;
 
