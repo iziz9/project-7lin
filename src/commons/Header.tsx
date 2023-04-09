@@ -10,6 +10,7 @@ import { loginState } from "../store/loginAtom";
 import { removeLocalStorage } from "../utils/localStorage";
 import { Link } from "react-router-dom";
 import { getCookie, removeCookie } from "../utils/cookie";
+import { logout } from "../apis/auth";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -54,12 +55,18 @@ const Header = () => {
     },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm("정말로 로그아웃 하시겠습니까?")) {
-      // logout api 추가
-      setUserInfo({ email: "", name: "", gender: "", age: 0, phone: "" });
-      removeCookie("accessToken", { path: "/" });
-      navigate("/");
+      try {
+        const data = await logout();
+        if (data !== "로그아웃이 완료되었습니다.")
+          return alert("로그아웃 실패: " + data);
+        setUserInfo({ email: "", name: "", gender: "", age: 0, phone: "" });
+        removeCookie("accessToken", { path: "/" });
+        navigate("/");
+      } catch (error) {
+        alert("로그아웃 실패: " + error);
+      }
     }
   };
 
