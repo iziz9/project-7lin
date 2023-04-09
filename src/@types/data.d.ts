@@ -93,7 +93,7 @@ export interface TestResultProductType {
 
 // 상품 조회 request
 export interface ProductRequestType {
-  category: [
+  categories: [
     {
       mainCategory: string | null;
       middleCategory: string | null;

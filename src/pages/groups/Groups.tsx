@@ -13,6 +13,7 @@ import {
 import { useRecoilState } from "recoil";
 import {
   categoryState,
+  filterState,
   itemState,
   pageState,
   sortState,
@@ -20,6 +21,7 @@ import {
 import { useMediaQuery } from "react-responsive";
 import Sort from "./Sort";
 import { getSortName } from "../../utils/sort";
+import { getPeriodRange, getPriceRange } from "../../utils/filter";
 
 interface ContainerProps {
   length: number;
@@ -46,6 +48,8 @@ const Groups = () => {
   const [sort, setSort] = useRecoilState(sortState);
   // 상품(전역)
   const [items, setItems] = useRecoilState(itemState);
+  // 필터(전역)
+  const [filter, setFilter] = useRecoilState(filterState);
 
   const navigate = useNavigate();
 
@@ -54,17 +58,20 @@ const Groups = () => {
     paramsPageNumber: number,
     paramsMiddleCategory: string | null,
     paramsSort: string | null,
+    paramsFilter?: object | null,
   ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
-      category: [
+      categories: [
         {
           mainCategory: getMainCategoryName(category.categories.mainCategory),
           middleCategory: getMiddleCategoryName(paramsMiddleCategory),
         },
       ],
       sort: paramsSort,
+      ...paramsFilter,
     };
+    console.log("파람필터두개더한거!!", requestData);
 
     const result = await postProductResult(requestData, paramsPageNumber);
     // 네트워크 에러시
@@ -94,6 +101,9 @@ const Groups = () => {
 
       // 정렬 값 저장
       setSort({ sort: paramsSort });
+
+      // 필터 값 저장
+      paramsFilter ? setFilter(paramsFilter) : console.log("암것도없슈");
     }
   };
 
@@ -114,7 +124,7 @@ const Groups = () => {
   const pagenation = () => {
     let arr = [];
 
-    const clickPage = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const pageClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
       getProductsData(
         Number(event.currentTarget.id),
         category.categories.middleCategory,
@@ -133,7 +143,7 @@ const Groups = () => {
           }?page=${i}`}
           key={i}
           id={i.toString()}
-          onClick={clickPage}
+          onClick={pageClick}
           className={i === page.pageNumber ? "selectedPage" : ""}
         >
           {i}
@@ -146,6 +156,7 @@ const Groups = () => {
   const subMenuClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     getProductsData(1, event.currentTarget.id, null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
     // Link to가 안먹혀서 작성
     navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
   };
@@ -156,6 +167,33 @@ const Groups = () => {
       page.pageNumber,
       category.categories.middleCategory,
       getSortName(event.currentTarget.id),
+    );
+  };
+
+  const filterClick = (event: React.FormEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { id, name } = event.currentTarget;
+    // 현재 이벤트 필터값
+    let targetFilter = {};
+    // api request용 filter값
+    let requestFilter = {};
+
+    switch (name) {
+      case "period":
+        targetFilter = getPeriodRange(id);
+        break;
+      case "price":
+        targetFilter = getPriceRange(id);
+        break;
+    }
+
+    Object.assign(requestFilter, filter, targetFilter);
+
+    getProductsData(
+      1,
+      category.categories.middleCategory,
+      sort.sort,
+      requestFilter,
     );
   };
 
@@ -223,11 +261,11 @@ const Groups = () => {
       <div className="body">
         {isMobile ? (
           <StickySection>
-            <Filter /> <div className="line"></div>
+            <Filter filterClick={filterClick} /> <div className="line"></div>
             <Sort sortClick={sortClick} /> <div className="line"></div>
           </StickySection>
         ) : (
-          <Filter />
+          <Filter filterClick={filterClick} />
         )}
         <div className="rightSection">
           <div className="rightTop">

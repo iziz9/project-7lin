@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { GrPowerReset, GrClose } from "react-icons/gr";
 import { useMediaQuery } from "react-responsive";
 import { BiFilterAlt } from "react-icons/bi";
+import { filterState } from "../../store/categoryAtom";
+import { useRecoilValue } from "recoil";
+import { getPeriodRange } from "../../utils/filter";
 
 const filterData = [
   {
@@ -45,11 +48,11 @@ const filterData = [
   },
 ];
 
-const Filter = () => {
+const Filter = ({ filterClick }: any) => {
   // 반응형
   const isMobile = useMediaQuery({ query: "(max-width:850px)" });
-
   const [isFilterOpened, setIsFilterOpened] = useState(false);
+  const filter = useRecoilValue(filterState);
 
   // X 버튼 클릭
   const closeClicked = (event: React.FormEvent<HTMLButtonElement>) => {
@@ -60,6 +63,17 @@ const Filter = () => {
   // 필터 버튼 클릭
   const filterClicked = () => {
     setIsFilterOpened((prev) => !prev);
+  };
+
+  const isChecked = (category: string, filterValue: string) => {
+    // console.log(category, filterValue);
+
+    // switch (category) {
+    //   case "period":
+    //     console.log("과아아아아연", getPeriodRange(filterValue[0]));
+    //     break;
+    // }
+    return true;
   };
 
   return (
@@ -91,6 +105,11 @@ const Filter = () => {
                           type={element.type}
                           id={`${element.category}${itemIndex}`}
                           name={element.category}
+                          onClick={filterClick}
+                          // checked={isChecked(
+                          //   element.category,
+                          //   `${element.category}${itemIndex}`,
+                          // )}
                         />
                         {item}
                       </label>
@@ -120,6 +139,11 @@ const Filter = () => {
                     type={element.type}
                     id={`${element.category}${itemIndex}`}
                     name={element.category}
+                    onClick={filterClick}
+                    // checked={isChecked(
+                    //   element.category,
+                    //   `${element.category}${itemIndex}`,
+                    // )}
                   />
                   {item}
                 </label>

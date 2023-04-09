@@ -20,10 +20,10 @@ interface CategoryState {
 }
 
 interface FilterState {
-  minPeriod: number | null;
-  maxPeriod: number | null;
-  minPrice: number | null;
-  maxPrice: number | null;
+  minPeriod?: number | null;
+  maxPeriod?: number | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
 }
 
 export const filterState = atom<FilterState>({
