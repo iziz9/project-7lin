@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { deleteWishList } from "../../../apis/auth";
+import useDeleteWishlistMutation from "../../../hooks/useDeleteWishlistMutation";
 
 interface Props {
   product: WishListProduct;
@@ -14,17 +15,17 @@ const WishListProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const deleteWishListMutation = useMutation(deleteWishList, {
-    onSuccess(res: any) {
-      console.log(res);
+  const deleteWishListMutation = useDeleteWishlistMutation({
+    onSuccess(res) {
       if (res.message === "success") {
+        alert("찜 삭제 완료");
         return queryClient.invalidateQueries({
           queryKey: ["wishlist"],
         });
       }
     },
     onError(error) {
-      alert("찜 삭제 실패: " + error);
+      alert("찜 삭제 에러: " + error);
     },
   });
 
