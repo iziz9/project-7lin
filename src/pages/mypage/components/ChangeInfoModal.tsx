@@ -11,6 +11,7 @@ import { userInfoState } from "../../../store/userInfoAtom";
 import { useMutation } from "react-query";
 import { phoneCheck, updateMemberInfo } from "../../../apis/auth";
 import { useModal } from "../../../hooks/useModal";
+import useUserInfoQuery from "../../../hooks/useUserInfoQuery";
 
 const ChangeInfoModal = () => {
   const validationSchema = Yup.object().shape({
@@ -61,7 +62,6 @@ const ChangeInfoModal = () => {
 
     if (confirm("정말로 정보를 수정하시겠습니까?")) {
       const updateMemberPayload: UpdateMemberRequest = {
-        email: userInfo.email,
         newPassword: data.password,
         validNewPassword: data.confirmPassword,
         phone: data.phone,
@@ -73,11 +73,20 @@ const ChangeInfoModal = () => {
   const { closeModal } = useModal();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
+  const { userInfoData, refetch: userInfoRefetch } = useUserInfoQuery({
+    onSuccess(res) {
+      setUserInfo(res.data);
+    },
+    onError(error) {
+      alert("회원정보 조회 실패: " + error);
+    },
+    enabled: false,
+  });
+
   const updateMembreInfoMutation = useMutation(updateMemberInfo, {
-    onSuccess: (res: any) => {
-      if (res.message === "회원정보를 수정했습니다.") {
-        const { phone } = res.data;
-        setUserInfo({ ...userInfo, phone });
+    onSuccess: async (res: any) => {
+      if (res.message === "회원정보 수정에 성공했습니다") {
+        await userInfoRefetch();
         alert("회원정보 수정 성공");
         closeModal();
       }
