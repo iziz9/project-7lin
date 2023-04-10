@@ -35,13 +35,13 @@ const Header = () => {
     },
     {
       title: "지역별여행",
-      pathname: "/",
-      color: location === "/" ? "on-page" : "",
+      pathname: "/destination",
+      color: location === "/destination" ? "on-page" : "",
     },
     {
       title: "테마별여행",
-      pathname: "/",
-      color: location === "/" ? "on-page" : "",
+      pathname: "/themes",
+      color: location === "/themes" ? "on-page" : "",
     },
     {
       title: "여행후기",
