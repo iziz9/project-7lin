@@ -26,6 +26,11 @@ interface FilterState {
   maxPrice?: number | null;
 }
 
+export const FilterCategoryState = atom({
+  key: "filterCategoryState",
+  default: [],
+});
+
 export const filterState = atom<FilterState>({
   key: "filterState",
   default: {

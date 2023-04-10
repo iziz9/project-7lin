@@ -2,11 +2,11 @@
 // 여행 기간
 export const getPeriodRange = (pathname: string | null) => {
   switch (pathname) {
-    case "period0":
+    case "5일 미만":
       return { minPeriod: 0, maxPeriod: 4 };
-    case "period1":
+    case "5일~14일":
       return { minPeriod: 5, maxPeriod: 14 };
-    case "period2":
+    case "15일 이상":
       return { minPeriod: 15, maxPeriod: 100 };
     // 기본값
     default:
@@ -17,13 +17,13 @@ export const getPeriodRange = (pathname: string | null) => {
 // 가격
 export const getPriceRange = (pathname: string | null) => {
   switch (pathname) {
-    case "price0":
+    case "~200만원":
       return { minPrice: 1, maxPrice: 2000000 };
-    case "price1":
+    case "200~500만원":
       return { minPrice: 2010000, maxPrice: 5000000 };
-    case "price2":
+    case "500~1000만원":
       return { minPrice: 5010000, maxPrice: 10000000 };
-    case "price3":
+    case "1000만원~":
       return { minPrice: 10010000, maxPrice: 99990000 };
     // 기본값
     default:

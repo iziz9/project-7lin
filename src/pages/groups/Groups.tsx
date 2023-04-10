@@ -12,6 +12,7 @@ import {
 } from "../../utils/category";
 import { useRecoilState } from "recoil";
 import {
+  FilterCategoryState,
   categoryState,
   filterState,
   itemState,
@@ -50,6 +51,9 @@ const Groups = () => {
   const [items, setItems] = useRecoilState(itemState);
   // 필터(전역)
   const [filter, setFilter] = useRecoilState(filterState);
+  // 추가 카테고리 필터(전역)
+  const [filterCategory, setFilterCategory] =
+    useRecoilState(FilterCategoryState);
 
   const navigate = useNavigate();
 
@@ -59,6 +63,7 @@ const Groups = () => {
     paramsMiddleCategory: string | null,
     paramsSort: string | null,
     paramsFilter?: object | null,
+    paramsFilterCategory?: [],
   ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
@@ -71,7 +76,14 @@ const Groups = () => {
       sort: paramsSort,
       ...paramsFilter,
     };
-    console.log("파람필터두개더한거!!", requestData);
+
+    if (paramsFilterCategory !== undefined) {
+      paramsFilterCategory.forEach((element) => {
+        requestData.categories.push(element);
+      });
+    }
+
+    console.log("최종 데이터", requestData);
 
     const result = await postProductResult(requestData, paramsPageNumber);
     // 네트워크 에러시
@@ -103,7 +115,11 @@ const Groups = () => {
       setSort({ sort: paramsSort });
 
       // 필터 값 저장
-      paramsFilter ? setFilter(paramsFilter) : console.log("암것도없슈");
+      paramsFilter ? setFilter(paramsFilter) : "";
+
+      if (paramsFilterCategory !== undefined) {
+        setFilterCategory(paramsFilterCategory);
+      }
     }
   };
 
@@ -173,28 +189,90 @@ const Groups = () => {
   const filterClick = (event: React.FormEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { id, name } = event.currentTarget;
+
+    console.log(id, name);
     // 현재 이벤트 필터값
     let targetFilter = {};
     // api request용 filter값
     let requestFilter = {};
+    // api request용 filter값 - array
+    let arrayRequestFilter: any = [];
 
     switch (name) {
       case "period":
         targetFilter = getPeriodRange(id);
+        Object.assign(requestFilter, filter, targetFilter);
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          requestFilter,
+        );
         break;
       case "price":
         targetFilter = getPriceRange(id);
+        Object.assign(requestFilter, filter, targetFilter);
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          requestFilter,
+        );
+        break;
+      case "theme":
+        targetFilter = {
+          mainCategory: "THEME",
+          middleCategory: id,
+        };
+
+        arrayRequestFilter.push(...filterCategory);
+        const themeValue = arrayRequestFilter.filter((e: any) => {
+          return e.middleCategory === id;
+        });
+
+        if (themeValue.length === 0) {
+          arrayRequestFilter.push(targetFilter);
+        } else {
+          arrayRequestFilter = arrayRequestFilter.filter((e: any) => {
+            return e.middleCategory !== id;
+          });
+        }
+
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          null,
+          arrayRequestFilter,
+        );
+        break;
+      case "destination":
+        targetFilter = {
+          mainCategory: "REGION",
+          middleCategory: id,
+        };
+        arrayRequestFilter.push(...filterCategory);
+        const destinationValue = arrayRequestFilter.filter((e: any) => {
+          return e.middleCategory === id;
+        });
+
+        if (destinationValue.length === 0) {
+          arrayRequestFilter.push(targetFilter);
+        } else {
+          arrayRequestFilter = arrayRequestFilter.filter((e: any) => {
+            return e.middleCategory !== id;
+          });
+        }
+
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          null,
+          arrayRequestFilter,
+        );
         break;
     }
-
-    Object.assign(requestFilter, filter, targetFilter);
-
-    getProductsData(
-      1,
-      category.categories.middleCategory,
-      sort.sort,
-      requestFilter,
-    );
   };
 
   return (

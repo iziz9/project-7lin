@@ -94,10 +94,7 @@ export interface TestResultProductType {
 // 상품 조회 request
 export interface ProductRequestType {
   categories: [
-    {
-      mainCategory: string | null;
-      middleCategory: string | null;
-    },
+    ...{ mainCategory: string | null; middleCategory: string | null }[],
   ];
   minPeriod?: number | null;
   maxPeriod?: number | null;
