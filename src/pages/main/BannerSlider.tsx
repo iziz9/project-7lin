@@ -93,7 +93,7 @@ const BannerSlider = () => {
           <div
             key={product.productId}
             className="container"
-            onClick={() => navigate("product/:" + product.productId)}
+            onClick={() => navigate("product/" + product.productId)}
           >
             <img src={`/${product.img}`} />
             <div className="tags">

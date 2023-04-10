@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { useNavigate } from "react-router";
 import { getLocalStorage } from "../../utils/localStorage";
 import Product from "../groups/Product";
-import { useResetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { itemState } from "../../store/categoryAtom";
+import { getTestResult } from "../../apis/request";
+import { useMutation } from "react-query";
 
 interface TestResultType {
   title: string;
@@ -14,9 +16,30 @@ interface TestResultType {
 const RecommendPage = () => {
   const navigate = useNavigate();
   const savedTestResult: TestResultType = getLocalStorage("testResult");
+  const [items, setItems] = useRecoilState(itemState);
 
-  // 목데이터로 리셋
-  useResetRecoilState(itemState)();
+  const recommendMutation = useMutation(
+    ([category, size]: [string, number]) =>
+      getTestResult(savedTestResult.category, 12),
+    {
+      onSuccess: (res: any) => {
+        if (res) {
+          console.log(res);
+          setItems(res.products);
+        }
+      },
+      onError: (error) => {
+        alert("데이터 페칭 실패: " + error);
+      },
+    },
+  );
+
+  useEffect(() => {
+    async function getResultData() {
+      recommendMutation.mutate([savedTestResult.category, 12]);
+    }
+    savedTestResult ? getResultData() : useResetRecoilState(itemState)();
+  }, []);
 
   return (
     <Container>
