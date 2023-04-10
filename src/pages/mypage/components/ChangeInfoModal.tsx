@@ -61,11 +61,14 @@ const ChangeInfoModal = () => {
     }
 
     if (confirm("정말로 정보를 수정하시겠습니까?")) {
+      const phone = data.phone.replaceAll("-", "");
       const updateMemberPayload: UpdateMemberRequest = {
         newPassword: data.password,
         validNewPassword: data.confirmPassword,
-        phone: data.phone,
       };
+
+      if (phone !== userInfo.phone) updateMemberPayload["phone"] = phone;
+
       updateMembreInfoMutation.mutateAsync(updateMemberPayload);
     }
   };
