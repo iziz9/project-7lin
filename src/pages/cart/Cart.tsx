@@ -239,6 +239,7 @@ const Cart = () => {
           productId: product.productId,
           title: product.title,
           image: product.image,
+          productPrice: product.productPrice,
           totalPrice: product.totalPrice,
           periods: { ...product.selectPeriod },
           options: product.selectOptions,

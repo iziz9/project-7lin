@@ -220,10 +220,10 @@ const ProductDetail = () => {
 
           <Recommend>
             <h2>연관상품</h2>
-            <RecommendSlider>
+            {/* <RecommendSlider>
               <p>36박 37일 남미 5개국 탐험</p>
               <p>123,334,747원</p>
-            </RecommendSlider>
+            </RecommendSlider> */}
           </Recommend>
 
           <BottomBar>

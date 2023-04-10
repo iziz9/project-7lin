@@ -2,13 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
-
-interface IBreadCrumbProps {
-  data: {
-    title: string;
-    link: string;
-  }[];
-}
+import { IBreadCrumbProps } from "../@types/props";
 
 const BreadCrumb = ({ data }: IBreadCrumbProps) => {
   return (

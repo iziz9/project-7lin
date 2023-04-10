@@ -1,5 +1,9 @@
 import { IProductDetailSelectOptionData } from "../pages/product-detail/ProductDetailModal";
-import { IProductDetailDataOptions, IProductDetailDataPeriod } from "./data";
+import {
+  IProductDetailDataOptions,
+  IProductDetailDataPeriod,
+  ReviewContentDtolist,
+} from "./data";
 import { IProductDetailSelectOptionData } from "./../pages/product-detail/ProductDetailModal";
 
 export interface IReviewModalProps {
@@ -12,8 +16,8 @@ export interface IReviewFilterItemProps {
 }
 
 export interface IMainContentsProps {
-  title: string;
-  thumnail: string;
+  data: ReviewContentDtolist[];
+  tag: string[];
 }
 
 export interface IProductDetailModalOptionProps {
@@ -49,4 +53,16 @@ export interface IProductDetailModalOptionCardProps {
   setSelectItem: React.Dispatch<
     React.SetStateAction<IProductDetailSelectOptionData>
   >;
+}
+
+export interface IBreadCrumbProps {
+  data: {
+    title: string;
+    link: string;
+  }[];
+}
+
+export interface IProductDetailReviewsProps {
+  reviewData: IProductDetailReviewData[];
+  thumnail: string;
 }

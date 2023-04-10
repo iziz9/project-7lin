@@ -1,76 +1,48 @@
 import React from "react";
 import styled from "styled-components";
-import ProductInfosCard from "./../../commons/ProductInfosCard";
 import { IMainContentsProps } from "./../../@types/props.d";
 import { useMediaQuery } from "react-responsive";
+import { ReviewContentDtolist } from "../../@types/data";
 
-const MainContents = ({ title, thumnail }: IMainContentsProps) => {
-  const isMobile: boolean = useMediaQuery({
-    query: "(max-width:850px)",
-  });
+const MainContents = ({ data, tag }: IMainContentsProps) => {
+  const imgs = data.filter(
+    (item: ReviewContentDtolist) => item.type === "IMAGE",
+  );
+  const txts = data.filter(
+    (item: ReviewContentDtolist) => item.type === "TEXT",
+  );
+
+  console.log(imgs);
+  console.log(txts);
 
   return (
-    <Main>
-      {isMobile ? null : <h1>{title}</h1>}
-
-      <ProductInfosCard />
-
+    <>
       <MainContent>
         <ImgArea>
-          <img src={thumnail} alt="후기 본문 이미지" />
-          <img src="/review_img_2.png" alt="후기 본문 이미지" />
-          <img src={thumnail} alt="후기 본문 이미지" />
-          <img src="/review_img_2.png" alt="후기 본문 이미지" />
-          <img src={thumnail} alt="후기 본문 이미지" />
-          <img src="/review_img_2.png" alt="후기 본문 이미지" />
-          <img src={thumnail} alt="후기 본문 이미지" />
-          <img src="/review_img_2.png" alt="후기 본문 이미지" />
+          {imgs.map((item: ReviewContentDtolist) => (
+            <img
+              key={item.reviewId}
+              onError={(e) => e.currentTarget.src === "/img_error.png"}
+              src={item.content}
+              alt="후기 본문 이미지"
+            />
+          ))}
         </ImgArea>
         <TxtArea>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis
-            animi ullam delectus nisi nam dolor voluptatem fuga esse minus autem
-            perferendis sint quam, temporibus nihil quod distinctio non atque
-            illum quidem cupiditate quas. Placeat facilis sequi aliquam
-            perspiciatis nulla ad quidem at earum nam magnam tempora sint ut
-            laborum error saepe a dolorum accusamus commodi soluta temporibus
-            inventore magni pariatur, deleniti exercitationem. Reprehenderit
-            quia, maiores nihil ipsa quisquam sint, cupiditate architecto
-            temporibus harum vitae cumque odit eaque tempora consequatur eum
-            repellendus quaerat molestias. Nobis, mollitia ad quaerat accusamus
-            laudantium eos explicabo esse id ea alias repudiandae consequuntur
-            modi? Animi, voluptatem. Lorem ipsum dolor, sit amet consectetur
-            adipisicing elit. Blanditiis animi ullam delectus nisi nam dolor
-            voluptatem fuga esse minus autem perferendis sint quam, temporibus
-            nihil quod distinctio non atque illum quidem cupiditate quas.
-            Placeat facilis sequi aliquam perspiciatis nulla ad quidem at earum
-            nam magnam tempora sint ut laborum error saepe a dolorum accusamus
-            commodi soluta temporibus inventore magni pariatur, deleniti
-            exercitationem. Reprehenderit quia, maiores nihil ipsa quisquam
-            sint, cupiditate architecto temporibus harum vitae cumque odit eaque
-            tempora consequatur eum repellendus quaerat molestias. Nobis,
-            mollitia ad quaerat accusamus laudantium eos explicabo esse id ea
-            alias repudiandae consequuntur modi? Animi, voluptatem.
-          </p>
+          {txts.map((item: ReviewContentDtolist) => (
+            <p key={item.reviewContentId}>{item.content}</p>
+          ))}
         </TxtArea>
       </MainContent>
 
       <Tags>
-        {["태그", "태그", "태그", "태그", "태그"].map((tag, index) => (
+        {tag.map((tag: string, index: number) => (
           <button key={index}>{tag}</button>
         ))}
       </Tags>
-    </Main>
+    </>
   );
 };
-const Main = styled.div`
-  padding-top: 50px;
-  h1 {
-    margin-bottom: 50px;
-    font-size: 45px;
-    font-weight: bold;
-  }
-`;
 
 const MainContent = styled.div`
   margin-top: 50px;

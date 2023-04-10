@@ -77,6 +77,7 @@ const ProductDetailModal = ({
           productId: id,
           title,
           image,
+          productPrice: price,
           totalPrice,
           periods: { ...selectItem.period },
           options: selectOptions,
