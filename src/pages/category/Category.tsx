@@ -86,12 +86,9 @@ const Category = () => {
       });
     }
 
-    console.log("최종 데이터", requestData);
-
     const result = await postProductResult(requestData, paramsPageNumber);
     // 네트워크 에러시
     if (result === "Network Error") {
-      console.log("네트워크 에러");
       return;
     } else {
       const { pageNumber, totalPages } = result.data;

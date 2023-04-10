@@ -1,5 +1,5 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
 import { BsSearch } from "react-icons/bs";
@@ -14,46 +14,58 @@ import { logout } from "../apis/auth";
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation().pathname;
+  const location = useLocation();
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
 
+  const queryParams = new URLSearchParams(location.search);
+
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [keyWord, setKeyWord] = useState<string>(queryParams.get("q") || "");
   const accessToken = getCookie("accessToken");
 
   const navMenu = [
     {
       title: "여행추천",
       pathname: "/recommend",
-      color: location === "/recommend" || location === "/test" ? "on-page" : "",
+      color:
+        location.pathname === "/recommend" || location.pathname === "/test"
+          ? "on-page"
+          : "",
     },
     {
       title: "그룹별여행",
       pathname: "/groups",
-      color: location === "/groups" ? "on-page" : "",
+      color: location.pathname === "/groups" ? "on-page" : "",
     },
     {
       title: "지역별여행",
       pathname: "/destination",
-      color: location === "/destination" ? "on-page" : "",
+      color: location.pathname === "/destination" ? "on-page" : "",
     },
     {
       title: "테마별여행",
       pathname: "/themes",
-      color: location === "/themes" ? "on-page" : "",
+      color: location.pathname === "/themes" ? "on-page" : "",
     },
     {
       title: "여행후기",
       pathname: "/review",
-      color: location === "/review" ? "on-page" : "",
+      color: location.pathname === "/review" ? "on-page" : "",
     },
     {
       title: "공지사항",
       pathname: "/notice",
-      color: location === "/notice" ? "on-page" : "",
+      color: location.pathname === "/notice" ? "on-page" : "",
     },
   ];
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (keyWord.trim() === "") return alert("검색어를 입력해주세요");
+    navigate(`/search?q=${keyWord}`);
+  };
 
   const handleLogout = async () => {
     if (confirm("정말로 로그아웃 하시겠습니까?")) {
@@ -81,7 +93,7 @@ const Header = () => {
               onClick={() => navigate("/")}
             />
             <div className="iconbox">
-              <SlBag className="icons" />
+              <SlBag className="icons" onClick={() => navigate("/cart")} />
               <SlLogin className="icons" onClick={() => navigate("/login")} />
             </div>
           </div>
@@ -94,16 +106,18 @@ const Header = () => {
                 <div className="logo">
                   <img src="/logo_text.png" onClick={() => navigate("/")} />
                 </div>
-                <div className="searchBar">
-                  <input type="text" placeholder="검색어를 입력해주세요" />
-                  <BsSearch className="searchButton" />
-                </div>
+                <form className="searchBar" onSubmit={handleSubmit}>
+                  <input
+                    type="text"
+                    placeholder="검색어를 입력해주세요"
+                    value={keyWord}
+                    onChange={(e) => setKeyWord(e.target.value)}
+                  />
+                  <BsSearch className="searchButton" type="submit" />
+                </form>
               </div>
               <ul>
-                <li>알림</li>
-                <Link to="/cart">
-                  <li>장바구니</li>
-                </Link>
+                <li onClick={() => navigate("/cart")}>장바구니</li>
                 {accessToken ? (
                   <li onClick={handleLogout}>로그아웃</li>
                 ) : (
