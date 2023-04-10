@@ -9,9 +9,13 @@ import Modal from "../../commons/Modal";
 import ProductDetailModal from "./ProductDetailModal";
 import ProductDetailReviews from "./ProductDetailReviews";
 import { useMediaQuery } from "react-responsive";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getProductDetail, getProductDetailReview } from "../../apis/request";
 import { IProductDetailDataContents } from "../../@types/data";
+import { getCookie } from "../../utils/cookie";
+import useWishlistQuery from "../../hooks/useWishlistQuery";
+import useAddWishlistMutation from "../../hooks/useAddWishlistMutation";
+import useDeleteWishlistMutation from "../../hooks/useDeleteWishlistMutation";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,6 +61,54 @@ const ProductDetail = () => {
         />
       ),
     });
+  };
+
+  const token = getCookie("accessToken");
+  const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
+    onSuccess(data) {
+      console.log(data);
+    },
+    onError(error) {
+      console.log("찜 리스트 조회 실패: " + error);
+    },
+    enabled: token ? true : false,
+  });
+
+  const queryClient = useQueryClient();
+  const addWishListMutation = useAddWishlistMutation({
+    onSuccess(res) {
+      if (res.message === "success") {
+        alert("찜 추가 완료");
+        return queryClient.invalidateQueries({
+          queryKey: ["wishlist"],
+        });
+      }
+    },
+    onError(error) {
+      alert("찜 추가 에러: " + error);
+    },
+  });
+
+  const deleteWishListMutation = useDeleteWishlistMutation({
+    onSuccess(res) {
+      if (res.message === "success") {
+        alert("찜 삭제 완료");
+        return queryClient.invalidateQueries({
+          queryKey: ["wishlist"],
+        });
+      }
+    },
+    onError(error) {
+      alert("찜 삭제 에러: " + error);
+    },
+  });
+
+  const handleAddWishlist = () => {
+    addWishListMutation.mutate(Number(id));
+  };
+
+  const handleDeleteWishlist = () => {
+    deleteWishListMutation.mutate(Number(id));
   };
 
   return (
@@ -185,7 +237,19 @@ const ProductDetail = () => {
               <button onClick={() => handleModal("장바구니")}>
                 {isMobile ? "장바구니" : "장바구니 추가"}
               </button>
-              <button>{isMobile ? "찜" : "찜에 추가하기"}</button>
+              {token ? (
+                wishlistData?.find(
+                  (product) => product.productId === Number(id),
+                ) ? (
+                  <button onClick={handleDeleteWishlist}>
+                    {isMobile ? "찜 삭제" : "찜 삭제하기"}
+                  </button>
+                ) : (
+                  <button onClick={handleAddWishlist}>
+                    {isMobile ? "찜 추가" : "찜 추가하기"}
+                  </button>
+                )
+              ) : null}
               <button>{isMobile ? "공유" : "공유하기"}</button>
             </div>
           </BottomBar>

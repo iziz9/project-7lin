@@ -60,8 +60,20 @@ export interface SignUpRequest {
   age: string;
 }
 
+export interface SignUpResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: {
+    email: string;
+    name: string;
+    gender: string;
+    age: number;
+    phone: string;
+  };
+}
+
 export interface UpdateMemberRequest {
-  email: string;
   newPassword: string;
   validNewPassword: string;
   phone: string;
@@ -93,11 +105,8 @@ export interface TestResultProductType {
 
 // 상품 조회 request
 export interface ProductRequestType {
-  category: [
-    {
-      mainCategory: string | null;
-      middleCategory: string | null;
-    },
+  categories: [
+    ...{ mainCategory: string | null; middleCategory: string | null }[],
   ];
   minPeriod?: number | null;
   maxPeriod?: number | null;
@@ -149,12 +158,20 @@ export interface IProductDetailDataPeriod {
   startDate: string;
   endDate: string;
 }
-export interface MemberInfoResponse {
+
+export interface MemberInfo {
   email: string;
   name: string;
   gender: string;
   age: number;
   phone: string;
+}
+
+export interface MemberInfoResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: MemberInfo;
 }
 
 export interface ReservationProduct {

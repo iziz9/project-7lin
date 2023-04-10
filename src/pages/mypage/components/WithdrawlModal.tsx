@@ -46,7 +46,7 @@ const WithdrawlModal = () => {
       <div
         className="btn-wrapper"
         onClick={() => {
-          withDrawalMutation.mutate(userInfo.email);
+          withDrawalMutation.mutate();
         }}
       >
         <BasicBtn>탈퇴하기</BasicBtn>

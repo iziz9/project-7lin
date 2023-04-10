@@ -12,7 +12,9 @@ import {
 } from "../../utils/category";
 import { useRecoilState } from "recoil";
 import {
+  FilterCategoryState,
   categoryState,
+  filterState,
   itemState,
   pageState,
   sortState,
@@ -20,6 +22,7 @@ import {
 import { useMediaQuery } from "react-responsive";
 import Sort from "./Sort";
 import { getSortName } from "../../utils/sort";
+import { getPeriodRange, getPriceRange } from "../../utils/filter";
 
 interface ContainerProps {
   length: number;
@@ -44,66 +47,79 @@ const Groups = () => {
   const [page, setPage] = useRecoilState(pageState);
   // 정렬(전역)
   const [sort, setSort] = useRecoilState(sortState);
-
-  // 상품
+  // 상품(전역)
   const [items, setItems] = useRecoilState(itemState);
+  // 필터(전역)
+  const [filter, setFilter] = useRecoilState(filterState);
+  // 추가 카테고리 필터(전역)
+  const [filterCategory, setFilterCategory] =
+    useRecoilState(FilterCategoryState);
 
   const navigate = useNavigate();
 
-  const onClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    console.log("클릭됐땅", event.currentTarget.id);
-
-    // api 호출
-    getProductsData(1, event.currentTarget.id, sort.sort);
-
-    // Link to가 안먹혀서 작성
-    navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
-  };
-
   // 상품 조회 api 호출 및 state 변경
   const getProductsData = async (
-    changePage: number,
-    middleCategory: string | null,
-    sortParam?: string | null,
+    paramsPageNumber: number,
+    paramsMiddleCategory: string | null,
+    paramsSort: string | null,
+    paramsFilter?: object | null,
+    paramsFilterCategory?: [],
   ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
-      category: [
+      categories: [
         {
           mainCategory: getMainCategoryName(category.categories.mainCategory),
-          middleCategory: getMiddleCategoryName(middleCategory),
+          middleCategory: getMiddleCategoryName(paramsMiddleCategory),
         },
       ],
-      sort: sortParam,
+      sort: paramsSort,
+      ...paramsFilter,
     };
 
-    const result = await postProductResult(requestData, changePage);
+    if (paramsFilterCategory !== undefined) {
+      paramsFilterCategory.forEach((element) => {
+        requestData.categories.push(element);
+      });
+    }
+
+    console.log("최종 데이터", requestData);
+
+    const result = await postProductResult(requestData, paramsPageNumber);
     // 네트워크 에러시
     if (result === "Network Error") {
       console.log("네트워크 에러");
       return;
     } else {
-      // 현재 카테고리 값 저장
       const { pageNumber, totalPages } = result.data;
-      // console.log("test..", pageNumber, totalPages);
+
+      // 페이지 값 저장
       setPage({
+        // pageNumber= paramsPageNumber ?
         pageNumber,
         totalPages,
       });
 
+      // 카테고리 값 저장
       setCategory({
         categories: {
           mainCategory: categoryLevel[1],
-          middleCategory: middleCategory,
+          middleCategory: paramsMiddleCategory,
         },
       });
 
-      // 상품 저장
+      // 호출 결과 상품 값 저장
       setItems(result.data.products);
 
-      // 정렬방식 저장
-      setSort;
+      // 정렬 값 저장
+      setSort({ sort: paramsSort });
+
+      // 필터 값 저장
+      paramsFilter ? setFilter(paramsFilter) : "";
+
+      if (paramsFilterCategory !== undefined) {
+        setFilterCategory(paramsFilterCategory);
+      }
     }
   };
 
@@ -115,7 +131,7 @@ const Groups = () => {
       },
     });
     // Api 호출
-    getProductsData(page.pageNumber, categoryLevel[2]);
+    getProductsData(page.pageNumber, categoryLevel[2], null);
     // console.log("아이템은", items);
     // console.log("카테고리는", category);
   }, []);
@@ -124,7 +140,7 @@ const Groups = () => {
   const pagenation = () => {
     let arr = [];
 
-    const clickPage = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const pageClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
       getProductsData(
         Number(event.currentTarget.id),
         category.categories.middleCategory,
@@ -143,8 +159,8 @@ const Groups = () => {
           }?page=${i}`}
           key={i}
           id={i.toString()}
-          onClick={clickPage}
-          className={i === page.pageNumber ? "selected" : ""}
+          onClick={pageClick}
+          className={i === page.pageNumber ? "selectedPage" : ""}
         >
           {i}
         </Link>,
@@ -153,10 +169,110 @@ const Groups = () => {
     return arr;
   };
 
+  const subMenuClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    getProductsData(1, event.currentTarget.id, null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Link to가 안먹혀서 작성
+    navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
+  };
+
   const sortClick = (event: React.MouseEvent<HTMLLIElement>) => {
-    const sortValue = getSortName(event.currentTarget.id);
-    setSort({ sort: sortValue });
-    getProductsData(page.pageNumber, categoryLevel[2], sortValue);
+    event.preventDefault();
+    getProductsData(
+      page.pageNumber,
+      category.categories.middleCategory,
+      getSortName(event.currentTarget.id),
+    );
+  };
+
+  const filterClick = (event: React.FormEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { id, name } = event.currentTarget;
+
+    console.log(id, name);
+    // 현재 이벤트 필터값
+    let targetFilter = {};
+    // api request용 filter값
+    let requestFilter = {};
+    // api request용 filter값 - array
+    let arrayRequestFilter: any = [];
+
+    switch (name) {
+      case "period":
+        targetFilter = getPeriodRange(id);
+        Object.assign(requestFilter, filter, targetFilter);
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          requestFilter,
+        );
+        break;
+      case "price":
+        targetFilter = getPriceRange(id);
+        Object.assign(requestFilter, filter, targetFilter);
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          requestFilter,
+        );
+        break;
+      case "theme":
+        targetFilter = {
+          mainCategory: "THEME",
+          middleCategory: id,
+        };
+
+        arrayRequestFilter.push(...filterCategory);
+        const themeValue = arrayRequestFilter.filter((e: any) => {
+          return e.middleCategory === id;
+        });
+
+        if (themeValue.length === 0) {
+          arrayRequestFilter.push(targetFilter);
+        } else {
+          arrayRequestFilter = arrayRequestFilter.filter((e: any) => {
+            return e.middleCategory !== id;
+          });
+        }
+
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          null,
+          arrayRequestFilter,
+        );
+        break;
+      case "destination":
+        targetFilter = {
+          mainCategory: "REGION",
+          middleCategory: id,
+        };
+        arrayRequestFilter.push(...filterCategory);
+        const destinationValue = arrayRequestFilter.filter((e: any) => {
+          return e.middleCategory === id;
+        });
+
+        if (destinationValue.length === 0) {
+          arrayRequestFilter.push(targetFilter);
+        } else {
+          arrayRequestFilter = arrayRequestFilter.filter((e: any) => {
+            return e.middleCategory !== id;
+          });
+        }
+
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          null,
+          arrayRequestFilter,
+        );
+        break;
+    }
   };
 
   return (
@@ -166,11 +282,15 @@ const Groups = () => {
           <SubMenu length={subMenu["groups"].length}>
             {subMenu["groups"].map((value) => (
               <Link
-                className="submenu"
+                className={
+                  category.categories.middleCategory === value
+                    ? "selectedMenu submenu"
+                    : "submenu"
+                }
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
-                onClick={onClick}
+                onClick={subMenuClick}
               >
                 {getMiddleCategoryName(value)}
               </Link>
@@ -181,11 +301,15 @@ const Groups = () => {
           <SubMenu length={subMenu["themes"].length}>
             {subMenu["themes"].map((value) => (
               <Link
-                className="submenu"
+                className={
+                  category.categories.middleCategory === value
+                    ? "selectedMenu submenu"
+                    : "submenu"
+                }
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
-                onClick={onClick}
+                onClick={subMenuClick}
               >
                 {getMiddleCategoryName(value)}
               </Link>
@@ -196,11 +320,15 @@ const Groups = () => {
           <SubMenu length={subMenu["destination"].length}>
             {subMenu["destination"].map((value) => (
               <Link
-                className="submenu"
+                className={
+                  category.categories.middleCategory === value
+                    ? "selectedMenu submenu"
+                    : "submenu"
+                }
                 to={`/${category.categories.mainCategory}/${value}`}
                 id={value}
                 key={value}
-                onClick={onClick}
+                onClick={subMenuClick}
               >
                 {getMiddleCategoryName(value)}
               </Link>
@@ -211,11 +339,11 @@ const Groups = () => {
       <div className="body">
         {isMobile ? (
           <StickySection>
-            <Filter /> <div className="line"></div>
+            <Filter filterClick={filterClick} /> <div className="line"></div>
             <Sort sortClick={sortClick} /> <div className="line"></div>
           </StickySection>
         ) : (
-          <Filter />
+          <Filter filterClick={filterClick} />
         )}
         <div className="rightSection">
           <div className="rightTop">
@@ -283,7 +411,7 @@ const Container = styled.div`
       gap: 0;
     }
   }
-  .selected {
+  .selectedPage {
     font-weight: 700;
   }
 `;
@@ -329,6 +457,10 @@ const SubMenu = styled.div<ContainerProps>`
       color: #0080c6;
       background-color: #e9e9e9;
     }
+  }
+  .selectedMenu {
+    color: #0080c6;
+    background-color: #e9e9e9;
   }
 
   // 모바일 환경
