@@ -224,7 +224,27 @@ const Groups = () => {
           filterCategory,
         );
         break;
-      case "theme":
+
+      case "groups":
+        targetFilter = {
+          mainCategory: "GROUP",
+          middleCategory: id,
+        };
+        arrayRequestFilter.push(...filterCategory);
+        arrayRequestFilter = arrayRequestFilter.filter((e: any) => {
+          return e.mainCategory !== "GROUP";
+        });
+        arrayRequestFilter.push(targetFilter);
+
+        getProductsData(
+          1,
+          category.categories.middleCategory,
+          sort.sort,
+          filter,
+          arrayRequestFilter,
+        );
+        break;
+      case "themes":
         targetFilter = {
           mainCategory: "THEME",
           middleCategory: id,

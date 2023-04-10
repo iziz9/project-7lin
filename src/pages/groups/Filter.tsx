@@ -3,13 +3,24 @@ import styled from "styled-components";
 import { GrPowerReset, GrClose } from "react-icons/gr";
 import { useMediaQuery } from "react-responsive";
 import { BiFilterAlt } from "react-icons/bi";
-import { FilterCategoryState, filterState } from "../../store/categoryAtom";
+import {
+  FilterCategoryState,
+  categoryState,
+  filterState,
+} from "../../store/categoryAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getPeriodRange, getPriceRange } from "../../utils/filter";
+import { getMainCategoryName } from "../../utils/category";
 
 const filterData = [
   {
-    category: "theme",
+    category: "groups",
+    type: "radio",
+    title: "여행 그룹",
+    content: ["5070끼리", "남자끼리", "여자끼리", "가족끼리", "누구든지"],
+  },
+  {
+    category: "themes",
     type: "checkbox",
     title: "여행 테마",
     content: [
@@ -55,6 +66,11 @@ const Filter = ({ filterClick }: any) => {
   const [filter, setFilter] = useRecoilState(filterState);
   const [filterCategory, setFilterCategory] =
     useRecoilState(FilterCategoryState);
+  const category = useRecoilValue(categoryState);
+
+  const filteredFilter = filterData.filter(
+    (e: any) => e.category !== category.categories.mainCategory,
+  );
 
   // X 버튼 클릭
   const closeClicked = (event: React.FormEvent<HTMLButtonElement>) => {
@@ -85,7 +101,9 @@ const Filter = ({ filterClick }: any) => {
           : false;
       case "price":
         return getPriceRange(name).minPrice === filter.minPrice ? true : false;
-      case "theme":
+      case "groups":
+        return result.length !== 0 ? true : false;
+      case "themes":
         return result.length !== 0 ? true : false;
       case "destination":
         return result.length !== 0 ? true : false;
@@ -110,7 +128,7 @@ const Filter = ({ filterClick }: any) => {
               <CloseButton onClick={closeClicked}>
                 <GrClose />
               </CloseButton>
-              {filterData.map((element, index) => (
+              {filteredFilter.map((element, index) => (
                 <section className={element.category} key={index}>
                   <h5 className="optionTitle">{element.title}</h5>{" "}
                   <div className="optionItems">
@@ -139,7 +157,7 @@ const Filter = ({ filterClick }: any) => {
             초기화
             <GrPowerReset />
           </ResetButton>
-          {filterData.map((element, index) => (
+          {filteredFilter.map((element, index) => (
             <section className={element.category} key={index}>
               <h5>{element.title}</h5>
               {element.content.map((item, itemIndex) => (

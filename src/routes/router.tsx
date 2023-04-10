@@ -54,6 +54,16 @@ const router = createBrowserRouter([
         children: [{ path: ":id", element: <Groups /> }],
       },
       {
+        path: "themes",
+        element: <Groups />,
+        children: [{ path: ":id", element: <Groups /> }],
+      },
+      {
+        path: "destination",
+        element: <Groups />,
+        children: [{ path: ":id", element: <Groups /> }],
+      },
+      {
         path: "/login",
         element: (
           <PrivateRoute onlyAuth={false}>
