@@ -122,8 +122,8 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
               onClick={() =>
                 navigate("/review/write", {
                   state: {
-                    id: product.reservationId,
-                    code: product.reservationCode,
+                    reservationId: product.reservationId,
+                    productId: product.productInfo[0].product.productId,
                   },
                 })
               }

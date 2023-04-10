@@ -199,6 +199,13 @@ export interface Product {
   period: number;
 }
 
+export interface AddReservationRespose {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: string;
+}
+
 export interface MemberReservationResponse {
   data: ReservationProduct[];
   dataSize: number;

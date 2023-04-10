@@ -1,5 +1,6 @@
 import {
   AddReservationRequest,
+  AddReservationRespose,
   FindIdFormValue,
   FindPwFormValue,
   LoginFormValue,
@@ -131,7 +132,10 @@ export const getMemberReservationDetail = async (id: number) => {
 
 // 예약 추가
 export const addReservation = async (arg: AddReservationRequest) => {
-  const data = await axiosInstance.post(`/reservation`, arg);
+  const data: AddReservationRespose = await axiosInstance.post(
+    `/reservation`,
+    arg,
+  );
   console.log(data);
   return data;
 };
