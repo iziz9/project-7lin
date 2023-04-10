@@ -80,7 +80,6 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
   const findPwMutation = useMutation(findPassword, {
     onSuccess: (res: any) => {
       if (res) {
-        console.log(res);
         openModal(showPwModalData);
       }
     },
@@ -98,8 +97,6 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
   const onSubmitHandler: SubmitHandler<
     FindIdFormValue | FindPwFormValue
   > = async (submitData) => {
-    console.log(JSON.stringify(submitData, null, 2));
-
     const phone = submitData.phone.replaceAll("-", "");
 
     if (isFindId && "name" in submitData) {
@@ -109,7 +106,6 @@ const FindIdPasswordModal = ({ findPw }: Props) => {
       };
       try {
         const data = await findId(findIdPayload);
-        console.log(data);
         const showIdModalData = {
           title: "아이디 찾기",
           content: (

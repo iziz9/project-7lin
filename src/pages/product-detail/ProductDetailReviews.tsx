@@ -3,19 +3,8 @@ import styled from "styled-components";
 import { IoIosArrowDropright } from "react-icons/io";
 import { useDragScroll } from "../../utils/useDragScroll";
 import { Link } from "react-router-dom";
-
-export interface IProductDetailReviewsProps {
-  reviewData: IProductDetailReviewData[];
-  thumnail: string;
-}
-
-export interface IProductDetailReviewData {
-  createdDate: string;
-  reviewId: number;
-  thumbnail: string;
-  title: string;
-  viewCount: number;
-}
+import { IProductDetailReviewsProps } from "../../@types/props";
+import { IProductDetailReviewData } from "../../@types/data";
 
 const ProductDetailReviews = ({
   reviewData,

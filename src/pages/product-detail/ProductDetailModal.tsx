@@ -58,8 +58,6 @@ const ProductDetailModal = ({
 
   // 예약하기, 장바구니에 추가, 변경하기 버튼 클릭 시
   const handleSubmit = () => {
-    console.log(funcType);
-
     let selectOptions;
     if (selectItem.optionRoom?.content && selectItem.optionFlight?.content)
       selectOptions = [
@@ -79,6 +77,7 @@ const ProductDetailModal = ({
           productId: id,
           title,
           image,
+          productPrice: price,
           totalPrice,
           periods: { ...selectItem.period },
           options: selectOptions,

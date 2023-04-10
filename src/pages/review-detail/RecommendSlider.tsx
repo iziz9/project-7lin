@@ -1,15 +1,19 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useDragScroll } from "../../utils/useDragScroll";
 import { useMediaQuery } from "react-responsive";
+import { GetAllReviewsReviewList } from "../../@types/data";
+import { Link } from "react-router-dom";
 
 interface IRecommendSliderProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  data: GetAllReviewsReviewList[] | undefined;
 }
 
-const RecommendSlider = ({ children }: IRecommendSliderProps) => {
+const RecommendSlider = ({ children, data }: IRecommendSliderProps) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [view, setView] = useState([0, 4]);
 
   useDragScroll(ref);
 
@@ -22,18 +26,40 @@ const RecommendSlider = ({ children }: IRecommendSliderProps) => {
       <Recommend>
         <RecommendMain isMobile={isMobile}>
           <button>
-            <IoIosArrowBack size={30} />
+            <IoIosArrowBack
+              size={30}
+              onClick={() =>
+                setView((prev) =>
+                  prev[0] === 0 ? [...prev] : [prev[0] - 4, prev[1] - 4],
+                )
+              }
+            />
           </button>
           <Imgs>
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item}>
-                <img src="/reveiw_img_3.png" alt="추천 후기 이미지" />
-                <div>{children}</div>
-              </div>
-            ))}
+            {data
+              ?.slice(view[0], view[1])
+              .map((item: GetAllReviewsReviewList) => (
+                <Link key={item.reviewId} to={`/review/${item.reviewId}`}>
+                  <div>
+                    <img src={item.reviewThumbnail} alt="추천 후기 이미지" />
+                    <div>
+                      <strong>{item.reviewTitle}</strong>
+                    </div>
+                  </div>
+                </Link>
+              ))}
           </Imgs>
           <button>
-            <IoIosArrowForward size={30} />
+            <IoIosArrowForward
+              size={30}
+              onClick={() =>
+                setView((prev) =>
+                  data && data?.length <= prev[1]
+                    ? [...prev]
+                    : [prev[0] + 4, prev[1] + 4],
+                )
+              }
+            />
           </button>
         </RecommendMain>
       </Recommend>
@@ -48,6 +74,9 @@ const Wrap = styled.div`
 
   ::-webkit-scrollbar {
     display: none;
+  }
+  button {
+    cursor: pointer;
   }
 `;
 
@@ -87,19 +116,29 @@ const RecommendMain = styled.div<{ isMobile: boolean }>`
 `;
 const Imgs = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  > div {
-    width: 23%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0 20px;
+  a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  a > div {
+    width: 100%;
+    height: 100%;
     position: relative;
     div {
       width: 100%;
+      height: 100%;
       position: absolute;
     }
   }
   img {
     margin-bottom: 10px;
     width: 100%;
+    height: 100%;
     border-radius: 10px;
   }
   strong {

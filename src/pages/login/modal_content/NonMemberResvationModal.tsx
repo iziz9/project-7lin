@@ -37,7 +37,6 @@ const NonMemberResvationModal = () => {
   const nonMemberReservationMutation = useMutation(getNonMemberReservation, {
     onSuccess: (res) => {
       if (res.message === "성공") {
-        console.log(res);
         const ReservationDetailModalData = {
           title: "예약내역 상세",
           content: (
@@ -53,8 +52,6 @@ const NonMemberResvationModal = () => {
   });
 
   const onSubmitHandler: SubmitHandler<NonMemberFormValue> = (data) => {
-    console.log(JSON.stringify(data, null, 2));
-
     const phone = data.phone.replaceAll("-", "");
 
     const payload: NonMemberFormValue = {

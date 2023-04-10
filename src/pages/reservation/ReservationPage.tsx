@@ -162,7 +162,7 @@ const Reservation = () => {
               </div>
               <div className="product-desc">
                 <span className="title">{state.title}</span>
-                {/* <span className="price">{state[0].price}원</span> 여기가 바로 수정해야하는 그곳입니다 */}
+                <span className="price">{state.productPrice}원</span>
               </div>
             </div>
             <div className="options">
@@ -568,7 +568,7 @@ const Reservation = () => {
                   <li>
                     <h3>상품 금액</h3>
                   </li>
-                  {/* <li>{state[0].price}인</li> 수정해야됩니다 */}
+                  <li>{state.productPrice}인</li>
                 </ul>
                 <div className="total">
                   <h3>총 예약 금액</h3>

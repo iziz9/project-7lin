@@ -200,7 +200,6 @@ const SignupSite = () => {
   const loginMutation = useMutation(login, {
     onSuccess: (res: any) => {
       if (res) {
-        console.log(res);
         const { email, name, age, gender, phone, tokenDto } = res; // res
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
@@ -220,7 +219,6 @@ const SignupSite = () => {
   const signupMutation = useMutation(signUp, {
     onSuccess: (res) => {
       if (res) {
-        console.log(res);
         // 자동 로그인 시도해보기
         if (confirm("회원가입 성공: 바로 로그인 하시겠습니까?")) {
           const loginPayload: LoginFormValue = {
@@ -240,8 +238,6 @@ const SignupSite = () => {
   });
 
   const onSubmitHandler: SubmitHandler<SignupFormValue> = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
-
     if (!isCheckDuplicate) {
       alert("이메일 중복검사를 해주세요!");
       scrollToTop();
