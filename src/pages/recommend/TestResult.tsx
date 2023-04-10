@@ -14,7 +14,6 @@ const TestResult = ({ result }: { result: string }) => {
   const testResultMutation = useMutation(getTestResult, {
     onSuccess: (res: any) => {
       if (res) {
-        console.log(res);
         setProductsData(res.products);
       }
     },

@@ -83,12 +83,9 @@ const Groups = () => {
       });
     }
 
-    console.log("최종 데이터", requestData);
-
     const result = await postProductResult(requestData, paramsPageNumber);
     // 네트워크 에러시
     if (result === "Network Error") {
-      console.log("네트워크 에러");
       return;
     } else {
       const { pageNumber, totalPages } = result.data;
@@ -132,8 +129,6 @@ const Groups = () => {
     });
     // Api 호출
     getProductsData(page.pageNumber, categoryLevel[2], null);
-    // console.log("아이템은", items);
-    // console.log("카테고리는", category);
   }, []);
 
   // 페이지네이션 함수
@@ -190,7 +185,6 @@ const Groups = () => {
     event.preventDefault();
     const { id, name } = event.currentTarget;
 
-    console.log(id, name);
     // 현재 이벤트 필터값
     let targetFilter = {};
     // api request용 filter값

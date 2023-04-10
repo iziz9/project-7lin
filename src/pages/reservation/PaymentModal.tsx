@@ -26,9 +26,7 @@ const PaymentModal = (props: Props) => {
           closeModal();
         }}
       >
-        <BasicBtn onClick={() => console.log("예약조회 페이지 이동")}>
-          예약 내역 조회
-        </BasicBtn>
+        <BasicBtn>예약 내역 조회</BasicBtn>
       </div>
     </Container>
   );

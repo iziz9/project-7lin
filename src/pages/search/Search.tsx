@@ -27,9 +27,7 @@ const Search = () => {
       if (keyWord) return getSearchProduct(keyWord);
     },
     {
-      onSuccess(data) {
-        console.log(data);
-      },
+      onSuccess(data) {},
       onError(error) {
         alert("상품 검색 실패: " + error);
       },
@@ -39,11 +37,9 @@ const Search = () => {
   const token = getCookie("accessToken");
 
   const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
-    onSuccess(data) {
-      console.log(data);
-    },
+    onSuccess(data) {},
     onError(error) {
-      console.log("찜 리스트 조회 실패: " + error);
+      alert("찜 리스트 조회 실패: " + error);
     },
     enabled: token ? true : false,
   });

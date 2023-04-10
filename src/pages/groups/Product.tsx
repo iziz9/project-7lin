@@ -19,11 +19,9 @@ const Product = () => {
   const token = getCookie("accessToken");
 
   const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
-    onSuccess(data) {
-      console.log(data);
-    },
+    onSuccess(data) {},
     onError(error) {
-      console.log("찜 리스트 조회 실패: " + error);
+      alert("찜 리스트 조회 실패: " + error);
     },
     enabled: token ? true : false,
   });

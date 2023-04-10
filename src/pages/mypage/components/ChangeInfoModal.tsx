@@ -47,7 +47,6 @@ const ChangeInfoModal = () => {
   });
 
   const onSubmitHandler: SubmitHandler<ChangeInfoFormValue> = (data) => {
-    console.log(JSON.stringify(data, null, 2));
     if (!isCheckPhoneDuplicate) {
       alert("전화번호 중복검사를 해주세요!");
       setFocus("phone");

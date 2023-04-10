@@ -47,7 +47,6 @@ const ReviewWrite = () => {
     setImgFile((prev: IImgData[]) => {
       const newArr = [...prev];
       const oldItemIdx = [...prev].findIndex((i) => i.content === file);
-      console.log(oldItemIdx);
       newArr.splice(oldItemIdx, 1);
       return newArr;
     });
@@ -97,7 +96,6 @@ const ReviewWrite = () => {
           // const formData = new FormData(e.currentTarget);
           // let entries = formData.entries();
           // for (const pair of entries) {
-          //   console.log(pair);
           //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
           // }
         }}

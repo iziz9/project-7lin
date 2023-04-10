@@ -16,7 +16,6 @@ export const getTestResult = async (category: string) => {
       },
     ],
   });
-  console.log(res);
   return res.data;
 };
 
@@ -62,6 +61,5 @@ export const getSearchProduct = async (keyWord: string) => {
   const data: SearchProductResponse = await axiosInstance.get(
     `/search?keyWord=${keyWord}`,
   );
-  console.log(data);
   return data;
 };

@@ -16,11 +16,9 @@ const Reservation = () => {
     "memberReservation",
     getMemberReservation,
     {
-      onSuccess(data) {
-        console.log(data);
-      },
+      onSuccess(data) {},
       onError(error) {
-        console.log("회원 예약 조회 실패: " + error);
+        alert("회원 예약 조회 실패: " + error);
       },
     },
   );

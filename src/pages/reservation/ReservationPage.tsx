@@ -12,7 +12,6 @@ type Props = {};
 
 const Reservation = (props: Props) => {
   const { state } = useLocation();
-  console.log(state);
 
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
@@ -42,7 +41,6 @@ const Reservation = (props: Props) => {
   };
 
   const onSubmit = () => {
-    console.log("api 연결");
     openModal(PaymentModalData);
   };
 
