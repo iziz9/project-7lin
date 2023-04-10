@@ -40,43 +40,52 @@ const ProductDetailModal = ({
   options,
   period,
 }: IProductDetailModalProps) => {
+  // const data: CartState[] = JSON.parse(localStorage.getItem("cart") || "[]");
+
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
 
   const navigate = useNavigate();
 
+  // 선택한 옵션들 정보
   const [selectItem, setSelectItem] =
     useState<IProductDetailSelectOptionData>(selectOptionData);
 
+  // 옵션카드 컴포넌트에서 쓸 각 option 정보
   const filterRoom = options?.filter((item) => item.type === "room");
   const filterFlight = options?.filter((item) => item.type === "flight");
 
+  // 예약하기, 장바구니에 추가, 변경하기 버튼 클릭 시
   const handleSubmit = () => {
     console.log(funcType);
 
-    let options;
+    let selectOptions;
     if (selectItem.optionRoom?.content && selectItem.optionFlight?.content)
-      options = [{ ...selectItem.optionRoom }, { ...selectItem.optionFlight }];
+      selectOptions = [
+        { ...selectItem.optionRoom },
+        { ...selectItem.optionFlight },
+      ];
     else if (selectItem.optionRoom?.content)
-      options = [{ ...selectItem.optionRoom }];
+      selectOptions = [{ ...selectItem.optionRoom }];
     else if (selectItem.optionFlight?.content)
-      options = [{ ...selectItem.optionFlight }];
-    else options = null;
+      selectOptions = [{ ...selectItem.optionFlight }];
+    else selectOptions = null;
 
+    // 예약 버튼일 때
     if (funcType === "예약") {
       navigate("/reservation", {
-        state: [
-          {
-            productId: id,
-            title,
-            image,
-            totalPrice,
-            periods: { ...selectItem.period },
-            options,
-          },
-        ],
+        state: {
+          productId: id,
+          title,
+          image,
+          totalPrice,
+          periods: { ...selectItem.period },
+          options: selectOptions,
+        },
       });
+
+      // 장바구니 버튼일 때
     } else if (funcType === "장바구니") {
       navigate("/cart");
 
@@ -87,7 +96,7 @@ const ProductDetailModal = ({
         productPrice: price,
         totalPrice,
         selectPeriod: { ...selectItem.period },
-        selectOptions: options,
+        selectOptions,
         allOption: options,
         allPeriod: period,
       };
@@ -96,6 +105,8 @@ const ProductDetailModal = ({
       const isDuplication = loadCart.filter(
         (item: CartState) => item.productId === id,
       );
+
+      // 장바구니에 이미 있는 상품일 때
       if (isDuplication.length !== 0) {
         confirm(
           "장바구니에 해당 상품이 추가되어 있습니다. 장바구니로 이동하시겠습니까?",
@@ -109,6 +120,46 @@ const ProductDetailModal = ({
 
       const addCart = [...loadCart, { ...storeCart }];
       localStorage.setItem("cart", JSON.stringify(addCart));
+    }
+
+    // 변경일때
+    else if (type === "변경") {
+      if (confirm("변경하시겠습니까?")) {
+        const data: CartState[] = JSON.parse(
+          localStorage.getItem("cart") || "[]",
+        );
+
+        const [prevProduct] = data.filter(
+          (item: CartState) => item.productId === id,
+        );
+        const restProducts = data.filter(
+          (item: CartState) => item.productId !== id,
+        );
+
+        localStorage.setItem(
+          "cart",
+          JSON.stringify([
+            ...restProducts,
+            {
+              productId: id,
+              title,
+              image,
+              productPrice: prevProduct.productPrice,
+              totalPrice,
+              selectPeriod: {
+                amount: selectItem.period.amount,
+                content: selectItem.period.content,
+                periodId: selectItem.period.periodId,
+              },
+              selectOptions,
+              allOption: [...prevProduct.allOption],
+              allPeriod: [...prevProduct.allPeriod],
+            },
+          ]),
+        );
+      } else {
+        navigate("/cart");
+      }
     }
 
     closeModal();
@@ -189,22 +240,22 @@ const ProductDetailModal = ({
               selectItem={selectItem}
               setSelectItem={setSelectItem}
             />
-            {filterRoom?.length !== 0 && selectItem.optionRoom?.content && (
+            {filterRoom?.length !== 0 && selectItem.optionRoom?.content ? (
               <ProductDetailModalOptionCard
                 title={selectItem.optionRoom?.content}
                 type="optionRoom"
                 selectItem={selectItem}
                 setSelectItem={setSelectItem}
               />
-            )}
-            {filterFlight?.length !== 0 && selectItem.optionFlight?.content && (
+            ) : null}
+            {filterFlight?.length !== 0 && selectItem.optionFlight?.content ? (
               <ProductDetailModalOptionCard
                 title={selectItem.optionFlight?.content}
                 type="optionFlight"
                 selectItem={selectItem}
                 setSelectItem={setSelectItem}
               />
-            )}
+            ) : null}
           </OptionCards>
 
           <p>

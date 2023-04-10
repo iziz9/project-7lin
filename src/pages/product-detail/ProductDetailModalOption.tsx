@@ -13,8 +13,10 @@ const ProductDetailModalOption = ({
   selectItem,
   setSelectItem,
   type,
+  isChange,
 }: IProductDetailModalOptionProps) => {
   const [drop, setDrop] = useState<boolean>(false);
+  let select = false;
 
   useEffect(() => {
     if (data && type === "필수") {

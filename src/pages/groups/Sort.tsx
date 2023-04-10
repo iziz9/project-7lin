@@ -16,7 +16,7 @@ const sortData = [
 
 const Sort = ({ sortClick }: any) => {
   const isMobile = useMediaQuery({ query: "(max-width:850px)" });
-  const [sort, setSort] = useRecoilState(sortState);
+  const [{ sort }, setSort] = useRecoilState(sortState);
 
   return (
     <Container>
@@ -25,7 +25,7 @@ const Sort = ({ sortClick }: any) => {
           key={index}
           onClick={sortClick}
           id={value}
-          className={sort.sort === value ? "selected" : ""}
+          className={getSortName(value) === sort ? "selected" : ""}
         >
           <BsCheckLg />
           {value}
@@ -53,8 +53,22 @@ const Container = styled.ul`
     margin: 20px;
   }
 
+  @media (max-width: 500px) {
+    display: grid;
+    margin: 10px;
+    grid-template-columns: repeat(4, 2fr);
+    grid-auto-rows: 20px;
+    @media (max-width: 400px) {
+      grid-template-columns: repeat(3, 2fr);
+      grid-auto-rows: 20px;
+    }
+  }
+
   .selected {
-    color: red;
+    font-weight: 700;
+    svg {
+      color: var(--color-blue);
+    }
   }
 `;
 

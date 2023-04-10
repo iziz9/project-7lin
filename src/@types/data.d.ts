@@ -105,11 +105,8 @@ export interface TestResultProductType {
 
 // 상품 조회 request
 export interface ProductRequestType {
-  category: [
-    {
-      mainCategory: string | null;
-      middleCategory: string | null;
-    },
+  categories: [
+    ...{ mainCategory: string | null; middleCategory: string | null }[],
   ];
   minPeriod?: number | null;
   maxPeriod?: number | null;
@@ -346,8 +343,8 @@ export interface CartState {
   image: string;
   productPrice: number;
   totalPrice: number;
-  selectPeriod: IProductDetailSelectOption;
+  selectPeriod: IProductDetailSelectOptionPeriod;
   selectOptions: IProductDetailSelectOption[];
-  allOption: IProductDetailSelectOption[];
-  allPeriod: IProductDetailSelectOption;
+  allOption: IProductDetailSelectOptions[];
+  allPeriod: IProductDetailDataPeriod[];
 }
