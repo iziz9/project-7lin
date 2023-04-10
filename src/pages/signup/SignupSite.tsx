@@ -120,7 +120,7 @@ const SignupSite = () => {
     const { email } = getValues();
 
     if (errors.email || email === "") {
-      alert("이메일을 제데로 입력해주세요");
+      alert("이메일을 제대로 입력해주세요");
       return;
     }
 
@@ -151,7 +151,7 @@ const SignupSite = () => {
     const { phone } = getValues();
 
     if (errors.phone || !phone) {
-      alert("전화번호를 제데로 입력해주세요");
+      alert("전화번호를 제대로 입력해주세요");
       return;
     }
 

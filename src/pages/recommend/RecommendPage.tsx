@@ -36,7 +36,7 @@ const RecommendPage = () => {
 
   useEffect(() => {
     async function getResultData() {
-      recommendMutation.mutate([savedTestResult.category, 12]); //페칭
+      recommendMutation.mutate([savedTestResult.category, 12]);
     }
     savedTestResult ? getResultData() : useResetRecoilState(itemState)();
   }, []);

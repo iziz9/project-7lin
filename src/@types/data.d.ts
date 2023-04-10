@@ -324,3 +324,9 @@ export interface CartState {
   allOption: IProductDetailSelectOption[];
   allPeriod: IProductDetailSelectOption;
 }
+export interface ReservationUserInfo {
+  email: string;
+  name: string;
+  phone: string;
+  acceptTerms: boolean;
+}
