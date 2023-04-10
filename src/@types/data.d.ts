@@ -60,8 +60,20 @@ export interface SignUpRequest {
   age: string;
 }
 
+export interface SignUpResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: {
+    email: string;
+    name: string;
+    gender: string;
+    age: number;
+    phone: string;
+  };
+}
+
 export interface UpdateMemberRequest {
-  email: string;
   newPassword: string;
   validNewPassword: string;
   phone: string;
@@ -146,12 +158,20 @@ export interface IProductDetailDataPeriod {
   startDate: string;
   endDate: string;
 }
-export interface MemberInfoResponse {
+
+export interface MemberInfo {
   email: string;
   name: string;
   gender: string;
   age: number;
   phone: string;
+}
+
+export interface MemberInfoResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: MemberInfo;
 }
 
 export interface ReservationProduct {
@@ -248,23 +268,22 @@ export interface IProductDetailDataOptionsFilter {
 }
 
 export interface IProductDetailSelectOptionData {
-  period: {
-    periodId: number;
-    content: string;
-    amount: number;
-  };
-  optionRoom: {
-    optionId: number;
-    content: string;
-    price: number;
-    amount: number;
-  };
-  optionFlight: {
-    optionId: number;
-    content: string;
-    price: number;
-    amount: number;
-  };
+  period: IProductDetailSelectOptionPeriod;
+  optionRoom: IProductDetailSelectOption;
+  optionFlight: IProductDetailSelectOption;
+}
+
+export interface IProductDetailSelectOptionPeriod {
+  periodId: number;
+  content: string;
+  amount: number;
+}
+
+export interface IProductDetailSelectOption {
+  optionId: number;
+  content: string;
+  price: number;
+  amount: number;
 }
 
 export interface Product {
@@ -309,4 +328,16 @@ export interface WishListProduct {
   productName: string;
   productPrice: number;
   tagList: string[];
+}
+
+export interface CartState {
+  productId: number;
+  title: string;
+  image: string;
+  productPrice: number;
+  totalPrice: number;
+  selectPeriod: IProductDetailSelectOption;
+  selectOptions: IProductDetailSelectOption[];
+  allOption: IProductDetailSelectOption[];
+  allPeriod: IProductDetailSelectOption;
 }
