@@ -460,3 +460,16 @@ export interface ReservationUserInfo {
   phone: string;
   acceptTerms: boolean;
 }
+interface OptionsType {
+  optionId: number;
+  amount: number;
+  content?: string;
+  price?: number;
+}
+
+interface ReservationDataType {
+  acceptTerms: boolean;
+  email: string;
+  name: string;
+  phone: string;
+}

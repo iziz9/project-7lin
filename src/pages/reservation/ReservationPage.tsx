@@ -8,26 +8,24 @@ import { PersonalData } from "../../commons/Terms";
 import { useLocation } from "react-router";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../store/userInfoAtom";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import NonMemberResvationModal from "../login/modal_content/NonMemberResvationModal";
 import { useMutation, useQueryClient } from "react-query";
 import { addReservation } from "../../apis/auth";
 import { getCookie } from "../../utils/cookie";
-import { AddReservationRequest, ReservationUserInfo } from "../../@types/data";
+import {
+  AddReservationRequest,
+  ReservationUserInfo,
+  OptionsType,
+  ReservationDataType,
+} from "../../@types/data";
 import * as Yup from "yup";
-
-interface OptionsType {
-  optionId: number;
-  amount: number;
-  content?: string;
-  price?: number;
-}
 
 const Reservation = () => {
   const { state } = useLocation();
+  console.log(state);
   const [savedUserInfo, setSavedUserInfo] = useRecoilState(userInfoState);
-  const [recievedNumber, setRecievedNumber] = useState(0);
+  const [recievedNumber, setRecievedNumber] = useState("");
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
@@ -39,6 +37,7 @@ const Reservation = () => {
       if (res.message === "성공") {
         console.log(res);
         const reservationNumber = res.data.match(/\d+/)![0];
+        setRecievedNumber(reservationNumber);
         const token = getCookie("accessToken");
         alert("예약추가 성공");
         if (token)
@@ -51,13 +50,6 @@ const Reservation = () => {
       alert("예약추가 실패: " + error);
     },
   });
-
-  const {
-    name: memberName,
-    phone: memberPhone,
-    email: memberEmail,
-  } = savedUserInfo;
-  const { periods, totalPrice, options } = state;
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("이름을 입력해주세요!").trim(),
@@ -81,11 +73,7 @@ const Reservation = () => {
   const {
     register,
     handleSubmit,
-    reset,
-    getValues,
     setValue,
-    setFocus,
-    setError,
     clearErrors,
     formState: { errors },
   } = useForm<ReservationUserInfo>({
@@ -95,7 +83,7 @@ const Reservation = () => {
 
   const PaymentModalData = {
     title: "입금 계좌 안내",
-    content: <PaymentModal reservationNumber={12345} />,
+    content: <PaymentModal reservationNumber={recievedNumber} />,
   };
   const TermsModalData = {
     title: "개인정보 수집 및 이용",
@@ -112,8 +100,9 @@ const Reservation = () => {
       : setTerms(terms.filter((term) => term !== e.target.name));
   };
 
-  const onSubmitHandler = (data: any) => {
+  const onSubmitHandler = (data: ReservationDataType) => {
     const { name, phone, email } = data;
+    const { periods, totalPrice, options } = state;
 
     let filteredOptions: OptionsType[] = [];
     options?.map((option: OptionsType) =>
@@ -181,7 +170,7 @@ const Reservation = () => {
                 <h3 className="h3blue">필수</h3>
                 <span>{`${state.periods.content} - ${state.periods.amount}개`}</span>
               </div>
-              {state.options?.map((option: any) => (
+              {state.options?.map((option: OptionsType) => (
                 <div className="back-gray" key={option.optionId}>
                   <h3>추가</h3>
                   <span>{`${option.content} - ${option.amount}개`}</span>
@@ -417,7 +406,7 @@ const Reservation = () => {
                     <h3 className="h3blue">필수</h3>
                     <span>{`${state.periods.content} - ${state.periods.amount}개`}</span>
                   </div>
-                  {state.options?.map((option: any) => (
+                  {state.options?.map((option: OptionsType) => (
                     <div className="back-gray" key={option.optionId}>
                       <h3>추가</h3>
                       <span>{`${option.content} - ${option.amount}개`}</span>

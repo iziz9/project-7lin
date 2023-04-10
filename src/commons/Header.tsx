@@ -126,7 +126,7 @@ const Header = () => {
                 {accessToken ? (
                   <li onClick={() => navigate("/mypage")}>마이페이지</li>
                 ) : (
-                  <li onClick={() => navigate("/signup_type")}>회원가입</li>
+                  <li onClick={() => navigate("/signup-type")}>회원가입</li>
                 )}
               </ul>
             </div>

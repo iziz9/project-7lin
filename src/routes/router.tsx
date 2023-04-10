@@ -74,7 +74,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/signup_type",
+        path: "/signup-type",
         element: (
           <PrivateRoute onlyAuth={false}>
             <SignupType />
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/signup_site",
+        path: "/signup",
         element: (
           <PrivateRoute onlyAuth={false}>
             <SignupSite />

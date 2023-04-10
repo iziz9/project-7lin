@@ -35,10 +35,9 @@ const RecommendPage = () => {
   );
 
   useEffect(() => {
-    async function getResultData() {
-      recommendMutation.mutate([savedTestResult.category, 12]);
-    }
-    savedTestResult ? getResultData() : useResetRecoilState(itemState)();
+    savedTestResult
+      ? recommendMutation.mutate([savedTestResult.category, 12])
+      : useResetRecoilState(itemState)();
   }, []);
 
   return (

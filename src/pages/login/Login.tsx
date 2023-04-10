@@ -153,7 +153,7 @@ const Login = () => {
             <div
               className="option sign_up"
               onClick={() => {
-                navigate("/signup_type");
+                navigate("/signup-type");
                 scrollToTop();
               }}
             >
