@@ -93,7 +93,7 @@ const Header = () => {
               onClick={() => navigate("/")}
             />
             <div className="iconbox">
-              <SlBag className="icons" />
+              <SlBag className="icons" onClick={() => navigate("/cart")} />
               <SlLogin className="icons" onClick={() => navigate("/login")} />
             </div>
           </div>
@@ -117,10 +117,7 @@ const Header = () => {
                 </form>
               </div>
               <ul>
-                <li>알림</li>
-                <Link to="/cart">
-                  <li>장바구니</li>
-                </Link>
+                <li onClick={() => navigate("/cart")}>장바구니</li>
                 {accessToken ? (
                   <li onClick={handleLogout}>로그아웃</li>
                 ) : (

@@ -371,3 +371,10 @@ export interface SearchCategory {
   middleCategory: string;
   subdivision?: string;
 }
+
+export interface ReservationUserInfo {
+  email: string;
+  name: string;
+  phone: string;
+  acceptTerms: boolean;
+}

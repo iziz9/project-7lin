@@ -11,19 +11,24 @@ const TestResult = ({ result }: { result: string }) => {
   const [productsData, setProductsData] = useState<TestResultProductType[]>([]);
   const navigate = useNavigate();
 
-  const testResultMutation = useMutation(getTestResult, {
-    onSuccess: (res: any) => {
-      if (res) {
-        setProductsData(res.products);
-      }
+  const testResultMutation = useMutation(
+    ([category, size]: [string, number]) =>
+      getTestResult(resultPack[result].category, 3),
+    {
+      onSuccess: (res: any) => {
+        if (res) {
+          console.log(res);
+          setProductsData(res.products);
+        }
+      },
+      onError: (error) => {
+        alert("데이터 페칭 실패: " + error);
+      },
     },
-    onError: (error) => {
-      alert("데이터 페칭 실패: " + error);
-    },
-  });
+  );
 
   useEffect(() => {
-    testResultMutation.mutate(resultPack[result].category); //페칭
+    testResultMutation.mutate([resultPack[result].category, 3]); //페칭
     setLocalStorage("testResult", resultPack[result]); // 로컬스토리지 저장
   }, [result]);
 

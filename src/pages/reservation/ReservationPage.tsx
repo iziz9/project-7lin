@@ -5,29 +5,101 @@ import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
 import PaymentModal from "./PaymentModal";
 import { PersonalData } from "../../commons/Terms";
-import EditUserInfoModal from "./EditUserInfoModal";
 import { useLocation } from "react-router";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../store/userInfoAtom";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import NonMemberResvationModal from "../login/modal_content/NonMemberResvationModal";
+import { useMutation, useQueryClient } from "react-query";
+import { addReservation } from "../../apis/auth";
+import { getCookie } from "../../utils/cookie";
+import { AddReservationRequest, ReservationUserInfo } from "../../@types/data";
+import * as Yup from "yup";
 
-type Props = {};
+interface OptionsType {
+  optionId: number;
+  amount: number;
+  content?: string;
+  price?: number;
+}
 
-const Reservation = (props: Props) => {
+const Reservation = () => {
   const { state } = useLocation();
-
+  const [savedUserInfo, setSavedUserInfo] = useRecoilState(userInfoState);
+  const [recievedNumber, setRecievedNumber] = useState(0);
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
   const { openModal } = useModal();
+
+  const queryClient = useQueryClient();
+  const addReservationMutation = useMutation(addReservation, {
+    onSuccess: (res: any) => {
+      if (res.message === "성공") {
+        console.log(res);
+        const reservationNumber = res.data.match(/\d+/)![0];
+        const token = getCookie("accessToken");
+        alert("예약추가 성공");
+        if (token)
+          return queryClient.invalidateQueries({
+            queryKey: ["memberReservation"],
+          });
+      }
+    },
+    onError: (error) => {
+      alert("예약추가 실패: " + error);
+    },
+  });
+
+  const {
+    name: memberName,
+    phone: memberPhone,
+    email: memberEmail,
+  } = savedUserInfo;
+  const { periods, totalPrice, options } = state;
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("이름을 입력해주세요!").trim(),
+    phone: Yup.string()
+      .required("전화번호를 입력해주세요!")
+      .trim()
+      .matches(
+        /^\d{2,3}-?\d{3,4}-?\d{4}$/,
+        "전화번호 형식이 올바르지 않습니다!",
+      ),
+    email: Yup.string()
+      .required("이메일을 입력해주세요!")
+      .trim()
+      .matches(
+        /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+        "이메일 형식이 올바르지 않습니다!",
+      ),
+    acceptTerms: Yup.bool().oneOf([true], "전체 약관에 동의해주세요!"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    setValue,
+    setFocus,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<ReservationUserInfo>({
+    resolver: yupResolver(validationSchema),
+    mode: "onBlur",
+  });
+
   const PaymentModalData = {
     title: "입금 계좌 안내",
-    content: <PaymentModal />,
+    content: <PaymentModal reservationNumber={12345} />,
   };
   const TermsModalData = {
     title: "개인정보 수집 및 이용",
     content: <PersonalData />,
-  };
-  const EditUserModalData = {
-    title: "예약자 정보 수정",
-    content: <EditUserInfoModal />,
   };
 
   const [terms, setTerms] = useState<string[]>([]);
@@ -40,73 +112,192 @@ const Reservation = (props: Props) => {
       : setTerms(terms.filter((term) => term !== e.target.name));
   };
 
-  const onSubmit = () => {
+  const onSubmitHandler = (data: any) => {
+    const { name, phone, email } = data;
+
+    let filteredOptions: OptionsType[] = [];
+    options?.map((option: OptionsType) =>
+      filteredOptions.push({
+        optionId: option.optionId,
+        amount: option.amount,
+      }),
+    );
+
+    const payload: AddReservationRequest = {
+      periods: [
+        {
+          periodId: periods.id,
+          amount: periods.amount,
+        },
+      ],
+      options: filteredOptions,
+      name: name,
+      phone: phone.replaceAll("-", ""),
+      email: email,
+      totalPrice: totalPrice,
+      people: periods.amount,
+    };
+
+    addReservationMutation.mutateAsync(payload);
+
     openModal(PaymentModalData);
   };
 
+  useEffect(() => {
+    if (savedUserInfo.name != "") {
+      setValue("name", savedUserInfo.name);
+      setValue("email", savedUserInfo.email);
+      setValue("phone", savedUserInfo.phone);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (terms.length === 2) {
+      setValue("acceptTerms", true);
+      clearErrors("acceptTerms");
+    } else {
+      setValue("acceptTerms", false);
+    }
+  }, [terms]);
+
   return (
-    <Container>
+    <Container onSubmit={handleSubmit(onSubmitHandler)}>
       {isMobile ? (
         <>
-          <h1>결제하기</h1>
+          <h1>예약하기</h1>
           <ProductInfo>
             <h2>예약 상품 정보</h2>
             <div className="product">
               <div>
-                <img src="/footer-blog.png" alt="예약 상품 이미지" />
+                <img src={state.image} alt="예약 상품 이미지" />
               </div>
               <div className="product-desc">
-                <span className="title">중앙아시아 3국 15일</span>
-                <span className="price">2,860,000원</span>
+                <span className="title">{state.title}</span>
+                {/* <span className="price">{state[0].price}원</span> 여기가 바로 수정해야하는 그곳입니다 */}
               </div>
             </div>
             <div className="options">
               <div className="back-gray">
                 <h3 className="h3blue">필수</h3>
-                <span>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</span>
+                <span>{`${state.periods.content} - ${state.periods.amount}개`}</span>
               </div>
-              <div className="back-gray">
-                <h3>추가</h3>
-                <span>1인 싱글룸 사용시 추가 - 2개</span>
-              </div>
-              <div className="back-gray">
-                <h3>추가</h3>
-                <span>인천 출발 비즈니스석 추가비용 - 1개</span>
-              </div>
+              {state.options?.map((option: any) => (
+                <div className="back-gray" key={option.optionId}>
+                  <h3>추가</h3>
+                  <span>{`${option.content} - ${option.amount}개`}</span>
+                </div>
+              ))}
             </div>
           </ProductInfo>
           <UserInfo>
             <h2>예약자 정보</h2>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                openModal(EditUserModalData);
-              }}
-            >
-              수정하기
-            </button>
-            <ul>
-              <li>
-                <h3>예약자 이름</h3>
-              </li>
-              <li>이땡땡</li>
-            </ul>
-            <ul>
-              <li>
-                <h3>휴대폰 번호</h3>
-              </li>
-              <li>01012345678</li>
-            </ul>
-            <ul>
-              <li>
-                <h3>이메일 주소</h3>
-              </li>
-              <li>abc@abc.com</li>
-            </ul>
+            {savedUserInfo.name !== "" ? (
+              <>
+                <ul>
+                  <li>
+                    <h3>예약자 이름</h3>
+                  </li>
+                  <li>
+                    {errors.name && (
+                      <div className="error">{errors.name?.message}</div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="홍길동"
+                      {...register("name")}
+                      value={savedUserInfo.name}
+                      disabled
+                    />
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <h3>휴대폰 번호</h3>
+                  </li>
+                  <li>
+                    {errors.phone && (
+                      <div className="error">{errors.phone?.message}</div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="01012345678"
+                      {...register("phone")}
+                      value={savedUserInfo.phone}
+                      disabled
+                    />
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <h3>이메일 주소</h3>
+                  </li>
+                  <li>
+                    {errors.email && (
+                      <div className="error">{errors.email?.message}</div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="abc@abc.com"
+                      {...register("email")}
+                      value={savedUserInfo.email}
+                      disabled
+                    />
+                  </li>
+                </ul>
+              </>
+            ) : (
+              <>
+                <ul>
+                  <li>
+                    <h3>예약자 이름</h3>
+                  </li>
+                  <li>
+                    {errors.name && (
+                      <div className="error">{errors.name?.message}</div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="홍길동"
+                      {...register("name")}
+                    />
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <h3>휴대폰 번호</h3>
+                  </li>
+                  <li>
+                    {errors.phone && (
+                      <div className="error">{errors.phone?.message}</div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="01012345678"
+                      {...register("phone")}
+                    />
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <h3>이메일 주소</h3>
+                  </li>
+                  <li>
+                    {errors.email && (
+                      <div className="error">{errors.email?.message}</div>
+                    )}
+                    <input
+                      type="text"
+                      placeholder="abc@google.com"
+                      {...register("email")}
+                    />
+                  </li>
+                </ul>
+              </>
+            )}
           </UserInfo>
           <PaymentSelect>
             <h2>결제 수단</h2>
-            <ul>
+            <ul className="payment">
               <li>
                 <input type="radio" id="payment2" checked readOnly />
                 <label htmlFor="payment2">계좌 이체</label>
@@ -126,23 +317,25 @@ const Reservation = (props: Props) => {
               <li>
                 <h3>총 상품 수</h3>
               </li>
-              <li>1개</li>
+              <li>{state.periods.amount}개</li>
             </ul>
             <ul>
               <li>
                 <h3>총 인원</h3>
               </li>
-              <li>2인</li>
+              <li>{state.periods.amount}인</li>
             </ul>
             <ul className="margin-border">
               <li>
                 <h3>상품 금액</h3>
               </li>
-              <li>2,860,000원</li>
+              {/* <li>{state[0].price}</li> 여기도 수정해야됩니다 */}
             </ul>
             <div className="total">
               <h3>총 예약 금액</h3>
-              <span className="price">2,860,000원</span>
+              <span className="price">
+                {state.totalPrice.toLocaleString()}원
+              </span>
             </div>
           </PaymentInfo>
           <CheckTerms>
@@ -151,12 +344,13 @@ const Reservation = (props: Props) => {
               <input
                 type="checkbox"
                 id="all"
-                name="all"
                 checked={terms.length === 2 ? true : false}
-                required
-                onChange={checkAll}
+                {...register("acceptTerms", { onChange: checkAll })}
               />
               <label htmlFor="all">전체동의</label>
+              {errors.acceptTerms ? (
+                <span className="invalid">{errors.acceptTerms?.message}</span>
+              ) : null}
             </div>
             <div>
               <input
@@ -164,7 +358,6 @@ const Reservation = (props: Props) => {
                 id="agree1"
                 name="agree1"
                 checked={terms.includes("agree1") ? true : false}
-                required
                 onChange={check}
               />
               <label htmlFor="agree1">
@@ -185,20 +378,12 @@ const Reservation = (props: Props) => {
                 id="agree2"
                 name="agree2"
                 checked={terms.includes("agree2") ? true : false}
-                required
                 onChange={check}
               />
               <label htmlFor="agree2">예약조건 확인 및 결제진행에 동의</label>
             </div>
           </CheckTerms>
-          <button
-            type="submit"
-            className="submit"
-            onClick={(e) => {
-              // e.preventDefault()
-              onSubmit();
-            }}
-          >
+          <button type="submit" className="submit">
             예약하기
           </button>
         </>
@@ -220,60 +405,135 @@ const Reservation = (props: Props) => {
                 <h2>예약 상품 정보</h2>
                 <div className="product">
                   <div>
-                    <img src="/footer-blog.png" alt="예약 상품 이미지" />
+                    <img src={state.image} alt="예약 상품 이미지" />
                   </div>
                   <div className="product-desc">
-                    <span className="title">중앙아시아 3국 15일</span>
-                    <span className="price">2,860,000원</span>
+                    <span className="title">{state.title}</span>
+                    {/* <span className="price">{state[0].price}원</span> 여기가 바로 수정해야하는 그곳입니다 */}
                   </div>
                 </div>
                 <div className="options">
                   <div className="back-gray">
-                    <h3 className="h3blue">필수옵션</h3>
-                    <span>2023.05.30(화) 출발 ~ 06.30(화) 도착 - 2개</span>
+                    <h3 className="h3blue">필수</h3>
+                    <span>{`${state.periods.content} - ${state.periods.amount}개`}</span>
                   </div>
-                  <div className="back-gray">
-                    <h3>추가옵션</h3>
-                    <span>1인 싱글룸 사용시 추가 - 2개</span>
-                  </div>
-                  <div className="back-gray">
-                    <h3>추가옵션</h3>
-                    <span>인천 출발 비즈니스석 추가비용 - 1개</span>
-                  </div>
+                  {state.options?.map((option: any) => (
+                    <div className="back-gray" key={option.optionId}>
+                      <h3>추가</h3>
+                      <span>{`${option.content} - ${option.amount}개`}</span>
+                    </div>
+                  ))}
                 </div>
               </ProductInfo>
               <UserInfo>
                 <h2>예약자 정보</h2>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    openModal(EditUserModalData);
-                  }}
-                >
-                  수정하기
-                </button>
-                <ul>
-                  <li>
-                    <h3>예약자 이름</h3>
-                  </li>
-                  <li>이땡땡</li>
-                </ul>
-                <ul>
-                  <li>
-                    <h3>휴대폰 번호</h3>
-                  </li>
-                  <li>01012345678</li>
-                </ul>
-                <ul>
-                  <li>
-                    <h3>이메일 주소</h3>
-                  </li>
-                  <li>abc@abc.com</li>
-                </ul>
+                {savedUserInfo.name !== "" ? (
+                  <>
+                    <ul>
+                      <li>
+                        <h3>예약자 이름</h3>
+                      </li>
+                      <li>
+                        {errors.name && (
+                          <div className="error">{errors.name?.message}</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="홍길동"
+                          {...register("name")}
+                          value={savedUserInfo.name}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                    <ul>
+                      <li>
+                        <h3>휴대폰 번호</h3>
+                      </li>
+                      <li>
+                        {errors.phone && (
+                          <div className="error">{errors.phone?.message}</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="01012345678"
+                          {...register("phone")}
+                          value={savedUserInfo.phone}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                    <ul>
+                      <li>
+                        <h3>이메일 주소</h3>
+                      </li>
+                      <li>
+                        {errors.email && (
+                          <div className="error">{errors.email?.message}</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="abc@abc.com"
+                          {...register("email")}
+                          value={savedUserInfo.email}
+                          disabled
+                        />
+                      </li>
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <ul>
+                      <li>
+                        <h3>예약자 이름</h3>
+                      </li>
+                      <li>
+                        {errors.name && (
+                          <div className="error">{errors.name?.message}</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="홍길동"
+                          {...register("name")}
+                        />
+                      </li>
+                    </ul>
+                    <ul>
+                      <li>
+                        <h3>휴대폰 번호</h3>
+                      </li>
+                      <li>
+                        {errors.phone && (
+                          <div className="error">{errors.phone?.message}</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="01012345678"
+                          {...register("phone")}
+                        />
+                      </li>
+                    </ul>
+                    <ul>
+                      <li>
+                        <h3>이메일 주소</h3>
+                      </li>
+                      <li>
+                        {errors.email && (
+                          <div className="error">{errors.email?.message}</div>
+                        )}
+                        <input
+                          type="text"
+                          placeholder="abc@google.com"
+                          {...register("email")}
+                        />
+                      </li>
+                    </ul>
+                  </>
+                )}
               </UserInfo>
               <PaymentSelect>
                 <h2>결제 수단</h2>
-                <ul>
+                <ul className="payment">
                   <li>
                     <input
                       type="radio"
@@ -313,17 +573,19 @@ const Reservation = (props: Props) => {
                   <li>
                     <h3>총 인원</h3>
                   </li>
-                  <li>2인</li>
+                  <li>{state.periods.amount}인</li>
                 </ul>
                 <ul className="margin-border">
                   <li>
                     <h3>상품 금액</h3>
                   </li>
-                  <li>2,860,000원</li>
+                  {/* <li>{state[0].price}인</li> 수정해야됩니다 */}
                 </ul>
                 <div className="total">
                   <h3>총 예약 금액</h3>
-                  <span className="price">2,860,000원</span>
+                  <span className="price">
+                    {state.totalPrice.toLocaleString()}원
+                  </span>
                 </div>
               </PaymentInfo>
               <CheckTerms>
@@ -332,18 +594,22 @@ const Reservation = (props: Props) => {
                   <input
                     type="checkbox"
                     id="all"
-                    required
-                    onChange={checkAll}
                     checked={terms.length === 2 ? true : false}
+                    {...register("acceptTerms")}
+                    onChange={checkAll}
                   />
                   <label htmlFor="all">전체동의</label>
+                  {errors.acceptTerms && (
+                    <span className="invalid">
+                      {errors.acceptTerms?.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <input
                     type="checkbox"
                     id="agree1"
                     name="agree1"
-                    required
                     checked={terms.includes("agree1") ? true : false}
                     onChange={check}
                   />
@@ -364,7 +630,6 @@ const Reservation = (props: Props) => {
                     type="checkbox"
                     id="agree2"
                     name="agree2"
-                    required
                     checked={terms.includes("agree2") ? true : false}
                     onChange={check}
                   />
@@ -373,14 +638,7 @@ const Reservation = (props: Props) => {
                   </label>
                 </div>
               </CheckTerms>
-              <button
-                type="submit"
-                className="submit"
-                onClick={(e) => {
-                  // e.preventDefault()
-                  onSubmit();
-                }}
-              >
+              <button type="submit" className="submit">
                 예약하기
               </button>
             </div>
@@ -392,13 +650,19 @@ const Reservation = (props: Props) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.form`
   height: 100%;
   padding-top: 32px;
   display: flex;
   flex-direction: column;
   gap: 22px;
   word-break: keep-all;
+
+  .error {
+    font-size: 12px;
+    color: red;
+    padding-bottom: 10px;
+  }
 
   h1 {
     font-size: 20px;
@@ -430,8 +694,34 @@ const Container = styled.div`
 
   ul {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     font-size: 14px;
+    align-items: center;
+
+    input[type="text"] {
+      width: 100%;
+      align-items: center;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+
+      :focus {
+        outline: none;
+      }
+
+      ::placeholder {
+        color: var(--color-grayscale30);
+      }
+
+      :disabled {
+        background-color: white;
+      }
+    }
+  }
+
+  .payment {
+    align-items: start;
   }
 
   .submit {
@@ -449,6 +739,10 @@ const Container = styled.div`
     padding: 32px 0px 0;
     /* padding: 32px 20px 0; */
 
+    .error {
+      font-size: 14px;
+    }
+
     h1 {
       font-size: 30px;
     }
@@ -464,6 +758,13 @@ const Container = styled.div`
 
     section {
       padding: 30px;
+    }
+
+    ul {
+      gap: 20px;
+      input[type="text"] {
+        font-size: 16px;
+      }
     }
 
     .title-box {
@@ -704,6 +1005,13 @@ const CheckTerms = styled.section`
   display: flex;
   flex-direction: row;
 
+  .invalid {
+    color: red;
+    margin: auto 10px;
+    font-size: 12px;
+    text-align: center;
+  }
+
   div {
     display: flex;
 
@@ -731,6 +1039,10 @@ const CheckTerms = styled.section`
   }
 
   @media (min-width: 851px) {
+    .invalid {
+      font-size: 14px;
+    }
+
     div {
       label {
         font-size: 18px;
