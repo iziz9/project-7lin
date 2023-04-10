@@ -8,7 +8,7 @@ import { useRecoilState } from "recoil";
 import { userInfoState } from "../../store/userInfoAtom";
 import { useNavigate } from "react-router";
 
-const PaymentModal = ({ reservationNumber }: { reservationNumber: number }) => {
+const PaymentModal = ({ reservationNumber }: { reservationNumber: string }) => {
   const { openModal, closeModal } = useModal();
   const [savedUserInfo, setSavedUserInfo] = useRecoilState(userInfoState);
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const PaymentModal = ({ reservationNumber }: { reservationNumber: number }) => {
       <div className="reservation-number">
         <span className="number">주문번호 : {reservationNumber}</span>
         <span className="notice">
-          예약조회 시 필요하니 주문번호를 꼭 메모해주세요.
+          비회원은 예약조회 시 주문번호가 필요하니 꼭 메모해주세요.
         </span>
       </div>
       <div
