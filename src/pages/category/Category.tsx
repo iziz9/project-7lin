@@ -34,7 +34,7 @@ const subMenu = {
   destination: ["asia", "india", "africa", "europe", "america"],
 };
 
-const Groups = () => {
+const Category = () => {
   // 반응형
   const isMobile = useMediaQuery({ query: "(max-width:850px)" });
 
@@ -520,4 +520,4 @@ const StickySection = styled.section`
   }
 `;
 
-export default Groups;
+export default Category;

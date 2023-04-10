@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import { getLocalStorage } from "../../utils/localStorage";
-import Product from "../groups/Product";
 import { useResetRecoilState } from "recoil";
 import { itemState } from "../../store/categoryAtom";
+import Product from "../category/Product";
 
 interface TestResultType {
   title: string;
