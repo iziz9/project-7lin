@@ -10,6 +10,8 @@ import { useMediaQuery } from "react-responsive";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../../commons/Modal";
 import ReviewModal from "./ReviewModal";
+import { useQuery } from "react-query";
+import { getAllReviews } from "../../apis/request";
 
 const reviewFilterData: ReviewFilterData = {
   group: {
@@ -57,6 +59,10 @@ const Review = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   useDragScroll(scrollRef);
 
+  const { isLoading, data } = useQuery(["getAllReviews"], getAllReviews);
+
+  console.log(data);
+
   const pageNum = new Array<number>();
 
   const { openModal } = useModal();
@@ -68,10 +74,6 @@ const Review = () => {
   for (let i = 1; i <= 10; i++) {
     pageNum.push(i);
   }
-
-  const handleClick = () => {
-    setModalOpen((prev) => !prev);
-  };
 
   const prevPageClick = () => {
     if (selectPage !== 1) {
@@ -107,11 +109,40 @@ const Review = () => {
   };
 
   return (
-    <Wrap>
-      <Head>
-        <Title>여행 후기</Title>
-        <Contents>
-          {isMobile ? null : (
+    <>
+      {!isLoading && (
+        <Wrap>
+          <Head>
+            <Title>여행 후기</Title>
+            <Contents>
+              {/* {isMobile ? null : (
+                <Search isMobile={isMobile}>
+                  <input
+                    type="text"
+                    name="review"
+                    placeholder="검색어를 입력하세요"
+                  />
+                  <button>
+                    <BsSearch size={23} color="#939393" />
+                  </button>
+                </Search>
+              )} */}
+              <ReviewBtn
+                onClick={() =>
+                  openModal({
+                    title: "예약번호를 입력해주세요",
+                    content: <ReviewModal />,
+                  })
+                }
+              >
+                후기 작성하기
+              </ReviewBtn>
+            </Contents>
+
+            <Modal />
+          </Head>
+
+          {isMobile ? (
             <Search isMobile={isMobile}>
               <input
                 type="text"
@@ -122,72 +153,51 @@ const Review = () => {
                 <BsSearch size={23} color="#939393" />
               </button>
             </Search>
-          )}
-          <ReviewBtn
-            onClick={() =>
-              openModal({
-                title: "예약번호를 입력해주세요",
-                content: <ReviewModal />,
-              })
-            }
-          >
-            후기 작성하기
-          </ReviewBtn>
-        </Contents>
+          ) : null}
 
-        <Modal />
-      </Head>
+          <Filtering ref={scrollRef}>
+            {Object.keys(reviewFilterData).map((key: string) => (
+              <ReviewFilterItem
+                key={key}
+                title={key}
+                content={reviewFilterData[key].content}
+              />
+            ))}
+          </Filtering>
 
-      {isMobile ? (
-        <Search isMobile={isMobile}>
-          <input type="text" name="review" placeholder="검색어를 입력하세요" />
-          <button>
-            <BsSearch size={23} color="#939393" />
-          </button>
-        </Search>
-      ) : null}
+          <ReviewItems data={data?.reviewList} />
 
-      <Filtering ref={scrollRef}>
-        {Object.keys(reviewFilterData).map((key: string) => (
-          <ReviewFilterItem
-            key={key}
-            title={key}
-            content={reviewFilterData[key].content}
-          />
-        ))}
-      </Filtering>
-
-      <ReviewItems />
-
-      <Paging>
-        <Btn onClick={prevEndPageClick}>
-          <img src="/front_icon.svg" alt="맨 앞 페이지로 가기" />
-        </Btn>
-        <Btn onClick={prevPageClick}>
-          <img src="/Arrow-Left_icon.svg" alt="이전 페이지로 가기" />
-        </Btn>
-        {/* 최대 5개 페이지만 보이고 이동할때마다 해당 페이지를 중심으로 5개씩만 보여주기 */}
-        {pageNum.slice(paging[0], paging[1]).map((item) => (
-          <Numbers key={item}>
-            <span
-              style={{
-                fontWeight: selectPage === item ? "bold" : "normal",
-                borderColor: selectPage === item ? "black" : "transparent",
-              }}
-              onClick={() => setSelectPage(item)}
-            >
-              {item}
-            </span>
-          </Numbers>
-        ))}
-        <Btn onClick={nextPageClick}>
-          <img src="/Arrow-Right_icon.svg" alt="다음 페이지로 가기" />
-        </Btn>
-        <Btn onClick={nextEndPageClick}>
-          <img src="/back_icon.svg" alt="맨 뒤 페이지로 가기" />
-        </Btn>
-      </Paging>
-    </Wrap>
+          {/* <Paging>
+            <Btn onClick={prevEndPageClick}>
+              <img src="/front_icon.svg" alt="맨 앞 페이지로 가기" />
+            </Btn>
+            <Btn onClick={prevPageClick}>
+              <img src="/Arrow-Left_icon.svg" alt="이전 페이지로 가기" />
+            </Btn>
+            최대 5개 페이지만 보이고 이동할때마다 해당 페이지를 중심으로 5개씩만 보여주기
+            {pageNum.slice(paging[0], paging[1]).map((item) => (
+              <Numbers key={item}>
+                <span
+                  style={{
+                    fontWeight: selectPage === item ? "bold" : "normal",
+                    borderColor: selectPage === item ? "black" : "transparent",
+                  }}
+                  onClick={() => setSelectPage(item)}
+                >
+                  {item}
+                </span>
+              </Numbers>
+            ))}
+            <Btn onClick={nextPageClick}>
+              <img src="/Arrow-Right_icon.svg" alt="다음 페이지로 가기" />
+            </Btn>
+            <Btn onClick={nextEndPageClick}>
+              <img src="/back_icon.svg" alt="맨 뒤 페이지로 가기" />
+            </Btn>
+          </Paging> */}
+        </Wrap>
+      )}
+    </>
   );
 };
 
@@ -238,6 +248,7 @@ const Search = styled.form<{ isMobile: boolean }>`
     background-color: transparent;
   }
 `;
+
 const ReviewBtn = styled.button`
   margin-left: 15px;
   padding: 0 25px;

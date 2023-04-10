@@ -341,3 +341,86 @@ export interface CartState {
   allOption: IProductDetailSelectOptions[];
   allPeriod: IProductDetailDataPeriod[];
 }
+
+export interface IProductDetailReviewData {
+  createdDate: string;
+  reviewId: number;
+  thumbnail: string;
+  title: string;
+  viewCount: number;
+}
+
+// 전체 후기 조회 response
+export interface GetAllReviewsRes {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: GetAllReviewsData;
+}
+
+export interface GetAllReviewsData {
+  reviewList: GetAllReviewsReviewList[];
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+}
+
+export interface GetAllReviewsReviewList {
+  reviewId: number;
+  reviewThumbnail: string;
+  reviewGrade: number;
+  reviewTitle: string;
+}
+
+// 후기 상세 조회 response
+export interface GetReviewDetailRes {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: GetReviewDetailData;
+}
+
+export interface GetReviewDetailData {
+  reviewId: number;
+  productId: number;
+  reservationId: number;
+  reviewWriter: string;
+  reviewGrade: number;
+  viewCount: number;
+  createdDate: Date;
+  reviewTitle: string;
+  productThumbnail: string;
+  productTitle: string;
+  reviewReservationPeriodDTOList: ReviewReservationPeriodDtolist[];
+  reviewReservationOptionDTOList: ReviewReservationOptionDtolist[];
+  reservationPrice: number;
+  reservationPeople: number;
+  reviewContentDTOList: ReviewContentDtolist[];
+  tagList: string[];
+}
+
+export interface ReviewReservationPeriodDtolist {
+  periodId: number;
+  startDate: string;
+  endDate: string;
+  amount: number;
+}
+
+export interface ReviewReservationOptionDtolist {
+  optionId: number;
+  type: string;
+  content: string;
+  price: number;
+  amount: number;
+}
+
+export interface ReviewContentDtolist {
+  reviewContentId: number;
+  content: string;
+  type: string;
+  priority: number;
+  reviewId: number;
+}

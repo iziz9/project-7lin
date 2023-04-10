@@ -1,6 +1,7 @@
 import { HttpStatusCode } from "axios";
 import { axiosInstance } from "./instance";
 import {
+  GetAllReviewsRes,
   IProductDetailDataResponse,
   ProductRequestType,
   ProductResponseType,
@@ -51,6 +52,40 @@ export const getProductDetail = async (id: string) => {
 export const getProductDetailReview = async (id: string) => {
   try {
     const res = await axiosInstance.get(`/products/reviews/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 후기 전체 조회
+export const getAllReviews = async () => {
+  try {
+    const res: GetAllReviewsRes = await axiosInstance.get(`/reviews`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 후기 상세 조회
+export const getReviewDetail = async (id: string) => {
+  try {
+    const res = await axiosInstance.get(`/reviews/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 후기 작성
+export const postReviewDetail = async (formData: any) => {
+  try {
+    const res = await axiosInstance.post(`/reviews`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res.data;
   } catch (error) {
     throw error;

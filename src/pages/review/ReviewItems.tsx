@@ -2,45 +2,34 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import test from "/review.png";
+import { GetAllReviewsReviewList } from "../../@types/data";
 
-const ReviewItems = () => {
-  const data = new Array();
+export interface IReviewItemsProps {
+  data: GetAllReviewsReviewList[] | undefined;
+}
 
-  for (let i = 0; i < 12; i++) {
-    data.push(i);
-  }
-
+const ReviewItems = ({ data }: IReviewItemsProps) => {
   return (
     <List>
-      {data.map((item) => (
-        <Link
-          to={`${item}`}
-          key={item}
-          state={{
-            thumnail: test,
-            date: "2023.12.12",
-            views: 1234,
-            title: "남미 여행이 어땠냐면",
-            name: "김영***",
-          }}
-        >
-          <Content>
-            <Img>
-              <img src={test} alt="thumnail" />
-            </Img>
-            <Text>
-              <p>
-                2023.12.12 <span>조회 1234</span>
-              </p>
-              <p>김영***</p>
-            </Text>
-          </Content>
+      {data &&
+        data?.map((item) => (
+          <Link to={`/review/${item.reviewId}`} key={item.reviewId}>
+            <Content>
+              <Img>
+                <img
+                  src={item.reviewThumbnail}
+                  onError={(e) =>
+                    (e.currentTarget.src = "/review_onError_img.png")
+                  }
+                  alt="후기 미리보기 이미지"
+                />
+              </Img>
+              <p>평점 {item.reviewGrade}</p>
+            </Content>
 
-          <ReviewTitle>
-            남미 여행이 어땠냐면 끝내줘요 죽여줘요 사랑해요 또 가고 싶어요
-          </ReviewTitle>
-        </Link>
-      ))}
+            <ReviewTitle>{item.reviewTitle}</ReviewTitle>
+          </Link>
+        ))}
     </List>
   );
 };
@@ -58,6 +47,14 @@ const List = styled.ul`
 `;
 const Content = styled.div`
   position: relative;
+  p {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 17px;
+    color: white;
+    text-shadow: 2px 2px 6px black;
+  }
 `;
 const Img = styled.div`
   width: 100%;
@@ -76,16 +73,6 @@ const Img = styled.div`
   img {
     width: 100%;
     height: 100%;
-  }
-`;
-const Text = styled.div`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  p {
-    margin-bottom: 10px;
-    font-size: 17px;
-    color: white;
   }
 `;
 const ReviewTitle = styled.h2`

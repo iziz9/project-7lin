@@ -1,35 +1,73 @@
 import React from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { number, string } from "yup";
+import {
+  ReviewReservationOptionDtolist,
+  ReviewReservationPeriodDtolist,
+} from "../@types/data";
 
-const DetailInfos = () => {
+export interface IProductInfosCardProps {
+  title: string;
+  period: ReviewReservationPeriodDtolist[];
+  option: ReviewReservationOptionDtolist[];
+  price: number;
+  count: number;
+  image?: string;
+}
+
+const DetailInfos = ({
+  title,
+  period,
+  option,
+  price,
+  count,
+}: IProductInfosCardProps) => {
   return (
     <DetailInfosWrap>
       <div>
         <p>
           <strong>여행 기간</strong>
-          <span>2023/05/30(화)출발~06/13(화)도착</span>
+          <span>
+            {period[0].startDate} ~ {period[0].endDate}
+          </span>
         </p>
         <p>
           <strong>예약 금액</strong>
-          <span>6,330,000원</span>
+          <span>{price.toLocaleString()}원</span>
         </p>
       </div>
       <div>
         <p>
           <strong>상품 옵션</strong>
-          <span>1인 싱글룸 사용 - 1개</span>
+          {option[0] ? (
+            <span>
+              {option[0].content} - {option[0].amount}개
+            </span>
+          ) : null}{" "}
+          {option[1] ? (
+            <span>
+              / {option[1].content} - {option[1].amount}개
+            </span>
+          ) : null}
         </p>
         <p>
           <strong>예약 인원</strong>
-          <span>2인</span>
+          <span>{count}인</span>
         </p>
       </div>
     </DetailInfosWrap>
   );
 };
 
-const ProductInfosCard = () => {
+const ProductInfosCard = ({
+  title,
+  period,
+  option,
+  price,
+  count,
+  image,
+}: IProductInfosCardProps) => {
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
@@ -37,14 +75,30 @@ const ProductInfosCard = () => {
   return (
     <ProductInfo isMobile={isMobile}>
       <div>
-        <img src="/product_img.png" alt="상품 이미지" />
+        <img src={image} alt="상품 이미지" />
         <TextArea isMobile={isMobile}>
-          <h2>중앙아시아 3국 15일</h2>
-          {isMobile ? <h3>6,330,000원</h3> : null}
-          {isMobile ? null : <DetailInfos />}
+          <h2>{title}</h2>
+          {isMobile ? <h3>{price}</h3> : null}
+          {isMobile ? null : (
+            <DetailInfos
+              title={title}
+              period={period}
+              option={option}
+              price={price}
+              count={count}
+            />
+          )}
         </TextArea>
       </div>
-      {isMobile ? <DetailInfos /> : null}
+      {isMobile ? (
+        <DetailInfos
+          title={title}
+          period={period}
+          option={option}
+          price={price}
+          count={count}
+        />
+      ) : null}
     </ProductInfo>
   );
 };
@@ -56,7 +110,7 @@ const ProductInfo = styled.div<{ isMobile: boolean }>`
   background-color: #f5f5f5;
   border-radius: 10px;
   img {
-    width: ${({ isMobile }) => (isMobile ? "100px" : "")};
+    width: ${({ isMobile }) => (isMobile ? "100px" : "200px")};
     margin-right: 30px;
     border-radius: 10px;
   }

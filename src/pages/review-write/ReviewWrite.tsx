@@ -4,14 +4,16 @@ import styled from "styled-components";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import ProductInfosCard from "./../../commons/ProductInfosCard";
 import { useMediaQuery } from "react-responsive";
-
-interface IImgData {
-  content: string;
-  isWidthLarger: boolean;
-}
+import { useForm } from "react-hook-form";
 
 const ReviewWrite = () => {
-  const [imgFile, setImgFile] = useState<IImgData[]>([]);
+  const [imgFile, setImgFile] = useState<string[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
@@ -28,33 +30,40 @@ const ReviewWrite = () => {
     img.src = _URL.createObjectURL(file[0]);
 
     reader.onloadend = () => {
-      img.onload = function () {
-        if (img.width > img.height)
-          setImgFile((prev: IImgData[]) => [
-            ...prev,
-            { content: reader.result, isWidthLarger: true },
-          ]);
-        else
-          setImgFile((prev: IImgData[]) => [
-            ...prev,
-            { content: reader.result, isWidthLarger: false },
-          ]);
-      };
+      setImgFile((prev: string[]) => [...prev, reader.result]);
     };
   };
 
   const removeImg = (file: string) => {
-    setImgFile((prev: IImgData[]) => {
+    setImgFile((prev: string[]) => {
       const newArr = [...prev];
-      const oldItemIdx = [...prev].findIndex((i) => i.content === file);
-      console.log(oldItemIdx);
-      newArr.splice(oldItemIdx, 1);
+      newArr.splice(newArr.indexOf(file), 1);
       return newArr;
     });
   };
 
+  const onValid = (data: any) => {
+    console.log(data);
+  };
+
+  const onInValid = (data: any) => {
+    console.log(data);
+  };
+
   return (
-    <Wrap>
+    <Wrap
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      //   // formData 로 하면 원하는대로 안됨 그냥 state 로 해주고 onvalid 에 보내주기
+      //   // const formData = new FormData(e.currentTarget);
+      //   // let entries = formData.entries();
+      //   // for (const pair of entries) {
+      //   //   console.log(pair);
+      //   //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
+      //   // }
+      // }}
+      onSubmit={handleSubmit(onValid, onInValid)}
+    >
       <BreadCrumb
         data={[
           {
@@ -82,27 +91,24 @@ const ReviewWrite = () => {
 
       <UserInfo>
         <strong>이영지</strong>
-        <input type="password" placeholder="비밀번호를 입력하세요" />
+        <input
+          {...register("password", { required: "비밀번호를 입력해주세요" })}
+          type="password"
+          placeholder="비밀번호를 입력하세요"
+        />
       </UserInfo>
 
       <ProductInfo>
         <h2>구매한 상품 패키지</h2>
-        <ProductInfosCard />
+        {/* <ProductInfosCard /> */}
       </ProductInfo>
 
-      <Form
-        onSubmit={(e: any) => {
-          e.preventDefault();
-          // formData 로 하면 원하는대로 안됨 그냥 state 로 해주고 onvalid 에 보내주기
-          // const formData = new FormData(e.currentTarget);
-          // let entries = formData.entries();
-          // for (const pair of entries) {
-          //   console.log(pair);
-          //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
-          // }
-        }}
-      >
-        <input type="text" placeholder="제목을 입력하세요" />
+      <Form>
+        <input
+          {...register("title", { required: "비밀번호를 입력해주세요" })}
+          type="text"
+          placeholder="제목을 입력하세요"
+        />
         <Rating>
           <strong>별점</strong>
           <AiFillStar size={20} />
@@ -124,15 +130,17 @@ const ReviewWrite = () => {
           <span>사진 첨부하기</span>
         </label>
         {/* 사진 첨부하기 */}
-        <button type="submit">등록하기</button>
+        <button>등록하기</button>
       </Form>
 
       <UpdateImg>
         {imgFile &&
-          imgFile.map(({ content, isWidthLarger }: IImgData, index: number) => (
-            <Img key={index} isWidthLarger={isWidthLarger}>
-              <img src={content} alt="프로필 이미지" />
-              <button onClick={() => removeImg(content)}>삭제</button>
+          imgFile.map((img: string, index: number) => (
+            <Img
+              key={index}
+              style={{ background: `url(${img}) no-repeat center / cover` }}
+            >
+              <button onClick={() => removeImg(img)}>삭제</button>
             </Img>
           ))}
       </UpdateImg>
@@ -140,7 +148,7 @@ const ReviewWrite = () => {
   );
 };
 
-const Wrap = styled.div`
+const Wrap = styled.form`
   width: 100%;
   margin: 50px auto;
   padding: 0 10px;
@@ -214,7 +222,7 @@ const ProductInfo = styled.div`
     font-weight: bold;
   }
 `;
-const Form = styled.form`
+const Form = styled.div`
   margin-top: 50px;
   input[type="text"] {
     width: 100%;
@@ -292,8 +300,7 @@ const UpdateImg = styled.div`
     grid-template-columns: repeat(3, 1fr);
   }
 `;
-
-const Img = styled.div<{ isWidthLarger: boolean }>`
+const Img = styled.div`
   width: 100%;
   height: calc(100vw / 5);
   display: flex;
@@ -307,10 +314,6 @@ const Img = styled.div<{ isWidthLarger: boolean }>`
   }
   :hover button {
     opacity: 1;
-  }
-  img {
-    width: ${({ isWidthLarger }) => (isWidthLarger ? "" : "100%")};
-    height: ${({ isWidthLarger }) => (isWidthLarger ? "100%" : "")};
   }
   button {
     content: "";
