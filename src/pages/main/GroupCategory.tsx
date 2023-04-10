@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { useNavigate } from "react-router";
 
-type Props = {};
-
-const GroupCategory = (props: Props) => {
+const GroupCategory = () => {
+  const navigate = useNavigate();
   // const isMobile: boolean = useMediaQuery({
   //   query: "(max-width:850px)",
   // });
@@ -13,25 +13,25 @@ const GroupCategory = (props: Props) => {
       <h2 className="title">어떤 그룹과 여행하고 싶으세요?</h2>
       <CategoryContainer>
         <ul className="category-first">
-          <li>
+          <li onClick={() => navigate("/groups/5070")}>
             <img src="/category-senior.png" alt="5070만의 특별한 여행" />
             <div className="overlay">5070만의 특별한 여행</div>
           </li>
-          <li>
+          <li onClick={() => navigate("/groups/anyone")}>
             <img src="/category-all.png" alt="누구와 함께 가도 좋을 여행" />
             <div className="overlay">누구와 함께 가도 좋을 여행</div>
           </li>
         </ul>
         <ul className="category-second">
-          <li>
+          <li onClick={() => navigate("/groups/ladies")}>
             <img src="/category-w.png" alt="여자끼리" />
             <div className="overlay">여자끼리</div>
           </li>
-          <li>
+          <li onClick={() => navigate("/groups/gentlemen")}>
             <img src="/category-m.png" alt="남자끼리" />
             <div className="overlay">남자끼리</div>
           </li>
-          <li>
+          <li onClick={() => navigate("/groups/family")}>
             <img src="/category-fam.png" alt="가족끼리" />
             <div className="overlay">가족끼리</div>
           </li>
@@ -101,10 +101,6 @@ const CategoryContainer = styled.div`
         display: flex;
       }
     }
-    :hover {
-      cursor: pointer;
-    }
-
     img {
       width: 100%;
       height: 100%;

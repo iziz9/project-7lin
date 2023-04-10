@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import Comments from "./Comments";
@@ -11,12 +11,24 @@ import { useMediaQuery } from "react-responsive";
 import { FiMoreVertical } from "react-icons/fi";
 import { useModal } from "../../hooks/useModal";
 import Modal from "../../commons/Modal";
+import { useQuery } from "react-query";
+import { getAllReviews, getReviewDetail } from "../../apis/request";
+import { GetReviewDetailData } from "../../@types/data";
+import ProductInfosCard from "../../commons/ProductInfosCard";
 
 const ReviewDetail = () => {
-  const { id } = useParams();
-  const {
-    state: { date, thumnail, title, views, name },
-  } = useLocation();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { isLoading, data } = useQuery(["getReviewDetail"], () => {
+    if (id) return getReviewDetail(id);
+  }) as { isLoading: boolean; data: GetReviewDetailData };
+
+  const { isLoading: atherDataLoading, data: atherData } = useQuery(
+    ["getAllReviews"],
+    getAllReviews,
+  );
+  console.log(atherData);
 
   const [mobileBtnOpen, setMobileBtnOpen] = useState(false);
 
@@ -40,93 +52,120 @@ const ReviewDetail = () => {
       });
   };
 
+  const date = !isLoading && new Date(data.createdDate);
+
   return (
-    <Wrap>
-      <BreadCrumb
-        data={[
-          {
-            title: "HOME",
-            link: "/",
-          },
-          {
-            title: "여행 후기",
-            link: "/review",
-          },
-          {
-            title,
-            link: `/review/${id}`,
-          },
-        ]}
-      />
+    <>
+      {!isLoading && (
+        <Wrap>
+          <BreadCrumb
+            data={[
+              {
+                title: "HOME",
+                link: "/",
+              },
+              {
+                title: "여행 후기",
+                link: "/review",
+              },
+              {
+                title: data.reviewTitle,
+                link: `/review/${data.reviewId}`,
+              },
+            ]}
+          />
 
-      <Title>여행후기</Title>
+          <Title>여행후기</Title>
 
-      {isMobile ? <h2>{title}</h2> : null}
+          {isMobile ? <h2>{data.reviewTitle}</h2> : null}
 
-      <Infos>
-        <Left>
-          <img src="/profile_img.png" alt="프로필 이미지" />
-          <div>
-            <div>
-              <strong>{name}</strong>
-              <Rating>
-                <AiFillStar />
-                <AiFillStar />
-                <AiFillStar />
-                <AiFillStar />
-                <AiOutlineStar />
-                <span>4.3점</span>
-              </Rating>
-            </div>
-            <div>
-              <p>조회 {views}</p>
-              <p>{date} 작성</p>
-            </div>
-          </div>
-        </Left>
-        <Right>
-          {isMobile ? (
-            <MobileBtns>
-              <FiMoreVertical
-                size={30}
-                onClick={() => setMobileBtnOpen((prev) => !prev)}
-              />
-              {mobileBtnOpen ? (
+          <Infos>
+            <Left>
+              <img src="/profile_img.png" alt="프로필 이미지" />
+              <div>
                 <div>
+                  <strong>{data.reviewWriter}</strong>
+                  <Rating>
+                    <AiFillStar />
+                    <AiFillStar />
+                    <AiFillStar />
+                    <AiFillStar />
+                    <AiOutlineStar />
+                    <span>{data.reviewGrade}점</span>
+                  </Rating>
+                </div>
+                <div>
+                  <p>조회 {data.viewCount}</p>
+                  <p>
+                    {date &&
+                      `${date.getFullYear()}년 ${date.getMonth()} + 1월
+                    ${date.getDate()}일 ${date.getHours()}:${date.getMinutes()}`}
+                    작성
+                  </p>
+                </div>
+              </div>
+            </Left>
+            <Right>
+              {isMobile ? (
+                <MobileBtns>
+                  <FiMoreVertical
+                    size={30}
+                    onClick={() => setMobileBtnOpen((prev) => !prev)}
+                  />
+                  {mobileBtnOpen ? (
+                    <div>
+                      <button onClick={() => handleModalOpen("수정")}>
+                        수정하기
+                      </button>
+                      <button onClick={() => handleModalOpen("삭제")}>
+                        삭제하기
+                      </button>
+                    </div>
+                  ) : null}
+                </MobileBtns>
+              ) : (
+                <Buttons>
                   <button onClick={() => handleModalOpen("수정")}>
                     수정하기
                   </button>
                   <button onClick={() => handleModalOpen("삭제")}>
                     삭제하기
                   </button>
-                </div>
-              ) : null}
-            </MobileBtns>
-          ) : (
-            <Buttons>
-              <button onClick={() => handleModalOpen("수정")}>수정하기</button>
-              <button onClick={() => handleModalOpen("삭제")}>삭제하기</button>
-            </Buttons>
-          )}
-        </Right>
-      </Infos>
+                </Buttons>
+              )}
+            </Right>
+          </Infos>
+          <Modal />
 
-      <Modal />
+          <Main>
+            {isMobile ? null : <h1>{data.reviewTitle}</h1>}
 
-      <MainContents title={title} thumnail={thumnail} />
+            <ProductInfosCard
+              title={data.productTitle}
+              period={data.reviewReservationPeriodDTOList}
+              option={data.reviewReservationOptionDTOList}
+              price={data.reservationPrice}
+              count={data.reservationPeople}
+              image={data.productThumbnail}
+            />
 
-      <Comments />
+            <MainContents data={data.reviewContentDTOList} tag={data.tagList} />
+          </Main>
 
-      <Recommend>
-        <RecommendHead>
-          <h2>다른 상품 후기 보기</h2>
-          <span>전체 후기 목록 보기</span>
-        </RecommendHead>
-        <RecommendSlider>
-          <strong>후기 글 제목</strong>
-        </RecommendSlider>
-      </Recommend>
-    </Wrap>
+          {/* <Comments /> */}
+
+          <Recommend>
+            <RecommendHead>
+              <h2>다른 후기 보기</h2>
+              <span onClick={() => navigate("/review")}>
+                전체 후기 목록 보기
+              </span>
+            </RecommendHead>
+            <RecommendSlider data={atherData?.reviewList}></RecommendSlider>
+          </Recommend>
+        </Wrap>
+      )}
+    </>
   );
 };
 
@@ -141,7 +180,6 @@ const Wrap = styled.div`
     font-weight: bold;
   }
 `;
-
 const Title = styled.h1`
   margin-top: 50px;
   font-size: 30px;
@@ -151,7 +189,6 @@ const Title = styled.h1`
     color: #5b5b5b;
   }
 `;
-
 const Infos = styled.div`
   margin-top: 40px;
   padding-bottom: 30px;
@@ -204,6 +241,14 @@ const Right = styled.div`
     :last-child {
       font-weight: bold;
     }
+  }
+`;
+const Main = styled.div`
+  padding-top: 50px;
+  h1 {
+    margin-bottom: 50px;
+    font-size: 45px;
+    font-weight: bold;
   }
 `;
 const Buttons = styled.div`

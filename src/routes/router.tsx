@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Groups from "../pages/groups/Groups";
 import Login from "../pages/login/Login";
 import MainPage from "../pages/main/MainPage";
 import Review from "./../pages/review/Review";
@@ -25,6 +24,9 @@ import KakaoLogin from "../pages/sociallogin/KakaoLogin";
 import NotFoundPage from "../pages/not-found/NotFoundPage";
 import NaverLogin from "../pages/sociallogin/NaverLogin";
 import GoogleLogin from "../pages/sociallogin/GoogleLogin";
+import Groups from "../pages/category/Groups";
+import Themes from "../pages/category/Themes";
+import Destination from "../pages/category/Destination";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +56,16 @@ const router = createBrowserRouter([
         children: [{ path: ":id", element: <Groups /> }],
       },
       {
+        path: "themes",
+        element: <Themes />,
+        children: [{ path: ":id", element: <Themes /> }],
+      },
+      {
+        path: "destination",
+        element: <Destination />,
+        children: [{ path: ":id", element: <Destination /> }],
+      },
+      {
         path: "/login",
         element: (
           <PrivateRoute onlyAuth={false}>
@@ -62,7 +74,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/signup_type",
+        path: "/signup-type",
         element: (
           <PrivateRoute onlyAuth={false}>
             <SignupType />
@@ -70,7 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/signup_site",
+        path: "/signup",
         element: (
           <PrivateRoute onlyAuth={false}>
             <SignupSite />

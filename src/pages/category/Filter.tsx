@@ -2,10 +2,25 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { GrPowerReset, GrClose } from "react-icons/gr";
 import { useMediaQuery } from "react-responsive";
+import { BiFilterAlt } from "react-icons/bi";
+import {
+  FilterCategoryState,
+  categoryState,
+  filterState,
+} from "../../store/categoryAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { getPeriodRange, getPriceRange } from "../../utils/filter";
+import { getMainCategoryName } from "../../utils/category";
 
 const filterData = [
   {
-    category: "theme",
+    category: "groups",
+    type: "radio",
+    title: "여행 그룹",
+    content: ["5070끼리", "남자끼리", "여자끼리", "가족끼리", "누구든지"],
+  },
+  {
+    category: "themes",
     type: "checkbox",
     title: "여행 테마",
     content: [
@@ -44,11 +59,18 @@ const filterData = [
   },
 ];
 
-const Filter = () => {
+const Filter = ({ filterClick }: any) => {
   // 반응형
   const isMobile = useMediaQuery({ query: "(max-width:850px)" });
-
   const [isFilterOpened, setIsFilterOpened] = useState(false);
+  const [filter, setFilter] = useRecoilState(filterState);
+  const [filterCategory, setFilterCategory] =
+    useRecoilState(FilterCategoryState);
+  const category = useRecoilValue(categoryState);
+
+  const filteredFilter = filterData.filter(
+    (e: any) => e.category !== category.categories.mainCategory,
+  );
 
   // X 버튼 클릭
   const closeClicked = (event: React.FormEvent<HTMLButtonElement>) => {
@@ -58,36 +80,66 @@ const Filter = () => {
 
   // 필터 버튼 클릭
   const filterClicked = () => {
-    setIsFilterOpened(true);
+    setIsFilterOpened((prev) => !prev);
+  };
+
+  const resetClick = () => {
+    setFilterCategory([]);
+    setFilter({});
+    console.log(filter);
+    console.log(filterCategory);
+  };
+
+  const isChecked = (title: string, name: string) => {
+    const value = filterCategory.map((e: any) => e.middleCategory);
+    const result = value.filter((e) => e === name);
+
+    switch (title) {
+      case "period":
+        return getPeriodRange(name).minPeriod === filter.minPeriod
+          ? true
+          : false;
+      case "price":
+        return getPriceRange(name).minPrice === filter.minPrice ? true : false;
+      case "groups":
+        return result.length !== 0 ? true : false;
+      case "themes":
+        return result.length !== 0 ? true : false;
+      case "destination":
+        return result.length !== 0 ? true : false;
+      default:
+        return false;
+    }
   };
 
   return (
     <>
       {isMobile ? (
         <MobileContainer>
-          <h4 onClick={filterClicked}>필터</h4>
+          <h4 onClick={filterClicked}>
+            필터 <BiFilterAlt />
+          </h4>
           {isFilterOpened && (
             <div className="modal">
-              <ResetButton type="reset">
+              <ResetButton onClick={resetClick} type="reset">
                 초기화
                 <GrPowerReset />
               </ResetButton>
               <CloseButton onClick={closeClicked}>
                 <GrClose />
               </CloseButton>
-              {filterData.map((element, index) => (
+              {filteredFilter.map((element, index) => (
                 <section className={element.category} key={index}>
                   <h5 className="optionTitle">{element.title}</h5>{" "}
                   <div className="optionItems">
                     {element.content.map((item, itemIndex) => (
-                      <label
-                        htmlFor={`${element.category}${itemIndex}`}
-                        key={itemIndex}
-                      >
+                      <label htmlFor={item} key={itemIndex}>
                         <input
                           type={element.type}
-                          id={`${element.category}${itemIndex}`}
+                          id={item}
                           name={element.category}
+                          onChange={filterClick}
+                          checked={isChecked(element.category, item)}
                         />
                         {item}
                       </label>
@@ -101,22 +153,21 @@ const Filter = () => {
       ) : (
         <PCContainer>
           <h4>필터</h4>
-          <ResetButton type="reset">
+          <ResetButton onClick={resetClick} type="reset">
             초기화
             <GrPowerReset />
           </ResetButton>
-          {filterData.map((element, index) => (
+          {filteredFilter.map((element, index) => (
             <section className={element.category} key={index}>
               <h5>{element.title}</h5>
               {element.content.map((item, itemIndex) => (
-                <label
-                  htmlFor={`${element.category}${itemIndex}`}
-                  key={itemIndex}
-                >
+                <label htmlFor={item} key={itemIndex}>
                   <input
                     type={element.type}
-                    id={`${element.category}${itemIndex}`}
+                    id={item}
                     name={element.category}
+                    onChange={filterClick}
+                    checked={isChecked(element.category, item)}
                   />
                   {item}
                 </label>
@@ -141,12 +192,20 @@ const MobileContainer = styled.form`
 
   // 필터
   h4 {
-    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin: 0 20px;
     font-weight: 700;
     font-size: 18px;
     padding: 16px 0;
     &:hover {
       cursor: pointer;
+    }
+    svg {
+      font-size: 22px;
+      /* color: var(--color-grayscale60); */
     }
   }
 
@@ -249,7 +308,7 @@ const ResetButton = styled.button`
 
   @media (max-width: 850px) {
     top: -40px;
-    right: 80px;
+    right: 60px;
   }
   &:hover {
     cursor: pointer;
@@ -261,9 +320,9 @@ const CloseButton = styled.button`
   border: none;
   position: absolute;
   top: -40px;
-  right: 20px;
+  right: 10px;
   font-size: 26px;
-  opacity: 0.7;
+
   &:hover {
     cursor: pointer;
   }

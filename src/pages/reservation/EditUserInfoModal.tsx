@@ -31,9 +31,7 @@ const EditUserInfoModal = (props: Props) => {
           closeModal();
         }}
       >
-        <BasicBtn onClick={() => console.log("예약자 정보 바꾸기")}>
-          예약자 정보 수정
-        </BasicBtn>
+        <BasicBtn>예약자 정보 수정</BasicBtn>
       </div>
     </Container>
   );

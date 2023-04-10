@@ -21,7 +21,6 @@ const ReservationDetailModal = ({ isMember, detailData }: Props) => {
   const cancelReservationMutaiton = useMutation(deleteReservation, {
     onSuccess: (res: any) => {
       if (res.message === "성공") {
-        console.log(res);
         alert("예약 취소 성공");
         closeModal();
       }

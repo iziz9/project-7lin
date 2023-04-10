@@ -13,18 +13,15 @@ const Favor = () => {
     isLoading,
     refetch: refetchWishlist,
   } = useWishlistQuery({
-    onSuccess(data) {
-      console.log(data);
-    },
+    onSuccess(data) {},
     onError(error) {
-      console.log("찜 리스트 조회 실패: " + error);
+      alert("찜 리스트 조회 실패: " + error);
     },
     retry: 3,
   });
 
   const deleteAllWishListMutation = useMutation(deleteAllWishList, {
     onSuccess(res: any) {
-      console.log(res);
       if (res.message === "success") {
         return refetchWishlist();
       }

@@ -22,19 +22,15 @@ const axiosApi = (url: string) => {
       return config;
     },
     (error: AxiosError): Promise<AxiosError> => {
-      console.log(error);
       return Promise.reject(error);
     },
   );
 
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
-      console.log(response);
       if (response.status === 200) return response.data;
     },
     async (error) => {
-      console.log(error);
-
       const originalRequest = error.config;
 
       switch (error.response?.status) {
@@ -61,8 +57,6 @@ const axiosApi = (url: string) => {
                   withCredentials: true,
                 },
               );
-              console.log(data);
-              alert(`리프레시 로직: ${data}`);
               // access token과 refresh token 저장
               setCookie("accessToken", data.accessToken, {
                 path: "/",

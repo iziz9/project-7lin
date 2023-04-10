@@ -76,7 +76,7 @@ export interface SignUpResponse {
 export interface UpdateMemberRequest {
   newPassword: string;
   validNewPassword: string;
-  phone: string;
+  phone?: string;
 }
 
 export interface ResultPackageType {
@@ -105,11 +105,8 @@ export interface TestResultProductType {
 
 // 상품 조회 request
 export interface ProductRequestType {
-  category: [
-    {
-      mainCategory: string | null;
-      middleCategory: string | null;
-    },
+  categories: [
+    ...{ mainCategory: string | null; middleCategory: string | null }[],
   ];
   minPeriod?: number | null;
   maxPeriod?: number | null;
@@ -197,6 +194,13 @@ export interface Product {
   productPrice: number;
   briefExplanation: string;
   period: number;
+}
+
+export interface AddReservationRespose {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: string;
 }
 
 export interface MemberReservationResponse {
@@ -339,8 +343,133 @@ export interface CartState {
   image: string;
   productPrice: number;
   totalPrice: number;
-  selectPeriod: IProductDetailSelectOption;
+  selectPeriod: IProductDetailSelectOptionPeriod;
   selectOptions: IProductDetailSelectOption[];
-  allOption: IProductDetailSelectOption[];
-  allPeriod: IProductDetailSelectOption;
+  allOption: IProductDetailSelectOptions[];
+  allPeriod: IProductDetailDataPeriod[];
+}
+
+export interface IProductDetailReviewData {
+  createdDate: string;
+  reviewId: number;
+  thumbnail: string;
+  title: string;
+  viewCount: number;
+}
+
+// 전체 후기 조회 response
+export interface GetAllReviewsRes {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: GetAllReviewsData;
+}
+
+export interface GetAllReviewsData {
+  reviewList: GetAllReviewsReviewList[];
+  offset: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+}
+
+export interface GetAllReviewsReviewList {
+  reviewId: number;
+  reviewThumbnail: string;
+  reviewGrade: number;
+  reviewTitle: string;
+}
+
+// 후기 상세 조회 response
+export interface GetReviewDetailRes {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: GetReviewDetailData;
+}
+
+export interface GetReviewDetailData {
+  reviewId: number;
+  productId: number;
+  reservationId: number;
+  reviewWriter: string;
+  reviewGrade: number;
+  viewCount: number;
+  createdDate: Date;
+  reviewTitle: string;
+  productThumbnail: string;
+  productTitle: string;
+  reviewReservationPeriodDTOList: ReviewReservationPeriodDtolist[];
+  reviewReservationOptionDTOList: ReviewReservationOptionDtolist[];
+  reservationPrice: number;
+  reservationPeople: number;
+  reviewContentDTOList: ReviewContentDtolist[];
+  tagList: string[];
+}
+
+export interface ReviewReservationPeriodDtolist {
+  periodId: number;
+  startDate: string;
+  endDate: string;
+  amount: number;
+}
+
+export interface ReviewReservationOptionDtolist {
+  optionId: number;
+  type: string;
+  content: string;
+  price: number;
+  amount: number;
+}
+
+export interface ReviewContentDtolist {
+  reviewContentId: number;
+  content: string;
+  type: string;
+  priority: number;
+  reviewId: number;
+}
+export interface SearchProductResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: SearchProduct[];
+}
+
+export interface SearchProduct {
+  productId: number;
+  thumbnail: string;
+  productName: string;
+  productPrice: number;
+  briefExplanation: string;
+  period: number;
+  categories: SearchCategory[];
+}
+
+export interface SearchCategory {
+  mainCategory: string;
+  middleCategory: string;
+  subdivision?: string;
+}
+
+export interface ReservationUserInfo {
+  email: string;
+  name: string;
+  phone: string;
+  acceptTerms: boolean;
+}
+interface OptionsType {
+  optionId: number;
+  amount: number;
+  content?: string;
+  price?: number;
+}
+
+interface ReservationDataType {
+  acceptTerms: boolean;
+  email: string;
+  name: string;
+  phone: string;
 }

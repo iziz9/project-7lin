@@ -65,11 +65,9 @@ const ProductDetail = () => {
 
   const token = getCookie("accessToken");
   const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
-    onSuccess(data) {
-      console.log(data);
-    },
+    onSuccess(data) {},
     onError(error) {
-      console.log("찜 리스트 조회 실패: " + error);
+      alert("찜 리스트 조회 실패: " + error);
     },
     enabled: token ? true : false,
   });
@@ -222,10 +220,10 @@ const ProductDetail = () => {
 
           <Recommend>
             <h2>연관상품</h2>
-            <RecommendSlider>
+            {/* <RecommendSlider>
               <p>36박 37일 남미 5개국 탐험</p>
               <p>123,334,747원</p>
-            </RecommendSlider>
+            </RecommendSlider> */}
           </Recommend>
 
           <BottomBar>

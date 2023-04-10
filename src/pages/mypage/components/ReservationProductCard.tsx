@@ -31,7 +31,6 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
   const cancelReservationMutaiton = useMutation(deleteReservation, {
     onSuccess: (res: any) => {
       if (res.message === "성공") {
-        console.log(res);
         alert("예약 취소 성공");
         return queryClient.invalidateQueries({
           queryKey: ["memberReservation"],
@@ -47,9 +46,7 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
     ["memberReservationDetail", product.reservationId],
     () => getMemberReservationDetail(product.reservationId),
     {
-      onSuccess(data) {
-        console.log(data);
-      },
+      onSuccess(data) {},
       onError(error) {
         alert("예약상세 정보 가져오기 실패: " + error);
       },
@@ -60,7 +57,6 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
   const reservationAgainMutation = useMutation(reservateAgain, {
     onSuccess: (res: any) => {
       if (res.message === "성공") {
-        console.log(res);
         alert("다시 예약 성공");
         handleTab(0);
         return queryClient.invalidateQueries({
@@ -77,7 +73,6 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
 
   const handleResevationDetail = async () => {
     const { data: detailData, isError, isSuccess } = await detailRefetch();
-    // if (isError) console.log("hi");
     if (isSuccess) {
       const ReservationDetailModalData = {
         title: "예약내역 상세",
@@ -122,8 +117,8 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
               onClick={() =>
                 navigate("/review/write", {
                   state: {
-                    id: product.reservationId,
-                    code: product.reservationCode,
+                    reservationId: product.reservationId,
+                    productId: product.productInfo[0].product.productId,
                   },
                 })
               }

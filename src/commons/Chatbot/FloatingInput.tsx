@@ -59,7 +59,6 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
           return !item.question;
         })
         .map((item) => item.text.join(""));
-      console.log(filteredList);
       // api연결코드 작성
 
       setChatbotStep({ step: 3 }); // step3 제출 완료 안내화면으로
@@ -78,7 +77,9 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
         <TextForm
           onSubmit={(e) => {
             e.preventDefault();
-            answer.length < 1
+            console.log(answer);
+            // orderNumber.textNumbering === 0 && answer.matches(/^\d{2,3}-?\d{3,4}-?\d{4}$/)
+            answer.length < 2
               ? alert("정확한 답변을 작성해주세요.")
               : handleSubmit(answer);
             setAnswer([]);
@@ -88,7 +89,9 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
             type="text"
             placeholder="여기에 메시지 입력"
             value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            onChange={(e) => {
+              setAnswer(e.target.value);
+            }}
           />
           <button type="submit">
             <IoIosPaperPlane className="send" />
@@ -117,7 +120,7 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
                   <input
                     type="checkbox"
                     id={answer + orderNumber.buttonNumbering}
-                    name={answer + orderNumber.buttonNumbering} //default checked false로 바뀌게 해야됨....
+                    name={answer + orderNumber.buttonNumbering}
                     value={answer}
                     defaultChecked={false}
                   />

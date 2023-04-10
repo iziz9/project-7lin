@@ -47,7 +47,6 @@ const ChangeInfoModal = () => {
   });
 
   const onSubmitHandler: SubmitHandler<ChangeInfoFormValue> = (data) => {
-    console.log(JSON.stringify(data, null, 2));
     if (!isCheckPhoneDuplicate) {
       alert("전화번호 중복검사를 해주세요!");
       setFocus("phone");
@@ -61,11 +60,14 @@ const ChangeInfoModal = () => {
     }
 
     if (confirm("정말로 정보를 수정하시겠습니까?")) {
+      const phone = data.phone.replaceAll("-", "");
       const updateMemberPayload: UpdateMemberRequest = {
         newPassword: data.password,
         validNewPassword: data.confirmPassword,
-        phone: data.phone,
       };
+
+      if (phone !== userInfo.phone) updateMemberPayload["phone"] = phone;
+
       updateMembreInfoMutation.mutateAsync(updateMemberPayload);
     }
   };
