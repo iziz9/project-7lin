@@ -336,8 +336,8 @@ export interface CartState {
   image: string;
   productPrice: number;
   totalPrice: number;
-  selectPeriod: IProductDetailSelectOption;
+  selectPeriod: IProductDetailSelectOptionPeriod;
   selectOptions: IProductDetailSelectOption[];
-  allOption: IProductDetailSelectOption[];
-  allPeriod: IProductDetailSelectOption;
+  allOption: IProductDetailSelectOptions[];
+  allPeriod: IProductDetailDataPeriod[];
 }
