@@ -53,7 +53,6 @@ const Login = () => {
   const loginMutation = useMutation(login, {
     onSuccess: (res: any) => {
       if (res) {
-        console.log(res);
         const { email, name, age, gender, phone, tokenDto } = res; // res
         setCookie("accessToken", tokenDto.accessToken, {
           path: "/",
@@ -70,7 +69,6 @@ const Login = () => {
   });
 
   const onSubmitHandler: SubmitHandler<LoginFormValue> = async (data) => {
-    console.log(JSON.stringify(data, null, 2));
     const loginPayload: LoginFormValue = {
       email: data.email,
       password: data.password,

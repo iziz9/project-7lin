@@ -4,6 +4,7 @@ import {
   IProductDetailDataResponse,
   ProductRequestType,
   ProductResponseType,
+  SearchProductResponse,
 } from "../@types/data";
 
 export const getTestResult = async (category: string, size: number) => {
@@ -59,4 +60,11 @@ export const getProductDetailReview = async (id: string) => {
   } catch (error) {
     throw error;
   }
+};
+
+export const getSearchProduct = async (keyWord: string) => {
+  const data: SearchProductResponse = await axiosInstance.get(
+    `/search?keyWord=${keyWord}`,
+  );
+  return data;
 };

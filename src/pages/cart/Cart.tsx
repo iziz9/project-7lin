@@ -65,7 +65,6 @@ const Cart = () => {
     options: IProductDetailDataOptions[],
     period: IProductDetailDataPeriod[],
   ) => {
-    console.log(options);
     openModal({
       title: "옵션 변경",
       content: (
