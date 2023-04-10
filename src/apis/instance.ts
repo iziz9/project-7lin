@@ -61,11 +61,12 @@ const axiosApi = (url: string) => {
                   withCredentials: true,
                 },
               );
-
+              console.log(data);
+              alert(`리프레시 로직: ${data}`);
               // access token과 refresh token 저장
               setCookie("accessToken", data.accessToken, {
                 path: "/",
-                maxAge: 1800,
+                maxAge: 60 * 60 * 24 * 7,
                 secure: true,
               });
 
@@ -74,6 +75,7 @@ const axiosApi = (url: string) => {
               return instance(originalRequest);
             } catch (refreshTokenError) {
               // refresh token이 만료되거나 잘못된 경우 로그인 페이지로 이동 또는 다른 로직 수행
+              removeCookie("accessToken", { path: "/" });
               alert("로그인시간 만료");
               return (window.location.href = "/login");
             }
@@ -93,7 +95,7 @@ const axiosApi = (url: string) => {
           break;
         case 500:
           alert("서버 에러 ");
-          removeCookie("accessToken");
+          removeCookie("accessToken", { path: "/" });
           return (window.location.href = "/login");
         default:
           break;

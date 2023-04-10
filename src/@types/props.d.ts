@@ -22,6 +22,7 @@ export interface IProductDetailModalOptionProps {
     | IProductDetailDataPeriod[]
     | undefined;
   type: string;
+  isChange?: boolean;
   selectItem: IProductDetailSelectOptionData;
   setSelectItem: React.Dispatch<
     React.SetStateAction<IProductDetailSelectOptionData>

@@ -44,6 +44,16 @@ const Favor = () => {
     </div>
   );
 
+  if (isLoading)
+    return (
+      <Container>
+        <div className="delete-all">
+          <div className="title">찜</div>
+        </div>
+        <div className="list"></div>
+      </Container>
+    );
+
   return (
     <Container>
       <div className="delete-all">

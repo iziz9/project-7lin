@@ -92,9 +92,11 @@ const Reservation = () => {
           취소된 예약 ({cancelReservation?.length})
         </div>
       </div>
-      <div className="list">
-        {listElement?.length === 0 ? noProduct : listElement}
-      </div>
+      {isLoading ? null : (
+        <div className="list">
+          {listElement?.length === 0 ? noProduct : listElement}
+        </div>
+      )}
     </Container>
   );
 };

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import styled from "styled-components";
@@ -6,12 +5,25 @@ import Modal from "../../commons/Modal";
 import { useModal } from "../../hooks/useModal";
 import ProductDetailModal from "../product-detail/ProductDetailModal";
 import { useMediaQuery } from "react-responsive";
-import { useLocation } from "react-router";
-import { CartState, IProductDetailSelectOption } from "../../@types/data";
+import {
+  CartState,
+  IProductDetailDataOptions,
+  IProductDetailDataPeriod,
+  IProductDetailSelectOption,
+} from "./../../@types/data.d";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
-  const data: CartState[] = JSON.parse(localStorage.getItem("cart") || "[]");
-  console.log(data);
+  const navigate = useNavigate();
+  const [data, setData] = useState<CartState[]>([]);
+
+  useEffect(() => {
+    const storageData: CartState[] = JSON.parse(
+      localStorage.getItem("cart") || "[]",
+    );
+    setData([...storageData]);
+  }, []);
 
   const { openModal, closeModal } = useModal();
 
@@ -19,19 +31,223 @@ const Cart = () => {
     query: "(max-width:850px)",
   });
 
-  const handleModal = () => {
-    // openModal({
-    //   title: "옵션 변경",
-    //   content: (
-    //     <ProductDetailModal
-    //       image={"/product_img.png"}
-    //       title={"중앙아시아 3국 15일 중앙아시아 3국 15일 중앙아시아 3국 15일"}
-    //       price={"2,860,000"}
-    //       closeModal={closeModal}
-    //       type="변경"
-    //     />
-    //   ),
-    // });
+  const [select, setSelect] = useState<number[]>([]);
+
+  // 전체 체크
+  const onChangeTotal = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const ids: number[] = [];
+      data.forEach((item: CartState) => ids.push(item.productId));
+      setSelect(ids);
+    } else {
+      setSelect([]);
+    }
+  };
+
+  // 선택 체크
+  const onChangeEach = (
+    id: number,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (event.target.checked) {
+      setSelect((prev) => [...prev, id]);
+    } else {
+      setSelect((prev) => [...prev].filter((i) => i !== id));
+    }
+  };
+
+  // 옵션 변경
+  const handleModal = (
+    id: number,
+    image: string,
+    title: string,
+    price: number,
+    options: IProductDetailDataOptions[],
+    period: IProductDetailDataPeriod[],
+  ) => {
+    console.log(options);
+    openModal({
+      title: "옵션 변경",
+      content: (
+        <ProductDetailModal
+          id={id || 0}
+          image={image || ""}
+          title={title || ""}
+          price={price || 0}
+          closeModal={closeModal || ""}
+          type="변경"
+          options={options}
+          period={period}
+        />
+      ),
+    });
+  };
+
+  // 엑스버튼 삭제
+  const handleDelete = (
+    productId: number,
+    isProduct: boolean,
+    optionId?: number,
+  ) => {
+    if (isProduct) {
+      const restProducts = data.filter(
+        (item: CartState) => item.productId !== productId,
+      );
+      localStorage.setItem("cart", JSON.stringify([...restProducts]));
+    } else {
+      const [prevProduct] = data.filter(
+        (item: CartState) => item.productId === item.productId,
+      );
+      const restProducts = data.filter(
+        (item: CartState) => item.productId !== productId,
+      );
+      const restOption = prevProduct.selectOptions.filter(
+        (item: IProductDetailSelectOption) => item.optionId !== optionId,
+      );
+
+      localStorage.setItem(
+        "cart",
+        JSON.stringify([
+          ...restProducts,
+          {
+            productId: prevProduct.productId,
+            title: prevProduct.title,
+            image: prevProduct.image,
+            productPrice: prevProduct.productPrice,
+            totalPrice: prevProduct.totalPrice,
+            selectPeriod: { ...prevProduct.selectPeriod },
+            selectOptions: [...restOption],
+            allOption: [...prevProduct.allOption],
+            allPeriod: [...prevProduct.allPeriod],
+          },
+        ]),
+      );
+    }
+
+    const storageData: CartState[] = JSON.parse(
+      localStorage.getItem("cart") || "[]",
+    );
+    setData([...storageData]);
+  };
+
+  // 선택 상품 삭제
+  const handleCheckDelete = () => {
+    for (const productId of select) {
+      const storageData: CartState[] = JSON.parse(
+        localStorage.getItem("cart") || "[]",
+      );
+      const restProducts = storageData.filter(
+        (item: CartState) => item.productId !== productId,
+      );
+      localStorage.setItem("cart", JSON.stringify([...restProducts]));
+      setSelect((prev: number[]) => [
+        ...prev.filter((item: number) => item !== productId),
+      ]);
+    }
+
+    const storageData: CartState[] = JSON.parse(
+      localStorage.getItem("cart") || "[]",
+    );
+    setData([...storageData]);
+  };
+
+  // 수량
+  const onClickMinus = (id: number) => {
+    const [prevProduct] = data.filter(
+      (item: CartState) => item.productId === id,
+    );
+    const restProducts = data.filter(
+      (item: CartState) => item.productId !== id,
+    );
+
+    localStorage.setItem(
+      "cart",
+      JSON.stringify([
+        {
+          productId: prevProduct.productId,
+          title: prevProduct.title,
+          image: prevProduct.image,
+          productPrice: prevProduct.productPrice,
+          totalPrice: prevProduct.totalPrice,
+          selectPeriod: {
+            periodId: prevProduct.selectPeriod.periodId,
+            content: prevProduct.selectPeriod.content,
+            amount:
+              prevProduct.selectPeriod.amount === 1
+                ? 1
+                : prevProduct.selectPeriod.amount - 1,
+          },
+          selectOptions: prevProduct.selectOptions
+            ? [...prevProduct.selectOptions]
+            : null,
+          allOption: [...prevProduct.allOption],
+          allPeriod: [...prevProduct.allPeriod],
+        },
+        ...restProducts,
+      ]),
+    );
+
+    const storageData: CartState[] = JSON.parse(
+      localStorage.getItem("cart") || "[]",
+    );
+    setData([...storageData]);
+  };
+  const onClickPlus = (id: number) => {
+    const [prevProduct] = data.filter(
+      (item: CartState) => item.productId === id,
+    );
+    const restProducts = data.filter(
+      (item: CartState) => item.productId !== id,
+    );
+
+    localStorage.setItem(
+      "cart",
+      JSON.stringify([
+        {
+          productId: prevProduct.productId,
+          title: prevProduct.title,
+          image: prevProduct.image,
+          productPrice: prevProduct.productPrice,
+          totalPrice: prevProduct.totalPrice,
+          selectPeriod: {
+            periodId: prevProduct.selectPeriod.periodId,
+            content: prevProduct.selectPeriod.content,
+            amount: prevProduct.selectPeriod.amount + 1,
+          },
+          selectOptions: prevProduct.selectOptions
+            ? [...prevProduct.selectOptions]
+            : null,
+          allOption: [...prevProduct.allOption],
+          allPeriod: [...prevProduct.allPeriod],
+        },
+        ...restProducts,
+      ]),
+    );
+
+    const storageData: CartState[] = JSON.parse(
+      localStorage.getItem("cart") || "[]",
+    );
+    setData([...storageData]);
+  };
+
+  // 예약하기
+  const handleReservation = (id: number) => {
+    const [product] = data.filter((item: CartState) => item.productId === id);
+
+    if (confirm("예약하시겠습니까?")) {
+      navigate("/reservation", {
+        state: {
+          productId: product.productId,
+          title: product.title,
+          image: product.image,
+          totalPrice: product.totalPrice,
+          periods: { ...product.selectPeriod },
+          options: product.selectOptions,
+        },
+      });
+    } else {
+      navigate("/cart");
+    }
   };
 
   let reservationPrice = 0;
@@ -49,12 +265,17 @@ const Cart = () => {
           </MobHead>
           <MobDelete>
             <label htmlFor="check_all">
-              <input type="checkbox" id="check_all" />
+              <input
+                type="checkbox"
+                id="check_all"
+                onChange={onChangeTotal}
+                checked={data.length === select.length ? true : false}
+              />
               <span></span>
             </label>
             <div>
-              <button>선택 상품 삭제</button>
-              <button>품절 상품 삭제</button>
+              <button onClick={handleCheckDelete}>선택 상품 삭제</button>
+              {/* <button>품절 상품 삭제</button> 품절 정보 없음 */}
             </div>
           </MobDelete>
           <MobProducts>
@@ -62,9 +283,14 @@ const Cart = () => {
               <p>장바구니에 상품이 없습니다</p>
             ) : (
               data.map((item: CartState) => (
-                <MobProduct>
-                  <label htmlFor="check_each">
-                    <input type="checkbox" id="check_each" />
+                <MobProduct key={item.productId}>
+                  <label htmlFor={`check_each_${item.productId}`}>
+                    <input
+                      type="checkbox"
+                      id={`check_each_${item.productId}`}
+                      onChange={(e) => onChangeEach(item.productId, e)}
+                      checked={select.includes(item.productId) ? true : false}
+                    />
                     <span></span>
                   </label>
                   <div>
@@ -74,7 +300,10 @@ const Cart = () => {
                         <h2>{item.title}</h2>
                         <p>{item.totalPrice.toLocaleString()}원</p>
                       </div>
-                      <IoMdClose size={25} />
+                      <IoMdClose
+                        size={25}
+                        onClick={() => handleDelete(item.productId, true)}
+                      />
                     </MobProductHead>
 
                     <MobOption>
@@ -88,18 +317,41 @@ const Cart = () => {
                     {item.selectOptions &&
                       item.selectOptions.map(
                         (optionItem: IProductDetailSelectOption) => (
-                          <MobOption>
+                          <MobOption key={optionItem.optionId}>
                             <strong>추가</strong>
                             <span>
                               {optionItem.content} - {optionItem.amount}개
                             </span>
-                            <IoMdClose />
+                            <IoMdClose
+                              onClick={() =>
+                                handleDelete(
+                                  item.productId,
+                                  false,
+                                  optionItem.optionId,
+                                )
+                              }
+                            />
                           </MobOption>
                         ),
                       )}
                     <MobEachBtns>
-                      <button onClick={handleModal}>옵션/수량 변경</button>
-                      <button>예약하기</button>
+                      <button
+                        onClick={() =>
+                          handleModal(
+                            item.productId,
+                            item.image,
+                            item.title,
+                            item.productPrice,
+                            item.allOption,
+                            item.allPeriod,
+                          )
+                        }
+                      >
+                        옵션/수량 변경
+                      </button>
+                      <button onClick={() => handleReservation(item.productId)}>
+                        예약하기
+                      </button>
                     </MobEachBtns>
                   </div>
                 </MobProduct>
@@ -117,8 +369,8 @@ const Cart = () => {
             </div>
           </MobResArea>
           <MobBtns>
-            <button>예약하기</button>
-            <button>계속 둘러보기</button>
+            {/* <button onClick={handleReservation}>예약하기</button> 예약하기 상품 1개만 됨 */}
+            <button onClick={() => navigate("/")}>계속 둘러보기</button>
           </MobBtns>
         </Wrap>
       ) : (
@@ -136,7 +388,12 @@ const Cart = () => {
 
           <TableHead>
             <label htmlFor="check_all">
-              <input type="checkbox" id="check_all" />
+              <input
+                type="checkbox"
+                id="check_all"
+                onChange={onChangeTotal}
+                checked={data.length === select.length ? true : false}
+              />
               <span></span>
             </label>
             <p>상품 정보</p>
@@ -150,8 +407,13 @@ const Cart = () => {
             ) : (
               data.map((item: CartState) => (
                 <TableItem key={item.productId}>
-                  <label htmlFor="check_each">
-                    <input type="checkbox" id="check_each" />
+                  <label htmlFor={`check_each_${item.productId}`}>
+                    <input
+                      type="checkbox"
+                      id={`check_each_${item.productId}`}
+                      onChange={(e) => onChangeEach(item.productId, e)}
+                      checked={select.includes(item.productId) ? true : false}
+                    />
                     <span></span>
                   </label>
                   <Product>
@@ -159,7 +421,10 @@ const Cart = () => {
                     <Text>
                       <div>
                         <h3>{item.title}</h3>
-                        <IoMdClose size={25} />
+                        <IoMdClose
+                          size={25}
+                          onClick={() => handleDelete(item.productId, true)}
+                        />
                       </div>
                       <p>
                         <strong>필수옵션</strong>
@@ -176,7 +441,15 @@ const Cart = () => {
                               <span>
                                 {optionItem.content} - {optionItem.amount}개
                               </span>
-                              <IoMdClose />
+                              <IoMdClose
+                                onClick={() =>
+                                  handleDelete(
+                                    item.productId,
+                                    false,
+                                    optionItem.optionId,
+                                  )
+                                }
+                              />
                             </p>
                           ),
                         )}
@@ -184,9 +457,15 @@ const Cart = () => {
                   </Product>
 
                   <Personnel>
-                    <BiMinus size={20} />
+                    <BiMinus
+                      size={20}
+                      onClick={() => onClickMinus(item.productId)}
+                    />
                     <p>{item.selectPeriod.amount}</p>
-                    <BiPlus size={20} />
+                    <BiPlus
+                      size={20}
+                      onClick={() => onClickPlus(item.productId)}
+                    />
                   </Personnel>
 
                   <Price>
@@ -194,7 +473,23 @@ const Cart = () => {
                       <strong>{item.totalPrice.toLocaleString()}원</strong>
                     </div>
                     <div>
-                      <button onClick={handleModal}>옵션 변경</button>
+                      <button
+                        onClick={() =>
+                          handleModal(
+                            item.productId,
+                            item.image,
+                            item.title,
+                            item.productPrice,
+                            item.allOption,
+                            item.allPeriod,
+                          )
+                        }
+                      >
+                        옵션 변경
+                      </button>
+                      <button onClick={() => handleReservation(item.productId)}>
+                        예약하기
+                      </button>
                     </div>
                   </Price>
                 </TableItem>
@@ -203,8 +498,8 @@ const Cart = () => {
           </TableBody>
 
           <DeleteBtns>
-            <button>선택 상품 삭제</button>
-            <button>품절 상품 삭제</button>
+            <button onClick={handleCheckDelete}>선택 상품 삭제</button>
+            {/* <button>품절 상품 삭제</button> 품절 정보 없음 */}
           </DeleteBtns>
 
           <ResultArea>
@@ -230,8 +525,8 @@ const Cart = () => {
           </ResultArea>
 
           <Btns>
-            <button>계속 둘러보기</button>
-            <button>예약하기</button>
+            <button onClick={() => navigate("/")}>계속 둘러보기</button>
+            {/* <button>예약하기</button> 예약하기 상품 1개만 됨 */}
           </Btns>
         </Wrap>
       )}
@@ -453,6 +748,9 @@ const Wrap = styled.div`
   button {
     cursor: pointer;
   }
+  svg {
+    cursor: pointer;
+  }
 `;
 const Head = styled.div`
   display: flex;
@@ -614,8 +912,10 @@ const Price = styled.div`
   div {
     width: 50%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     :first-child {
       border-right: 1px solid #bbbbc2;
     }
@@ -627,6 +927,11 @@ const Price = styled.div`
       outline: none;
       background-color: transparent;
       cursor: pointer;
+      :last-child {
+        color: white;
+        background-color: var(--color-blue);
+        border: 1px solid var(--color-blue);
+      }
     }
   }
 `;
@@ -715,12 +1020,11 @@ const Btns = styled.div`
     :first-child {
       background-color: #f5f5f5;
       color: #5b5b5b;
-      margin-right: 16px;
     }
-    :last-child {
+    /* :last-child {
       background-color: var(--color-blue);
       color: white;
-    }
+    } */
   }
 `;
 

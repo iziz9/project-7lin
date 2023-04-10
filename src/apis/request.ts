@@ -31,15 +31,7 @@ export const postProductResult = async (
   try {
     const res: ProductResponseType = await axiosInstance.post(
       `/products?page=${page}`,
-      {
-        categories: [
-          {
-            mainCategory: testdata.category[0].mainCategory,
-            middleCategory: testdata.category[0].middleCategory,
-          },
-        ],
-        sort: testdata.sort,
-      },
+      testdata,
     );
     return res;
   } catch (error: any) {

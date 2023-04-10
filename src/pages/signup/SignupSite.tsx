@@ -6,14 +6,21 @@ import styled from "styled-components";
 import { BasicBtn } from "../../commons/Button";
 import { BasicInput } from "../../commons/Input";
 import { BasicSelect } from "../../commons/Select";
-import { SignUpRequest, SignupFormValue } from "../../@types/data";
+import {
+  LoginFormValue,
+  SignUpRequest,
+  SignupFormValue,
+} from "../../@types/data";
 import { useMutation } from "react-query";
-import { idCheck, phoneCheck, signUp } from "../../apis/auth";
+import { idCheck, login, phoneCheck, signUp } from "../../apis/auth";
 import { scrollToTop } from "../../utils/scroll";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
 import { PersonalData, Policy } from "../../commons/Terms";
 import Modal from "../../commons/Modal";
+import { setCookie } from "../../utils/cookie";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "../../store/userInfoAtom";
 
 const SignupSite = () => {
   const validationSchema = Yup.object().shape({
@@ -188,13 +195,43 @@ const SignupSite = () => {
     scrollToTop();
   };
 
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+
+  const loginMutation = useMutation(login, {
+    onSuccess: (res: any) => {
+      if (res) {
+        console.log(res);
+        const { email, name, age, gender, phone, tokenDto } = res; // res
+        setCookie("accessToken", tokenDto.accessToken, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+        setUserInfo({ email, name, age, gender, phone });
+        alert("로그인 성공");
+        scrollToTop();
+        navigate("/", { replace: true });
+      }
+    },
+    onError: (error) => {
+      alert("로그인 실패: " + error);
+    },
+  });
+
   const signupMutation = useMutation(signUp, {
     onSuccess: (res) => {
       if (res) {
         console.log(res);
         // 자동 로그인 시도해보기
-        scrollToTop();
-        navigate("/login");
+        if (confirm("회원가입 성공: 바로 로그인 하시겠습니까?")) {
+          const loginPayload: LoginFormValue = {
+            email: res.data.email,
+            password: getValues("password"),
+          };
+          loginMutation.mutate(loginPayload);
+        } else {
+          scrollToTop();
+          navigate("/login");
+        }
       }
     },
     onError: (error) => {
@@ -882,3 +919,12 @@ const LoginForm = styled.form`
 `;
 
 export default SignupSite;
+function setUserInfo(arg0: {
+  email: any;
+  name: any;
+  age: any;
+  gender: any;
+  phone: any;
+}) {
+  throw new Error("Function not implemented.");
+}
