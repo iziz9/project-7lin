@@ -97,10 +97,9 @@ const Search = () => {
               <BsSearch className="search-icon" type="submit" />
             </form>
           </div>
-
-          <div>최근 검색어</div>
+          {/* <div>최근 검색어</div>
           <div>최근 본 상품</div>
-          <div>추천 키워드</div>
+          <div>추천 키워드</div> */}
           {searchProducts?.data.length === 0 ? (
             <NoContainer>
               <p></p>상품이 없습니다<p></p>
