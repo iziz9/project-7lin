@@ -62,8 +62,8 @@ const Groups = () => {
     paramsPageNumber: number,
     paramsMiddleCategory: string | null,
     paramsSort: string | null,
-    paramsFilter?: object | null,
-    paramsFilterCategory?: [],
+    paramsFilter: {} | null,
+    paramsFilterCategory: never[] | null,
   ) => {
     // Api request 데이터. recoil 합쳐서 만들기
     const requestData: ProductRequestType = {
@@ -77,7 +77,7 @@ const Groups = () => {
       ...paramsFilter,
     };
 
-    if (paramsFilterCategory !== undefined) {
+    if (paramsFilterCategory !== null) {
       paramsFilterCategory.forEach((element) => {
         requestData.categories.push(element);
       });
@@ -115,11 +115,13 @@ const Groups = () => {
       setSort({ sort: paramsSort });
 
       // 필터 값 저장
-      paramsFilter ? setFilter(paramsFilter) : "";
+      // 이전값 유지하고 싶을 땐 null 보내면 됨
+      paramsFilter === null ? "" : setFilter(paramsFilter);
 
-      if (paramsFilterCategory !== undefined) {
-        setFilterCategory(paramsFilterCategory);
-      }
+      // 필터 카테고리 값 저장
+      paramsFilterCategory === null
+        ? ""
+        : setFilterCategory(paramsFilterCategory);
     }
   };
 
@@ -131,9 +133,7 @@ const Groups = () => {
       },
     });
     // Api 호출
-    getProductsData(page.pageNumber, categoryLevel[2], null);
-    // console.log("아이템은", items);
-    // console.log("카테고리는", category);
+    getProductsData(page.pageNumber, categoryLevel[2], null, null, null);
   }, []);
 
   // 페이지네이션 함수
@@ -145,6 +145,8 @@ const Groups = () => {
         Number(event.currentTarget.id),
         category.categories.middleCategory,
         sort.sort,
+        null,
+        null,
       );
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -171,7 +173,7 @@ const Groups = () => {
 
   const subMenuClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    getProductsData(1, event.currentTarget.id, null);
+    getProductsData(1, event.currentTarget.id, null, {}, []);
     window.scrollTo({ top: 0, behavior: "smooth" });
     // Link to가 안먹혀서 작성
     navigate(`/${category.categories.mainCategory}/${event.currentTarget.id}`);
@@ -183,6 +185,8 @@ const Groups = () => {
       page.pageNumber,
       category.categories.middleCategory,
       getSortName(event.currentTarget.id),
+      filter,
+      filterCategory,
     );
   };
 
@@ -190,7 +194,6 @@ const Groups = () => {
     event.preventDefault();
     const { id, name } = event.currentTarget;
 
-    console.log(id, name);
     // 현재 이벤트 필터값
     let targetFilter = {};
     // api request용 filter값
@@ -207,6 +210,7 @@ const Groups = () => {
           category.categories.middleCategory,
           sort.sort,
           requestFilter,
+          filterCategory,
         );
         break;
       case "price":
@@ -217,6 +221,7 @@ const Groups = () => {
           category.categories.middleCategory,
           sort.sort,
           requestFilter,
+          filterCategory,
         );
         break;
       case "theme":
@@ -224,12 +229,10 @@ const Groups = () => {
           mainCategory: "THEME",
           middleCategory: id,
         };
-
         arrayRequestFilter.push(...filterCategory);
         const themeValue = arrayRequestFilter.filter((e: any) => {
           return e.middleCategory === id;
         });
-
         if (themeValue.length === 0) {
           arrayRequestFilter.push(targetFilter);
         } else {
@@ -237,12 +240,11 @@ const Groups = () => {
             return e.middleCategory !== id;
           });
         }
-
         getProductsData(
           1,
           category.categories.middleCategory,
           sort.sort,
-          null,
+          filter,
           arrayRequestFilter,
         );
         break;
@@ -263,12 +265,11 @@ const Groups = () => {
             return e.middleCategory !== id;
           });
         }
-
         getProductsData(
           1,
           category.categories.middleCategory,
           sort.sort,
-          null,
+          filter,
           arrayRequestFilter,
         );
         break;

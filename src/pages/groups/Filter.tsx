@@ -70,6 +70,8 @@ const Filter = ({ filterClick }: any) => {
   const resetClick = () => {
     setFilterCategory([]);
     setFilter({});
+    console.log(filter);
+    console.log(filterCategory);
   };
 
   const isChecked = (title: string, name: string) => {
