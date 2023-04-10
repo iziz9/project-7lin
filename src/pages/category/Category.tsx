@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 import Product from "./Product";
@@ -40,6 +40,9 @@ const Category = () => {
 
   // request용 메인 카테고리 데이터(페이지 시작 시 한 번만 호출)
   const categoryLevel = useLocation().pathname.split("/");
+  const [nowCategory, setNowCategory] = useState(
+    useLocation().pathname.split("/"),
+  );
 
   // 카테고리(전역)
   const [category, setCategory] = useRecoilState(categoryState);
@@ -128,13 +131,13 @@ const Category = () => {
   useEffect(() => {
     setCategory({
       categories: {
-        mainCategory: categoryLevel[1],
-        middleCategory: categoryLevel[2],
+        mainCategory: nowCategory[1],
+        middleCategory: nowCategory[2],
       },
     });
     // Api 호출
-    getProductsData(page.pageNumber, categoryLevel[2], null, null, null);
-  }, []);
+    getProductsData(page.pageNumber, nowCategory[2], null, null, null);
+  }, [nowCategory]);
 
   // 페이지네이션 함수
   const pagenation = () => {
@@ -513,7 +516,6 @@ const StickySection = styled.section`
     width: 100%;
     background-color: var(--color-grayscale10);
   }
-
   @supports (position: sticky) or (position: -webkit-sticky) {
     top: 0;
     z-index: 10;
