@@ -5,19 +5,24 @@ import {
   IProductDetailDataResponse,
   ProductRequestType,
   ProductResponseType,
+  SearchProductResponse,
 } from "../@types/data";
 
-export const getTestResult = async (category: string) => {
-  const res = await axiosInstance.post("/products?size=3", {
-    categories: [
-      {
-        mainCategory: "THEME",
-        middleCategory: category,
-      },
-    ],
-  });
-  console.log(res);
-  return res.data;
+export const getTestResult = async (category: string, size: number) => {
+  try {
+    const res = await axiosInstance.post("/products?size=" + size, {
+      categories: [
+        {
+          mainCategory: "THEME",
+          middleCategory: category,
+        },
+      ],
+    });
+    console.log(res);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
 };
 
 // 상품 조회 api
@@ -90,4 +95,11 @@ export const postReviewDetail = async (formData: any) => {
   } catch (error) {
     throw error;
   }
+};
+
+export const getSearchProduct = async (keyWord: string) => {
+  const data: SearchProductResponse = await axiosInstance.get(
+    `/search?keyWord=${keyWord}`,
+  );
+  return data;
 };

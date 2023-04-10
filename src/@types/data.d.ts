@@ -76,7 +76,7 @@ export interface SignUpResponse {
 export interface UpdateMemberRequest {
   newPassword: string;
   validNewPassword: string;
-  phone: string;
+  phone?: string;
 }
 
 export interface ResultPackageType {
@@ -194,6 +194,13 @@ export interface Product {
   productPrice: number;
   briefExplanation: string;
   period: number;
+}
+
+export interface AddReservationRespose {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: string;
 }
 
 export interface MemberReservationResponse {
@@ -423,4 +430,33 @@ export interface ReviewContentDtolist {
   type: string;
   priority: number;
   reviewId: number;
+}
+export interface SearchProductResponse {
+  httpStatus: string;
+  message: string;
+  dataSize: number;
+  data: SearchProduct[];
+}
+
+export interface SearchProduct {
+  productId: number;
+  thumbnail: string;
+  productName: string;
+  productPrice: number;
+  briefExplanation: string;
+  period: number;
+  categories: SearchCategory[];
+}
+
+export interface SearchCategory {
+  mainCategory: string;
+  middleCategory: string;
+  subdivision?: string;
+}
+
+export interface ReservationUserInfo {
+  email: string;
+  name: string;
+  phone: string;
+  acceptTerms: boolean;
 }

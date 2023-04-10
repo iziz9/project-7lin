@@ -59,7 +59,6 @@ const FloatingInput = ({ answer, setAnswer }: FloatingInputPropsType) => {
           return !item.question;
         })
         .map((item) => item.text.join(""));
-      console.log(filteredList);
       // api연결코드 작성
 
       setChatbotStep({ step: 3 }); // step3 제출 완료 안내화면으로

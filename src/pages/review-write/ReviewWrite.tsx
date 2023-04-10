@@ -103,9 +103,19 @@ const ReviewWrite = () => {
         {/* <ProductInfosCard /> */}
       </ProductInfo>
 
-      <Form>
+      <Form
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          // formData 로 하면 원하는대로 안됨 그냥 state 로 해주고 onvalid 에 보내주기
+          // const formData = new FormData(e.currentTarget);
+          // let entries = formData.entries();
+          // for (const pair of entries) {
+          //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
+          // }
+        }}
+      >
         <input
-          {...register("title", { required: "비밀번호를 입력해주세요" })}
+          {...register("title", { required: "제목을 입력해주세요" })}
           type="text"
           placeholder="제목을 입력하세요"
         />

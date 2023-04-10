@@ -1,5 +1,6 @@
 import {
   AddReservationRequest,
+  AddReservationRespose,
   FindIdFormValue,
   FindPwFormValue,
   LoginFormValue,
@@ -18,14 +19,12 @@ import { axiosInstance } from "./instance";
 // 회원가입
 export const signUp = async (arg: SignUpRequest) => {
   const data: SignUpResponse = await axiosInstance.post("/signUp", arg);
-  console.log(data);
   return data;
 };
 
 // 아이디 중복 체크
 export const idCheck = async (email: string) => {
   const data: boolean = await axiosInstance.post("/signUp/checkId", { email });
-  console.log(data);
   return data;
 };
 
@@ -34,7 +33,6 @@ export const phoneCheck = async (phone: string) => {
   const data: boolean = await axiosInstance.post("/signUp/checkPhone", {
     phone,
   });
-  console.log(data);
   return data;
 };
 
@@ -43,14 +41,12 @@ export const phoneCheckUpdate = async (phone: string) => {
   const data: boolean = await axiosInstance.post("/member/update/checkPhone", {
     phone,
   });
-  console.log(data);
   return data;
 };
 
 // 로그인
 export const login = async (arg: LoginFormValue) => {
   const data = await axiosInstance.post("/login", arg);
-  console.log(data);
   return data;
 };
 
@@ -59,7 +55,6 @@ export const findId = async (arg: FindIdFormValue) => {
   const data = await axiosInstance.get(
     `/findId?name=${arg.name}&phone=${arg.phone}`,
   );
-  console.log(data);
   return data;
 };
 
@@ -69,35 +64,30 @@ export const findPassword = async (arg: FindPwFormValue) => {
     `/sendEmail?email=${arg.email}&phone=${arg.phone}`,
     {},
   );
-  console.log(data);
   return data;
 };
 
 // 회원정보 조회
 export const getMemberInfo = async () => {
   const data: MemberInfoResponse = await axiosInstance.get(`/member`);
-  console.log(data);
   return data;
 };
 
 // 회원정보 수정
 export const updateMemberInfo = async (arg: UpdateMemberRequest) => {
   const data = await axiosInstance.put(`/member/update`, arg);
-  console.log(data);
   return data;
 };
 
 // 로그아웃
 export const logout = async () => {
   const data: string = await axiosInstance.post(`/logouts`, {});
-  console.log(data);
   return data;
 };
 
 // 회원 탈퇴
 export const widthdrawal = async () => {
   const data = await axiosInstance.put(`/deleteMember`, {});
-  console.log(data);
   return data;
 };
 
@@ -106,7 +96,6 @@ export const getMemberReservation = async () => {
   const data: MemberReservationResponse = await axiosInstance.get(
     "/my/reservation",
   );
-  console.log(data);
   return data;
 };
 
@@ -116,7 +105,6 @@ export const getNonMemberReservation = async (arg: NonMemberFormValue) => {
     "/reservation/check",
     arg,
   );
-  console.log(data);
   return data;
 };
 
@@ -125,14 +113,15 @@ export const getMemberReservationDetail = async (id: number) => {
   const data: MemberReservationDetailResponse = await axiosInstance.get(
     `/my/reservation/${id}`,
   );
-  console.log(data);
   return data;
 };
 
 // 예약 추가
 export const addReservation = async (arg: AddReservationRequest) => {
-  const data = await axiosInstance.post(`/reservation`, arg);
-  console.log(data);
+  const data: AddReservationRespose = await axiosInstance.post(
+    `/reservation`,
+    arg,
+  );
   return data;
 };
 
@@ -141,7 +130,6 @@ export const deleteReservation = async (code: string) => {
   const data = await axiosInstance.delete(`/reservation`, {
     data: { reservationCode: code },
   });
-  console.log(data);
   return data;
 };
 
@@ -150,14 +138,12 @@ export const reservateAgain = async (code: string) => {
   const data = await axiosInstance.post(`/reservation/undo`, {
     reservationCode: code,
   });
-  console.log(data);
   return data;
 };
 
 // 찜 조회
 export const getWishList = async () => {
   const data: WishListProductResponse = await axiosInstance.get("/mywishlist");
-  console.log(data);
   return data;
 };
 
@@ -165,7 +151,6 @@ export const getWishList = async () => {
 export const addWishList = async (productId: number) => {
   const data: { status: number; message: string; dataSize: number } =
     await axiosInstance.post("/wishlist", { productId });
-  console.log(data);
   return data;
 };
 
@@ -173,7 +158,6 @@ export const addWishList = async (productId: number) => {
 export const deleteWishList = async (productId: number) => {
   const data: { status: number; message: string; dataSize: number } =
     await axiosInstance.delete("/wishlist", { data: { productId } });
-  console.log(data);
   return data;
 };
 
@@ -181,6 +165,5 @@ export const deleteWishList = async (productId: number) => {
 export const deleteAllWishList = async () => {
   const data: { httpStatus: string; message: string } =
     await axiosInstance.delete("/wishlistall");
-  console.log(data);
   return data;
 };
