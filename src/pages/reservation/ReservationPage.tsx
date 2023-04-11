@@ -31,6 +31,11 @@ const Reservation = () => {
   });
   const { openModal } = useModal();
 
+  const PaymentModalData = {
+    title: "입금 계좌 안내",
+    content: <PaymentModal reservationNumber={recievedNumber} />,
+  };
+
   const queryClient = useQueryClient();
   const addReservationMutation = useMutation(addReservation, {
     onSuccess: (res: any) => {
@@ -39,7 +44,7 @@ const Reservation = () => {
         const reservationNumber = res.data.match(/\d+/)![0];
         setRecievedNumber(reservationNumber);
         const token = getCookie("accessToken");
-        alert("예약추가 성공");
+        alert("예약되었습니다.");
         if (token)
           return queryClient.invalidateQueries({
             queryKey: ["memberReservation"],
@@ -81,10 +86,6 @@ const Reservation = () => {
     mode: "onBlur",
   });
 
-  const PaymentModalData = {
-    title: "입금 계좌 안내",
-    content: <PaymentModal reservationNumber={recievedNumber} />,
-  };
   const TermsModalData = {
     title: "개인정보 수집 및 이용",
     content: <PersonalData />,
