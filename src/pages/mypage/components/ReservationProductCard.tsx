@@ -143,7 +143,7 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
       <div className="wrapper">
         <div className="left">
           <div className="img-wrapper">
-            <img src="/product_img.png" />
+            <img src={product.productInfo[0].product.thumbnail} />
           </div>
           <div className="info">
             <div className="date">{product.date}</div>

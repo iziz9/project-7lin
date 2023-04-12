@@ -16,7 +16,7 @@ const PaymentModal = ({ reservationNumber }: { reservationNumber: string }) => {
   return (
     <Container>
       <div className="content">
-        <span className="bank">KEB하나은행</span>
+        <span className="bank">입금계좌 : KEB하나은행</span>
         <span className="account"> 267-910020-36604</span>
         (주)더샤이니
       </div>
@@ -24,12 +24,12 @@ const PaymentModal = ({ reservationNumber }: { reservationNumber: string }) => {
         <h2>결제금액</h2>
         <span>2,860,000원</span>
       </div>
-      {/* <div className="reservation-number">
+      <div className="reservation-number">
         <span className="number">주문번호 : {reservationNumber}</span>
         <span className="notice">
           비회원은 예약조회 시 주문번호가 필요하니 꼭 메모해주세요.
         </span>
-      </div> */}
+      </div>
       <div
         onClick={() => {
           scrollToTop();
