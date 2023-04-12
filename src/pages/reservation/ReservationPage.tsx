@@ -23,32 +23,29 @@ import * as Yup from "yup";
 
 const Reservation = () => {
   const { state } = useLocation();
-  console.log(state);
   const [savedUserInfo, setSavedUserInfo] = useRecoilState(userInfoState);
-  const [recievedNumber, setRecievedNumber] = useState("");
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
   const { openModal } = useModal();
 
-  const PaymentModalData = {
-    title: "입금 계좌 안내",
-    content: <PaymentModal reservationNumber={recievedNumber} />,
-  };
-
   const queryClient = useQueryClient();
   const addReservationMutation = useMutation(addReservation, {
     onSuccess: (res: any) => {
       if (res.message === "성공") {
-        console.log(res);
-        const reservationNumber = res.data.match(/\d+/)![0];
-        setRecievedNumber(reservationNumber);
         const token = getCookie("accessToken");
-        alert("예약되었습니다.");
-        if (token)
-          return queryClient.invalidateQueries({
+        if (token) {
+          queryClient.invalidateQueries({
             queryKey: ["memberReservation"],
           });
+        }
+        const PaymentModalData = {
+          title: "예약이 완료되었습니다.",
+          content: (
+            <PaymentModal reservationNumber={res.data.match(/\d+/)![0]} />
+          ),
+        };
+        openModal(PaymentModalData);
       }
     },
     onError: (error) => {
@@ -127,10 +124,7 @@ const Reservation = () => {
       totalPrice: totalPrice,
       people: periods.amount,
     };
-
     addReservationMutation.mutateAsync(payload);
-
-    openModal(PaymentModalData);
   };
 
   useEffect(() => {
