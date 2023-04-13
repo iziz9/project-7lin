@@ -28,6 +28,7 @@ const axiosApi = (url: string) => {
 
   instance.interceptors.response.use(
     (response: AxiosResponse) => {
+      console.log(response);
       if (response.status === 200) return response.data;
     },
     async (error) => {

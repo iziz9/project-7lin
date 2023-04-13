@@ -6,6 +6,7 @@ import WishListProductCard from "./components/WishListProductCard";
 import useWishlistQuery from "../../hooks/useWishlistQuery";
 import { WishListProduct } from "../../@types/data";
 import { BasicBtn } from "../../commons/Button";
+import Spinner from "/spinner.svg";
 
 const Favor = () => {
   const {
@@ -36,13 +37,16 @@ const Favor = () => {
     </div>
   );
 
-  if (isFetching)
+  if (isFetching || isLoading)
     return (
       <Container>
         <div className="delete-all">
           <div className="title">찜</div>
         </div>
-        <div className="list"></div>
+        <div className="loading-list">{wishList}</div>
+        <div className="spinner">
+          <img src={Spinner} alt="로딩" width="10%" />
+        </div>
       </Container>
     );
 
@@ -72,6 +76,7 @@ const Favor = () => {
 };
 
 const Container = styled.div`
+  position: relative;
   .delete-all {
     display: flex;
     justify-content: space-between;
@@ -88,6 +93,26 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     /* gap: 15px; */
+  }
+
+  .loading-list {
+    display: flex;
+    flex-direction: column;
+    opacity: 0.5;
+    position: relative;
+  }
+
+  .spinner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   @media (max-width: 850px) {
