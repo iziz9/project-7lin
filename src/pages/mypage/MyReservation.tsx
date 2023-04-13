@@ -12,7 +12,7 @@ const Reservation = () => {
     setTab(num);
   };
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isFetching } = useQuery(
     "memberReservation",
     getMemberReservation,
     {
@@ -20,6 +20,8 @@ const Reservation = () => {
       onError(error) {
         alert("회원 예약 조회 실패: " + error);
       },
+      staleTime: 1000 * 60 * 30,
+      cacheTime: 1000 * 60 * 30,
     },
   );
 

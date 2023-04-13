@@ -11,14 +11,9 @@ const Favor = () => {
   const {
     wishlistData,
     isLoading,
+    isFetching,
     refetch: refetchWishlist,
-  } = useWishlistQuery({
-    onSuccess(data) {},
-    onError(error) {
-      alert("찜 리스트 조회 실패: " + error);
-    },
-    retry: 3,
-  });
+  } = useWishlistQuery();
 
   const deleteAllWishListMutation = useMutation(deleteAllWishList, {
     onSuccess(res: any) {
@@ -41,7 +36,7 @@ const Favor = () => {
     </div>
   );
 
-  if (isLoading)
+  if (isFetching)
     return (
       <Container>
         <div className="delete-all">
