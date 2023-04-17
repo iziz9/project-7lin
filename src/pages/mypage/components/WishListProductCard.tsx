@@ -1,10 +1,8 @@
 import React from "react";
-import { Product, WishListProduct } from "../../../@types/data";
+import { WishListProduct } from "../../../@types/data";
 import { BasicBtn } from "../../../commons/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
-import { deleteWishList } from "../../../apis/auth";
 import useDeleteWishlistMutation from "../../../hooks/useDeleteWishlistMutation";
 
 interface Props {
@@ -13,21 +11,8 @@ interface Props {
 
 const WishListProductCard = ({ product }: Props) => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
-  const deleteWishListMutation = useDeleteWishlistMutation({
-    onSuccess(res) {
-      if (res.message === "success") {
-        alert("찜 삭제 완료");
-        return queryClient.invalidateQueries({
-          queryKey: ["wishlist"],
-        });
-      }
-    },
-    onError(error) {
-      alert("찜 삭제 에러: " + error);
-    },
-  });
+  const deleteWishListMutation = useDeleteWishlistMutation();
 
   return (
     <Container>

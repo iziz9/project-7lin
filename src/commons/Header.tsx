@@ -94,7 +94,15 @@ const Header = () => {
             />
             <div className="iconbox">
               <SlBag className="icons" onClick={() => navigate("/cart")} />
-              <SlLogin className="icons" onClick={() => navigate("/login")} />
+              {accessToken ? (
+                <SlLogout className="icons" onClick={handleLogout}>
+                  로그아웃
+                </SlLogout>
+              ) : (
+                <SlLogin className="icons" onClick={() => navigate("/login")}>
+                  로그인
+                </SlLogin>
+              )}
             </div>
           </div>
         </MobileHeaderContainer>
@@ -216,15 +224,17 @@ const TopSection = styled.section`
       input {
         width: 300px;
         height: 30px;
-        padding: 5px;
+        padding: 5px 5px 5px 10px;
         background-color: var(--color-inputGray);
         border: none;
+        border-radius: 8px;
+
         :focus {
           outline: none;
         }
-        ::placeholder {
+        /* ::placeholder {
           padding-left: 10px;
-        }
+        } */
       }
 
       .searchButton {

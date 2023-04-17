@@ -16,7 +16,7 @@ const PaymentModal = ({ reservationNumber }: { reservationNumber: string }) => {
   return (
     <Container>
       <div className="content">
-        <span className="bank">KEB하나은행</span>
+        <span className="bank">입금계좌 : KEB하나은행</span>
         <span className="account"> 267-910020-36604</span>
         (주)더샤이니
       </div>

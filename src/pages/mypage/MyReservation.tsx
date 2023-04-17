@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { getMemberReservation } from "../../apis/auth";
 import { ReservationProduct } from "../../@types/data";
 import ReservationProductCard from "./components/ReservationProductCard";
+import Spinner from "/spinner.svg";
 
 const Reservation = () => {
   const [tab, setTab] = useState<0 | 1 | 2>(0);
@@ -12,7 +13,7 @@ const Reservation = () => {
     setTab(num);
   };
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isFetching } = useQuery(
     "memberReservation",
     getMemberReservation,
     {
@@ -20,6 +21,8 @@ const Reservation = () => {
       onError(error) {
         alert("회원 예약 조회 실패: " + error);
       },
+      staleTime: 1000 * 60 * 30,
+      cacheTime: 1000 * 60 * 30,
     },
   );
 
@@ -90,7 +93,14 @@ const Reservation = () => {
           취소된 예약 ({cancelReservation?.length})
         </div>
       </div>
-      {isLoading ? null : (
+      {isLoading || isFetching ? (
+        <div className="loading-wrapper">
+          <div className="loading-list">{listElement}</div>
+          <div className="spinner">
+            <img src={Spinner} alt="로딩" width="10%" />
+          </div>
+        </div>
+      ) : (
         <div className="list">
           {listElement?.length === 0 ? noProduct : listElement}
         </div>
@@ -149,6 +159,30 @@ const Container = styled.div<{ tab: number }>`
     display: flex;
     flex-direction: column;
     /* gap: 15px; */
+  }
+
+  .loading-wrapper {
+    position: relative;
+  }
+
+  .loading-list {
+    display: flex;
+    flex-direction: column;
+    opacity: 0.5;
+    position: relative;
+  }
+
+  .spinner {
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   @media (max-width: 850px) {

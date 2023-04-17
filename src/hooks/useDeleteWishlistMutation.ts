@@ -1,4 +1,4 @@
-import { useMutation, UseMutationOptions } from "react-query";
+import { useMutation, UseMutationOptions, useQueryClient } from "react-query";
 import { deleteWishList } from "../apis/auth";
 
 const usedeleteWishlistMutation = (
@@ -14,7 +14,21 @@ const usedeleteWishlistMutation = (
       >
     | undefined,
 ) => {
-  return useMutation(deleteWishList, options);
+  const queryClient = useQueryClient();
+  return useMutation(deleteWishList, {
+    onSuccess(res) {
+      if (res.message === "success") {
+        alert("찜 삭제 완료");
+        return queryClient.invalidateQueries({
+          queryKey: ["wishlist"],
+        });
+      }
+    },
+    onError(error) {
+      alert("찜 삭제 에러: " + error);
+    },
+    ...options,
+  });
 };
 
 export default usedeleteWishlistMutation;
