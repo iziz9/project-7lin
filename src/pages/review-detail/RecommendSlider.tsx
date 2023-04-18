@@ -1,65 +1,139 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useDragScroll } from "../../utils/useDragScroll";
 import { useMediaQuery } from "react-responsive";
-import { GetAllReviewsReviewList } from "../../@types/data";
+import { GetAllReviewsReviewList, IRelatedProduct } from "../../@types/data";
 import { Link } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface IRecommendSliderProps {
-  children?: React.ReactNode;
-  data: GetAllReviewsReviewList[] | undefined;
+  data: GetAllReviewsReviewList[] | IRelatedProduct[] | undefined;
+  type: string;
 }
 
-const RecommendSlider = ({ children, data }: IRecommendSliderProps) => {
+const RecommendSlider = ({ data, type }: IRecommendSliderProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [view, setView] = useState([0, 4]);
 
+  // 가로스크롤 마우스
   useDragScroll(ref);
 
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
 
+  useEffect(() => {
+    console.log(isMobile);
+
+    if (data && isMobile) setView([0, data.length]);
+    else setView([0, 4]);
+  }, [isMobile]);
+
   return (
     <Wrap ref={ref}>
       <Recommend>
         <RecommendMain isMobile={isMobile}>
-          <button>
-            <IoIosArrowBack
-              size={30}
-              onClick={() =>
-                setView((prev) =>
-                  prev[0] === 0 ? [...prev] : [prev[0] - 4, prev[1] - 4],
-                )
-              }
-            />
+          <button
+            onClick={() =>
+              setView((prev) =>
+                prev[0] === 0 ? [...prev] : [prev[0] - 4, prev[1] - 4],
+              )
+            }
+          >
+            <IoIosArrowBack size={30} />
           </button>
-          <Imgs>
-            {data
-              ?.slice(view[0], view[1])
-              .map((item: GetAllReviewsReviewList) => (
-                <Link key={item.reviewId} to={`/review/${item.reviewId}`}>
-                  <div>
-                    <img src={item.reviewThumbnail} alt="추천 후기 이미지" />
-                    <div>
-                      <strong>{item.reviewTitle}</strong>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+          <Imgs type={type}>
+            <AnimatePresence>
+              {type === "후기" &&
+                data
+                  ?.slice(view[0], view[1])
+                  .map(
+                    (
+                      item: GetAllReviewsReviewList | IRelatedProduct,
+                      index: number,
+                    ) => (
+                      <motion.div
+                        key={"productId" in item ? item.productId : index}
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{
+                          x: 0,
+                          opacity: 1,
+                          transition: { duration: 0.3 },
+                        }}
+                      >
+                        <Link
+                          key={"reviewId" in item ? item.reviewId : index}
+                          to={`/review/${
+                            "reviewId" in item ? item.reviewId : ""
+                          }`}
+                        >
+                          <img
+                            src={"reviewId" in item ? item.reviewThumbnail : ""}
+                            alt="추천 후기 이미지"
+                          />
+                          <div className="review">
+                            <strong>
+                              {"reviewId" in item ? item.reviewTitle : ""}
+                            </strong>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ),
+                  )}
+              {type === "연관" &&
+                data
+                  ?.slice(view[0], view[1])
+                  .map(
+                    (
+                      item: GetAllReviewsReviewList | IRelatedProduct,
+                      index: number,
+                    ) => (
+                      <motion.div
+                        key={"productId" in item ? item.productId : index}
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{
+                          x: 0,
+                          opacity: 1,
+                          transition: { duration: 0.3 },
+                        }}
+                      >
+                        <Link
+                          to={`/product/${
+                            "productId" in item ? item.productId : ""
+                          }`}
+                        >
+                          <img
+                            src={"thumbnail" in item ? item.thumbnail : ""}
+                            alt="추천 후기 이미지"
+                          />
+                          <div className="related">
+                            <p>
+                              {"productName" in item ? item.productName : ""}
+                            </p>
+                            <p>
+                              {"productPrice" in item
+                                ? item.productPrice.toLocaleString()
+                                : ""}
+                              원
+                            </p>
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ),
+                  )}
+            </AnimatePresence>
           </Imgs>
-          <button>
-            <IoIosArrowForward
-              size={30}
-              onClick={() =>
-                setView((prev) =>
-                  data && data?.length <= prev[1]
-                    ? [...prev]
-                    : [prev[0] + 4, prev[1] + 4],
-                )
-              }
-            />
+          <button
+            onClick={() =>
+              setView((prev) =>
+                data && data?.length <= prev[1]
+                  ? [...prev]
+                  : [prev[0] + 4, prev[1] + 4],
+              )
+            }
+          >
+            <IoIosArrowForward size={30} />
           </button>
         </RecommendMain>
       </Recommend>
@@ -69,8 +143,9 @@ const RecommendSlider = ({ children, data }: IRecommendSliderProps) => {
 
 const Wrap = styled.div`
   padding-top: 30px;
-  padding-bottom: 50px;
+  padding-bottom: 15%;
   overflow-x: scroll;
+  overflow-y: hidden;
 
   ::-webkit-scrollbar {
     display: none;
@@ -84,13 +159,13 @@ const Recommend = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media screen and (max-width: 850px) {
-    width: 850px;
-  }
+  justify-content: center;
+  width: 100%;
 `;
 const RecommendMain = styled.div<{ isMobile: boolean }>`
-  width: ${({ isMobile }) => (isMobile ? "100%" : "94%")};
+  width: ${({ isMobile }) => (isMobile ? "100%" : "92%")};
   display: flex;
+  flex-wrap: nowrap;
   position: relative;
   button {
     padding: 10px;
@@ -114,56 +189,59 @@ const RecommendMain = styled.div<{ isMobile: boolean }>`
     }
   }
 `;
-const Imgs = styled.div`
+const Imgs = styled.div<{ type: string }>`
   width: 100%;
-  height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 0 20px;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 23.5%));
+  grid-gap: 0 2%;
+  @media screen and (max-width: 850px) {
+    display: flex;
+    grid-gap: 0 20px;
+  }
   a {
     display: block;
     width: 100%;
-    height: 100%;
-  }
-  a > div {
-    width: 100%;
-    height: 100%;
+    height: 90%;
     position: relative;
+    @media screen and (max-width: 850px) {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+    img {
+      margin-bottom: 10px;
+      width: 100%;
+      height: ${({ type }) => (type === "후기" ? "100%" : "")};
+      border-radius: 10px;
+    }
     div {
       width: 100%;
-      height: 100%;
       position: absolute;
-    }
-  }
-  img {
-    margin-bottom: 10px;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-  }
-  strong {
-    font-size: 25px;
-    font-weight: bold;
-    display: block;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  p {
-    display: block;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 25px;
-    :nth-child(1) {
-      font-size: 19px;
-    }
-    :nth-child(2) {
-      font-size: 18px;
+      strong {
+        font-size: 23px;
+        font-weight: bold;
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @media screen and (max-width: 850px) {
+          font-size: 20px;
+        }
+      }
+      p {
+        line-height: 25px;
+        :nth-child(1) {
+          font-size: 20px;
+          font-weight: bold;
+        }
+        :nth-child(2) {
+          font-size: 18px;
+        }
+      }
     }
   }
 `;
+const Item = styled(Link);
 
 export default RecommendSlider;

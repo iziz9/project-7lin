@@ -100,7 +100,7 @@ const Cart = () => {
       const restProducts = data.filter(
         (item: CartState) => item.productId !== productId,
       );
-      const restOption = prevProduct.selectOptions.filter(
+      const restOption = prevProduct.selectOptions?.filter(
         (item: IProductDetailSelectOption) => item.optionId !== optionId,
       );
 
@@ -115,7 +115,7 @@ const Cart = () => {
             productPrice: prevProduct.productPrice,
             totalPrice: prevProduct.totalPrice,
             selectPeriod: { ...prevProduct.selectPeriod },
-            selectOptions: [...restOption],
+            selectOptions: restOption ? [...restOption] : null,
             allOption: [...prevProduct.allOption],
             allPeriod: [...prevProduct.allPeriod],
           },
@@ -155,73 +155,72 @@ const Cart = () => {
     const [prevProduct] = data.filter(
       (item: CartState) => item.productId === id,
     );
-    const restProducts = data.filter(
-      (item: CartState) => item.productId !== id,
+    const copyData = [...data];
+    const prevProductIndex = copyData.findIndex(
+      (item: CartState) => item.productId === id,
     );
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify([
-        {
-          productId: prevProduct.productId,
-          title: prevProduct.title,
-          image: prevProduct.image,
-          productPrice: prevProduct.productPrice,
-          totalPrice: prevProduct.totalPrice,
-          selectPeriod: {
-            periodId: prevProduct.selectPeriod.periodId,
-            content: prevProduct.selectPeriod.content,
-            amount:
-              prevProduct.selectPeriod.amount === 1
-                ? 1
-                : prevProduct.selectPeriod.amount - 1,
-          },
-          selectOptions: prevProduct.selectOptions
-            ? [...prevProduct.selectOptions]
-            : null,
-          allOption: [...prevProduct.allOption],
-          allPeriod: [...prevProduct.allPeriod],
-        },
-        ...restProducts,
-      ]),
-    );
+    const minusData = {
+      productId: prevProduct.productId,
+      title: prevProduct.title,
+      image: prevProduct.image,
+      productPrice: prevProduct.productPrice,
+      totalPrice: prevProduct.totalPrice,
+      selectPeriod: {
+        periodId: prevProduct.selectPeriod.periodId,
+        content: prevProduct.selectPeriod.content,
+        amount:
+          prevProduct.selectPeriod.amount === 1
+            ? 1
+            : prevProduct.selectPeriod.amount - 1,
+      },
+      selectOptions: prevProduct.selectOptions
+        ? [...prevProduct.selectOptions]
+        : null,
+      allOption: [...prevProduct.allOption],
+      allPeriod: [...prevProduct.allPeriod],
+    };
+
+    copyData.splice(prevProductIndex, 1, minusData);
+
+    localStorage.setItem("cart", JSON.stringify(copyData));
 
     const storageData: CartState[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
     );
     setData([...storageData]);
   };
+
   const onClickPlus = (id: number) => {
     const [prevProduct] = data.filter(
       (item: CartState) => item.productId === id,
     );
-    const restProducts = data.filter(
-      (item: CartState) => item.productId !== id,
+    const copyData = [...data];
+    const prevProductIndex = copyData.findIndex(
+      (item: CartState) => item.productId === id,
     );
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify([
-        {
-          productId: prevProduct.productId,
-          title: prevProduct.title,
-          image: prevProduct.image,
-          productPrice: prevProduct.productPrice,
-          totalPrice: prevProduct.totalPrice,
-          selectPeriod: {
-            periodId: prevProduct.selectPeriod.periodId,
-            content: prevProduct.selectPeriod.content,
-            amount: prevProduct.selectPeriod.amount + 1,
-          },
-          selectOptions: prevProduct.selectOptions
-            ? [...prevProduct.selectOptions]
-            : null,
-          allOption: [...prevProduct.allOption],
-          allPeriod: [...prevProduct.allPeriod],
-        },
-        ...restProducts,
-      ]),
-    );
+    const plusData = {
+      productId: prevProduct.productId,
+      title: prevProduct.title,
+      image: prevProduct.image,
+      productPrice: prevProduct.productPrice,
+      totalPrice: prevProduct.totalPrice,
+      selectPeriod: {
+        periodId: prevProduct.selectPeriod.periodId,
+        content: prevProduct.selectPeriod.content,
+        amount: prevProduct.selectPeriod.amount + 1,
+      },
+      selectOptions: prevProduct.selectOptions
+        ? [...prevProduct.selectOptions]
+        : null,
+      allOption: [...prevProduct.allOption],
+      allPeriod: [...prevProduct.allPeriod],
+    };
+
+    copyData.splice(prevProductIndex, 1, plusData);
+
+    localStorage.setItem("cart", JSON.stringify(copyData));
 
     const storageData: CartState[] = JSON.parse(
       localStorage.getItem("cart") || "[]",
@@ -403,7 +402,7 @@ const Cart = () => {
 
           <TableBody>
             {data && data.length === 0 ? (
-              <p>장바구니에 상품이 없습니다</p>
+              <p>장바구니에 담은 상품이 없습니다.</p>
             ) : (
               data.map((item: CartState) => (
                 <TableItem key={item.productId}>
@@ -806,6 +805,14 @@ const TableBody = styled.div`
   width: 100%;
   margin-top: 24px;
   box-sizing: border-box;
+  > p {
+    padding: 100px 0;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
 `;
 const TableItem = styled.div`
   margin-bottom: 24px;

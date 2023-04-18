@@ -53,13 +53,34 @@ export const getProductDetail = async (id: string) => {
   }
 };
 
-// 상품 상세 후기 조회
+// 상품 상세 후기 조회 (상세페이지)
 export const getProductDetailReview = async (id: string) => {
   try {
     const res = await axiosInstance.get(`/products/reviews/${id}`);
     return res.data;
   } catch (error) {
     throw error;
+  }
+};
+
+// 카테고리별 상품 조회 (상세페이지)
+export const getRelatedProducts = async (
+  mainCategory?: string,
+  middleCategory?: string,
+) => {
+  try {
+    const res = await axiosInstance.post("/products?page=1", {
+      categories: [
+        {
+          mainCategory,
+          middleCategory,
+        },
+      ],
+    });
+    console.log(res);
+    return res.data.products;
+  } catch (err) {
+    throw err;
   }
 };
 
@@ -84,16 +105,18 @@ export const getReviewDetail = async (id: string) => {
 };
 
 // 후기 작성
-export const postReviewDetail = async (formData: any) => {
+export const postReviewDetail = async (formData: FormData) => {
+  console.log(formData);
+
   try {
-    const res = await axiosInstance.post(`/reviews`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    const res = await axiosInstance.post(`/reviews`, {
+      ...formData,
     });
+    console.log(res);
     return res.data;
   } catch (error) {
-    throw error;
+    console.log(error);
+    // throw error;
   }
 };
 
