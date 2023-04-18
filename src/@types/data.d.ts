@@ -145,12 +145,19 @@ export interface IProductDetailData {
   productName: string;
   price: number;
   briefExplanation: string;
+  categories: IProductDetailCategories[];
   region: string;
   feature: string;
   flight: string;
   period: IProductDetailDataPeriod[];
   contents: IProductDetailDataContents[];
   options: IProductDetailDataOptions[];
+}
+
+export interface IProductDetailCategories {
+  mainCategory: string;
+  middleCategory: string;
+  subdivision: string | null;
 }
 
 export interface IProductDetailDataPeriod {
@@ -344,7 +351,7 @@ export interface CartState {
   productPrice: number;
   totalPrice: number;
   selectPeriod: IProductDetailSelectOptionPeriod;
-  selectOptions: IProductDetailSelectOption[];
+  selectOptions: IProductDetailSelectOption[] | null;
   allOption: IProductDetailSelectOptions[];
   allPeriod: IProductDetailDataPeriod[];
 }
@@ -459,4 +466,13 @@ export interface ReservationUserInfo {
   name: string;
   phone: string;
   acceptTerms: boolean;
+}
+
+export interface IRelatedProduct {
+  briefExplanation: string;
+  period: number;
+  productId: number;
+  productName: string;
+  productPrice: number;
+  thumbnail: string;
 }

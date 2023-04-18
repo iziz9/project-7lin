@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import { IoIosArrowDropright } from "react-icons/io";
 import { useDragScroll } from "../../utils/useDragScroll";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IProductDetailReviewsProps } from "../../@types/props";
 import { IProductDetailReviewData } from "../../@types/data";
 
@@ -11,14 +11,13 @@ const ProductDetailReviews = ({
   thumnail,
 }: IProductDetailReviewsProps) => {
   const ref = useRef<HTMLDivElement>(null);
-
-  useDragScroll(ref);
+  const navigate = useNavigate();
 
   return (
     <>
       <Head>
         <h2>여행 후기</h2>
-        <IoIosArrowDropright size={30} />
+        <IoIosArrowDropright size={30} onClick={() => navigate("/review")} />
       </Head>
 
       <Review ref={ref}>
@@ -27,24 +26,22 @@ const ProductDetailReviews = ({
             <p>여행후기가 없습니다</p>
           ) : (
             reviewData.map((item: IProductDetailReviewData) => (
-              <Link key={item.reviewId} to={`/review/${item.reviewId}`}>
-                <Item>
-                  <img
-                    onError={(e) => (e.currentTarget.src = thumnail)}
-                    src={item.thumbnail}
-                    alt="후기 이미지"
-                  />
+              <Item key={item.reviewId} to={`/review/${item.reviewId}`}>
+                <img
+                  onError={(e) => (e.currentTarget.src = thumnail)}
+                  src={item.thumbnail}
+                  alt="후기 이미지"
+                />
+                <div>
                   <div>
-                    <div>
-                      <p>
-                        <span>{item.createdDate}</span>{" "}
-                        <span>조회수 {item.viewCount}</span>
-                      </p>
-                    </div>
-                    <h3>{item.title}</h3>
+                    <p>
+                      <span>{item.createdDate}</span>
+                      <span>조회수 {item.viewCount}</span>
+                    </p>
                   </div>
-                </Item>
-              </Link>
+                  <h3>{item.title}</h3>
+                </div>
+              </Item>
             ))
           )}
         </List>
@@ -62,16 +59,22 @@ const Head = styled.div`
     font-size: 25px;
     font-weight: bold;
   }
+  svg {
+    cursor: pointer;
+  }
 `;
+
 const Review = styled.div`
   overflow-x: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
 `;
+
 const List = styled.div`
   display: flex;
-  justify-content: space-between;
+  gap: 30px;
+  padding: 0 40px;
   > p {
     margin: 30px auto;
     font-size: 30px;
@@ -79,17 +82,22 @@ const List = styled.div`
   }
   @media screen and (max-width: 850px) {
     width: 850px;
+    padding: 0;
     > p {
       margin: 30px 0;
       margin-left: 50px;
     }
   }
 `;
-const Item = styled.div`
-  width: 30%;
+
+const Item = styled(Link)`
+  display: inline-block;
+  width: 33%;
   position: relative;
+
   img {
     width: 100%;
+    height: 100%;
     border-radius: 10px;
   }
   > div {
@@ -104,9 +112,12 @@ const Item = styled.div`
     box-sizing: border-box;
     color: white;
     font-weight: bold;
+    text-shadow: 2px 2px 6px black;
     div {
       p {
         line-height: 24px;
+        display: flex;
+        flex-direction: column;
       }
     }
     h3 {

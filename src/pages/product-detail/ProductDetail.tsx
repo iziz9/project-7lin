@@ -10,7 +10,12 @@ import ProductDetailModal from "./ProductDetailModal";
 import ProductDetailReviews from "./ProductDetailReviews";
 import { useMediaQuery } from "react-responsive";
 import { useQuery, useQueryClient } from "react-query";
-import { getProductDetail, getProductDetailReview } from "../../apis/request";
+import {
+  getRelatedProducts,
+  getProductDetail,
+  getProductDetailReview,
+  getTestResult,
+} from "../../apis/request";
 import { IProductDetailDataContents } from "../../@types/data";
 import { getCookie } from "../../utils/cookie";
 import useWishlistQuery from "../../hooks/useWishlistQuery";
@@ -20,19 +25,24 @@ import useDeleteWishlistMutation from "../../hooks/useDeleteWishlistMutation";
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
 
-  const [isMore, setIsMore] = useState(false);
+  // 상품 설명 더보기
+  const [isMore, setIsMore] = useState<boolean>(false);
 
+  // 옵션
   const { openModal, closeModal } = useModal();
 
   const isMobile: boolean = useMediaQuery({
     query: "(max-width:850px)",
   });
 
+  // 상품 데이터
   const { isLoading: productLoading, data: productData } = useQuery(
     ["getProductDetail"],
     () => (id ? getProductDetail(id) : null),
   );
+  console.log(productData);
 
+  // 상품 상세 리뷰
   const { isLoading: reviewLoading, data: reviewData } = useQuery(
     ["getProductDetailReview"],
     () => {
@@ -40,10 +50,20 @@ const ProductDetail = () => {
     },
   );
 
-  const descriptionOne = productData?.briefExplanation.split("\r\n");
+  // 연관 상품
+  const mainCategory = productData?.categories[0].mainCategory;
+  const middleCategory = productData?.categories[0].middleCategory;
 
+  const { isLoading: relatedLoading, data: relatedData } = useQuery(
+    ["getRelatedProducts"],
+    () => getRelatedProducts(mainCategory, middleCategory),
+  );
+
+  // 설명 데이터 가공
+  const descriptionOne = productData?.briefExplanation.split("\r\n");
   const descriptionTwo = productData?.briefExplanation.split("</br>");
 
+  // 옵션 모달 열기
   const handleModal = (funcType: string) => {
     openModal({
       title: "옵션 선택",
@@ -63,6 +83,7 @@ const ProductDetail = () => {
     });
   };
 
+  // 찜
   const token = getCookie("accessToken");
   const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
     onSuccess(data) {},
@@ -113,35 +134,19 @@ const ProductDetail = () => {
     <>
       {!productLoading && !reviewLoading && (
         <Wrap>
-          {/* <BreadCrumb
-            data={[
-              {
-                title: "HOME",
-                link: "/",
-              },
-              {
-                title: "그룹별 여행",
-                link: "/groups",
-              },
-              {
-                title: "5070끼리",
-                link: "/",
-              },
-            ]}
-          /> */}
           <Img>
             <img src={productData?.thumbnail} alt={productData?.productName} />
           </Img>
           <Infos>
             <h1>{productData?.productName}</h1>
-            <Rating>
+            {/* <Rating>
               <AiFillStar />
               <AiFillStar />
               <AiFillStar />
               <AiFillStar />
               <AiOutlineStar />
               <span>4.3점 (14,305)</span>
-            </Rating>
+            </Rating> */}
             <div>
               {descriptionOne?.length !== 1
                 ? descriptionOne?.map((item: string) => (
@@ -220,10 +225,7 @@ const ProductDetail = () => {
 
           <Recommend>
             <h2>연관상품</h2>
-            {/* <RecommendSlider>
-              <p>36박 37일 남미 5개국 탐험</p>
-              <p>123,334,747원</p>
-            </RecommendSlider> */}
+            <RecommendSlider data={relatedData} type="연관"></RecommendSlider>
           </Recommend>
 
           <BottomBar>
@@ -286,6 +288,7 @@ const Img = styled.div`
 const Infos = styled.div`
   margin-top: 35px;
   h1 {
+    margin-bottom: 30px;
     font-size: 40px;
     font-weight: bold;
   }
@@ -318,14 +321,14 @@ const Infos = styled.div`
     }
   }
 `;
-const Rating = styled.div`
-  margin: 23px 0;
-  display: flex;
-  align-items: center;
-  svg {
-    margin-right: 10px;
-  }
-`;
+// const Rating = styled.div`
+//   margin: 23px 0;
+//   display: flex;
+//   align-items: center;
+//   svg {
+//     margin-right: 10px;
+//   }
+// `;
 
 const Discription = styled.div<{ isMore: boolean }>`
   display: flex;
