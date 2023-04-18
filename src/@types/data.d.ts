@@ -467,6 +467,7 @@ export interface ReservationUserInfo {
   phone: string;
   acceptTerms: boolean;
 }
+<<<<<<< HEAD
 
 export interface IRelatedProduct {
   briefExplanation: string;
@@ -475,4 +476,18 @@ export interface IRelatedProduct {
   productName: string;
   productPrice: number;
   thumbnail: string;
+=======
+interface OptionsType {
+  optionId: number;
+  amount: number;
+  content?: string;
+  price?: number;
+}
+
+interface ReservationDataType {
+  acceptTerms: boolean;
+  email: string;
+  name: string;
+  phone: string;
+>>>>>>> 42918d8e407245824e185d7e348c7bf876e075fa
 }

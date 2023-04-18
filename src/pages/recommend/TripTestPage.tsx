@@ -24,10 +24,6 @@ const TripTest = () => {
     setOrderNumber(orderNumber + 1);
   };
 
-  // 첫번째 장에서는 left 버튼 x
-  // 이전 문항으로 돌아간 게 아니면 right 버튼 x
-  // 마지막 장에서는 right 버튼 x, 결과보기 버튼 o
-
   const testSubmit = (answer: string) => {
     setIsTestFinished(true);
     setResultData(answer);

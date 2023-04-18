@@ -85,42 +85,11 @@ const ProductDetail = () => {
 
   // 찜
   const token = getCookie("accessToken");
-  const { wishlistData, refetch: refetchWishlist } = useWishlistQuery({
-    onSuccess(data) {},
-    onError(error) {
-      alert("찜 리스트 조회 실패: " + error);
-    },
-    enabled: token ? true : false,
-  });
+  const { wishlistData } = useWishlistQuery();
 
-  const queryClient = useQueryClient();
-  const addWishListMutation = useAddWishlistMutation({
-    onSuccess(res) {
-      if (res.message === "success") {
-        alert("찜 추가 완료");
-        return queryClient.invalidateQueries({
-          queryKey: ["wishlist"],
-        });
-      }
-    },
-    onError(error) {
-      alert("찜 추가 에러: " + error);
-    },
-  });
+  const addWishListMutation = useAddWishlistMutation();
 
-  const deleteWishListMutation = useDeleteWishlistMutation({
-    onSuccess(res) {
-      if (res.message === "success") {
-        alert("찜 삭제 완료");
-        return queryClient.invalidateQueries({
-          queryKey: ["wishlist"],
-        });
-      }
-    },
-    onError(error) {
-      alert("찜 삭제 에러: " + error);
-    },
-  });
+  const deleteWishListMutation = useDeleteWishlistMutation();
 
   const handleAddWishlist = () => {
     addWishListMutation.mutate(Number(id));

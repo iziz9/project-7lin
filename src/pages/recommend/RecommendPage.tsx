@@ -17,7 +17,7 @@ const RecommendPage = () => {
   const navigate = useNavigate();
   const savedTestResult: TestResultType = getLocalStorage("testResult");
   const [items, setItems] = useRecoilState(itemState);
-
+  const itemData = useResetRecoilState(itemState);
   const recommendMutation = useMutation(
     ([category, size]: [string, number]) =>
       getTestResult(savedTestResult.category, 12),
@@ -35,10 +35,9 @@ const RecommendPage = () => {
   );
 
   useEffect(() => {
-    async function getResultData() {
-      recommendMutation.mutate([savedTestResult.category, 12]);
-    }
-    savedTestResult ? getResultData() : useResetRecoilState(itemState)();
+    savedTestResult
+      ? recommendMutation.mutate([savedTestResult.category, 12])
+      : itemData;
   }, []);
 
   return (

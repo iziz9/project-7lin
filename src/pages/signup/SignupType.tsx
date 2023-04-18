@@ -43,7 +43,7 @@ const SignupType = () => {
         <div
           className="btn-wrapper"
           onClick={() => {
-            navigate("/signup_site");
+            navigate("/signup");
             scrollToTop();
           }}
         >
