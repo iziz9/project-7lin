@@ -4,7 +4,7 @@ import styled from "styled-components";
 import BannerSlider from "./BannerSlider";
 import GroupCategory from "./GroupCategory";
 import { useMediaQuery } from "react-responsive";
-import { BsSearch } from "react-icons/bs";
+import SearchBar from "../../commons/SearchBar";
 
 type Props = {};
 
@@ -20,10 +20,7 @@ const MainPage = (props: Props) => {
       {isMobile ? (
         <MobileMain>
           <div className="searchbar">
-            <div className="search-input">
-              <input type="text" placeholder="검색어를 입력하세요" />
-              <BsSearch className="search-icon" />
-            </div>
+            <SearchBar />
           </div>
           <GroupCategory />
           <div className="youtube">
@@ -86,33 +83,8 @@ const MainPage = (props: Props) => {
 const MobileMain = styled.div`
   .searchbar {
     display: flex;
+    justify-content: center;
     margin: 30px auto;
-
-    .search-input {
-      width: 80%;
-      position: relative;
-      margin: auto;
-
-      input {
-        width: 100%;
-        height: 36px;
-        border: none;
-        border-radius: 8px;
-        background-color: var(--color-inputGray);
-        margin: auto;
-        padding-left: 15px;
-
-        :focus {
-          outline: none;
-        }
-      }
-      .search-icon {
-        position: absolute;
-        top: 10px;
-        right: 0px;
-        cursor: pointer;
-      }
-    }
   }
 
   .youtube {

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
-import { BsSearch } from "react-icons/bs";
 import { SlBag, SlLogin, SlLogout } from "react-icons/sl";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../store/userInfoAtom";
@@ -11,6 +10,7 @@ import { removeLocalStorage } from "../utils/localStorage";
 import { Link } from "react-router-dom";
 import { getCookie, removeCookie } from "../utils/cookie";
 import { logout } from "../apis/auth";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -22,7 +22,6 @@ const Header = () => {
   const queryParams = new URLSearchParams(location.search);
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const [keyWord, setKeyWord] = useState<string>(queryParams.get("q") || "");
   const accessToken = getCookie("accessToken");
 
   const navMenu = [
@@ -60,12 +59,6 @@ const Header = () => {
       color: location.pathname === "/notice" ? "on-page" : "",
     },
   ];
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (keyWord.trim() === "") return alert("검색어를 입력해주세요");
-    navigate(`/search?q=${keyWord}`);
-  };
 
   const handleLogout = async () => {
     if (confirm("정말로 로그아웃 하시겠습니까?")) {
@@ -114,15 +107,7 @@ const Header = () => {
                 <div className="logo">
                   <img src="/logo_text.png" onClick={() => navigate("/")} />
                 </div>
-                <form className="searchBar" onSubmit={handleSubmit}>
-                  <input
-                    type="text"
-                    placeholder="검색어를 입력해주세요"
-                    value={keyWord}
-                    onChange={(e) => setKeyWord(e.target.value)}
-                  />
-                  <BsSearch className="searchButton" type="submit" />
-                </form>
+                <SearchBar />
               </div>
               <ul>
                 <li onClick={() => navigate("/cart")}>장바구니</li>
@@ -215,35 +200,6 @@ const TopSection = styled.section`
         :hover {
           cursor: pointer;
         }
-      }
-    }
-
-    .searchBar {
-      position: relative;
-
-      input {
-        width: 300px;
-        height: 30px;
-        padding: 5px 5px 5px 10px;
-        background-color: var(--color-inputGray);
-        border: none;
-        border-radius: 8px;
-
-        :focus {
-          outline: none;
-        }
-        /* ::placeholder {
-          padding-left: 10px;
-        } */
-      }
-
-      .searchButton {
-        position: absolute;
-        right: 0;
-        top: 10px;
-        padding-right: 10px;
-        color: gray;
-        cursor: pointer;
       }
     }
   }
