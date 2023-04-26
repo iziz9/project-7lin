@@ -4,7 +4,6 @@ import styled from "styled-components";
 import BannerSlider from "./BannerSlider";
 import GroupCategory from "./GroupCategory";
 import { useMediaQuery } from "react-responsive";
-import { BsSearch } from "react-icons/bs";
 import SearchBar from "../../commons/SearchBar";
 
 type Props = {};
