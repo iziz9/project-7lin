@@ -101,7 +101,6 @@ const ProductDetailModalOption = ({
       </div>
       <p onClick={() => setDrop((prev) => !prev)}>
         {checkOptionTitle(type)}
-
         <IoIosArrowDown color="#868686" />
       </p>
       {drop && (
