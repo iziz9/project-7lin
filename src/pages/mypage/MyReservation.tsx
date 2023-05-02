@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { getMemberReservation } from "../../apis/auth";
@@ -93,18 +93,19 @@ const Reservation = () => {
           취소된 예약 ({cancelReservation?.length})
         </div>
       </div>
+      <div className="list">
+        {listElement?.length === 0 ? noProduct : listElement}
+      </div>
       {isLoading || isFetching ? (
-        <div className="loading-wrapper">
-          <div className="loading-list">{listElement}</div>
-          <div className="spinner">
-            <img src={Spinner} alt="로딩" width="10%" />
+        <>
+          <div className="loading-wrapper">
+            {/* <div className="loading-list">{listElement}</div> */}
           </div>
-        </div>
-      ) : (
-        <div className="list">
-          {listElement?.length === 0 ? noProduct : listElement}
-        </div>
-      )}
+          <div className="spinner">
+            <img src={Spinner} alt="로딩" width="70px" />
+          </div>
+        </>
+      ) : null}
     </Container>
   );
 };
@@ -162,7 +163,15 @@ const Container = styled.div<{ tab: number }>`
   }
 
   .loading-wrapper {
-    position: relative;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
   }
 
   .loading-list {
@@ -173,7 +182,7 @@ const Container = styled.div<{ tab: number }>`
   }
 
   .spinner {
-    position: absolute;
+    position: fixed;
     top: 40px;
     bottom: 0;
     left: 0;

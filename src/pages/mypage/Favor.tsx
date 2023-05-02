@@ -37,19 +37,6 @@ const Favor = () => {
     </div>
   );
 
-  if (isFetching || isLoading)
-    return (
-      <Container>
-        <div className="delete-all">
-          <div className="title">찜</div>
-        </div>
-        <div className="loading-list">{wishList}</div>
-        <div className="spinner">
-          <img src={Spinner} alt="로딩" width="10%" />
-        </div>
-      </Container>
-    );
-
   return (
     <Container>
       <div className="delete-all">
@@ -71,6 +58,16 @@ const Favor = () => {
       <div className="list">
         {wishList?.length === 0 ? noProduct : wishList}
       </div>
+      {isFetching || isLoading || deleteAllWishListMutation.isLoading ? (
+        <>
+          <div className="loading-wrapper">
+            {/* <div className="loading-list">{listElement}</div> */}
+          </div>
+          <div className="spinner">
+            <img src={Spinner} alt="로딩" width="70px" />
+          </div>
+        </>
+      ) : null}
     </Container>
   );
 };
@@ -95,15 +92,20 @@ const Container = styled.div`
     /* gap: 15px; */
   }
 
-  .loading-list {
-    display: flex;
-    flex-direction: column;
-    opacity: 0.5;
-    position: relative;
+  .loading-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
   }
 
   .spinner {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;

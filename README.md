@@ -94,8 +94,16 @@
 
 ### 찜 등록 및 취소
 
-<img src="">
-<br>
+- 찜 등록
+  <img src="./public/찜추가.gif">
+  <br>
+
+- 찜 취소
+  <img src="./public/찜삭제.gif">
+  <br>
+
+  <img src="./public/찜전체삭제.gif">
+  <br>
 
 ### 상세페이지, 장바구니 페이지
 
@@ -105,6 +113,11 @@
 ### 예약 결제
 
 <img src="./public/예약결제.gif">
+<br>
+
+### 예약 조회 및 취소
+
+<img src="./public/예약내역.gif">
 <br>
 
 ### 카테고리
@@ -129,12 +142,17 @@
 
 ### 개인정보 수정
 
-<img src="">
+<img src="./public/개인정보수정.gif">
 <br>
 
-### 아이디,비밀번호 첮기
+### 아이디 찾기
 
-<img src="">
+<img src="./public/아이디찾기.gif">
+<br>
+
+### 비밀번호 첮기
+
+<img src="./public/비밀번호찾기.gif">
 <br><br>
 
 # 7. 느낀 점, 좋았던 점, 아쉬운 점
