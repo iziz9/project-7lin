@@ -161,7 +161,7 @@ const ReviewDetail = () => {
                 전체 후기 목록 보기
               </span>
             </RecommendHead>
-            <RecommendSlider data={atherData?.reviewList}></RecommendSlider>
+            <RecommendSlider data={atherData?.reviewList} type="후기" />
           </Recommend>
         </Wrap>
       )}

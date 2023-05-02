@@ -5,6 +5,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import ProductInfosCard from "./../../commons/ProductInfosCard";
 import { useMediaQuery } from "react-responsive";
 import { useForm } from "react-hook-form";
+import { postReviewDetail } from "../../apis/request";
 
 const ReviewWrite = () => {
   const [imgFile, setImgFile] = useState<string[]>([]);
@@ -42,8 +43,87 @@ const ReviewWrite = () => {
     });
   };
 
-  const onValid = (data: any) => {
+  const onValid = async (data: any) => {
     console.log(data);
+    const formData = new FormData();
+
+    formData.append(
+      "productId",
+      new Blob([JSON.stringify(19)], {
+        type: "application/json",
+      }),
+    );
+
+    formData.append(
+      "reservationId",
+      new Blob([JSON.stringify(1)], {
+        type: "application/json",
+      }),
+    );
+
+    formData.append(
+      "reviewTitle",
+      new Blob([JSON.stringify(data.title)], {
+        type: "application/json",
+      }),
+    );
+
+    formData.append(
+      "name",
+      new Blob([JSON.stringify("이영지")], {
+        type: "application/json",
+      }),
+    );
+
+    formData.append(
+      "password",
+      new Blob([JSON.stringify(data.password)], {
+        type: "application/json",
+      }),
+    );
+
+    formData.append(
+      "grade",
+      new Blob([JSON.stringify(4.0)], {
+        type: "application/json",
+      }),
+    );
+
+    formData.append(
+      "text",
+      new Blob([JSON.stringify(data.content)], {
+        type: "text/plain",
+      }),
+    );
+
+    for (const img of imgFile) {
+      formData.append("image", img);
+    }
+
+    let entries = formData.entries();
+    for (const pair of entries) {
+      console.log(pair[1]);
+      // setAnswer((prev: any) => [...prev, String(pair[0])]);
+    }
+
+    await postReviewDetail(formData);
+
+    // 민정님 코드
+    // formData.append(
+    //   "productPostRequestDTO",
+    //   new Blob([JSON.stringify(productPostRequestDTO)], {
+    //     type: "application/json",
+    //   }),
+    // );
+    // formData.append("thumbnail", thumbnail[0]);
+    // const imageArray = (files: any) => {
+    //   for (let i = 0; i < files.length; i += 1) {
+    //     formData.append("images", files[i]);
+    //   }
+    // };
+
+    // if (data.password) formData.append("password", data.password);
+    // if (data.password) formData.append("password", data.password);
   };
 
   const onInValid = (data: any) => {
@@ -51,19 +131,7 @@ const ReviewWrite = () => {
   };
 
   return (
-    <Wrap
-      // onSubmit={(e) => {
-      //   e.preventDefault();
-      //   // formData 로 하면 원하는대로 안됨 그냥 state 로 해주고 onvalid 에 보내주기
-      //   // const formData = new FormData(e.currentTarget);
-      //   // let entries = formData.entries();
-      //   // for (const pair of entries) {
-      //   //   console.log(pair);
-      //   //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
-      //   // }
-      // }}
-      onSubmit={handleSubmit(onValid, onInValid)}
-    >
+    <Wrap onSubmit={handleSubmit(onValid, onInValid)}>
       <BreadCrumb
         data={[
           {
@@ -103,17 +171,7 @@ const ReviewWrite = () => {
         {/* <ProductInfosCard /> */}
       </ProductInfo>
 
-      <Form
-        onSubmit={(e: any) => {
-          e.preventDefault();
-          // formData 로 하면 원하는대로 안됨 그냥 state 로 해주고 onvalid 에 보내주기
-          // const formData = new FormData(e.currentTarget);
-          // let entries = formData.entries();
-          // for (const pair of entries) {
-          //   // setAnswer((prev: any) => [...prev, String(pair[0])]);
-          // }
-        }}
-      >
+      <Form>
         <input
           {...register("title", { required: "제목을 입력해주세요" })}
           type="text"
@@ -128,7 +186,10 @@ const ReviewWrite = () => {
           <AiOutlineStar size={20} />
           <span>4.3점</span>
         </Rating>
-        <textarea placeholder="후기를 남겨주세요!"></textarea>
+        <textarea
+          {...register("content", { required: "후기를 입력해주세요" })}
+          placeholder="후기를 남겨주세요!"
+        ></textarea>
         <label htmlFor="add-img">
           <input
             type="file"
@@ -140,7 +201,7 @@ const ReviewWrite = () => {
           <span>사진 첨부하기</span>
         </label>
         {/* 사진 첨부하기 */}
-        <button>등록하기</button>
+        {/* <button>등록하기</button> */}
       </Form>
 
       <UpdateImg>

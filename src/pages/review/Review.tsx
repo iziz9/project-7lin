@@ -12,6 +12,7 @@ import Modal from "../../commons/Modal";
 import ReviewModal from "./ReviewModal";
 import { useQuery } from "react-query";
 import { getAllReviews } from "../../apis/request";
+import { useNavigate } from "react-router";
 
 const reviewFilterData: ReviewFilterData = {
   group: {
@@ -55,6 +56,8 @@ const Review = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [paging, setPaging] = useState<number[]>([0, 5]);
   const [selectPage, setSelectPage] = useState<number>(1);
+
+  const navigate = useNavigate();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   useDragScroll(scrollRef);
@@ -128,11 +131,15 @@ const Review = () => {
                 </Search>
               )} */}
               <ReviewBtn
-                onClick={() =>
-                  openModal({
-                    title: "예약번호를 입력해주세요",
-                    content: <ReviewModal />,
-                  })
+                onClick={
+                  () => {
+                    navigate("/review/write", { state: {} });
+                  }
+
+                  // openModal({
+                  //   title: "예약번호를 입력해주세요",
+                  //   content: <ReviewModal />,
+                  // })
                 }
               >
                 후기 작성하기
@@ -167,14 +174,15 @@ const Review = () => {
 
           <ReviewItems data={data?.reviewList} />
 
-          {/* <Paging>
+          <Paging>
             <Btn onClick={prevEndPageClick}>
               <img src="/front_icon.svg" alt="맨 앞 페이지로 가기" />
             </Btn>
             <Btn onClick={prevPageClick}>
               <img src="/Arrow-Left_icon.svg" alt="이전 페이지로 가기" />
             </Btn>
-            최대 5개 페이지만 보이고 이동할때마다 해당 페이지를 중심으로 5개씩만 보여주기
+            최대 5개 페이지만 보이고 이동할때마다 해당 페이지를 중심으로 5개씩만
+            보여주기
             {pageNum.slice(paging[0], paging[1]).map((item) => (
               <Numbers key={item}>
                 <span
@@ -194,7 +202,7 @@ const Review = () => {
             <Btn onClick={nextEndPageClick}>
               <img src="/back_icon.svg" alt="맨 뒤 페이지로 가기" />
             </Btn>
-          </Paging> */}
+          </Paging>
         </Wrap>
       )}
     </>

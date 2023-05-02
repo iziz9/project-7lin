@@ -21,6 +21,7 @@ import Modal from "../../commons/Modal";
 import { setCookie } from "../../utils/cookie";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "../../store/userInfoAtom";
+import Spinner from "/spinner.svg";
 
 const SignupSite = () => {
   const validationSchema = Yup.object().shape({
@@ -685,6 +686,14 @@ const SignupSite = () => {
         </div>
       </div>
       <Modal />
+      {signupMutation.isLoading || loginMutation.isLoading ? (
+        <>
+          <div className="loading-wrapper"></div>
+          <div className="spinner">
+            <img src={Spinner} alt="로딩" width="70px" />
+          </div>
+        </>
+      ) : null}
     </Container>
   );
 };
@@ -784,6 +793,31 @@ const Container = styled.div`
         }
       }
     }
+  }
+
+  .loading-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
+  }
+
+  .spinner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   .invalid {

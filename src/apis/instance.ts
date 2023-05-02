@@ -90,8 +90,8 @@ const axiosApi = (url: string) => {
           break;
         case 500:
           alert("서버 에러 ");
-          removeCookie("accessToken", { path: "/" });
-          return (window.location.href = "/login");
+        // removeCookie("accessToken", { path: "/" });
+        // return (window.location.href = "/login");
         default:
           break;
       }

@@ -8,6 +8,7 @@ import { getCookie } from "../../utils/cookie";
 import useWishlistQuery from "../../hooks/useWishlistQuery";
 import useDeleteWishlistMutation from "../../hooks/useDeleteWishlistMutation";
 import useAddWishlistMutation from "../../hooks/useAddWishlistMutation";
+import Spinner from "/spinner.svg";
 
 interface ProductProps {
   product: ProductType; // 부모 컴포넌트에서 import한 타입
@@ -18,7 +19,7 @@ const Product = () => {
   const items = useRecoilValue(itemState);
   const token = getCookie("accessToken");
 
-  const { wishlistData } = useWishlistQuery();
+  const { wishlistData, isLoading, isFetching } = useWishlistQuery();
 
   const addWishListMutation = useAddWishlistMutation();
 
@@ -31,6 +32,69 @@ const Product = () => {
       addWishListMutation.mutate(productId);
     }
   };
+
+  if (
+    isLoading ||
+    isFetching ||
+    addWishListMutation.isLoading ||
+    deleteWishListMutation.isLoading
+  ) {
+    return (
+      <Container className="loading">
+        {items.map(
+          (
+            {
+              briefExplanation,
+              productId,
+              productName,
+              productPrice,
+              thumbnail,
+            },
+            index,
+          ) => (
+            <div
+              className="link"
+              onClick={() => navigate(`/product/${productId}`)}
+              key={index}
+            >
+              <Item>
+                <img className="image" src={thumbnail} alt={productName} />
+                {token ? (
+                  <AiFillHeart
+                    className={
+                      wishlistData?.find(
+                        (product) => product.productId === productId,
+                      )
+                        ? "favor active"
+                        : "favor"
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleWishlist(productId);
+                    }}
+                  />
+                ) : null}
+                <h3 className="title">{productName}</h3>
+                <span className="price">
+                  {productPrice
+                    ? `${productPrice.toLocaleString("ko-KR")}원`
+                    : "가격문의"}
+                </span>
+                <p
+                  className="body"
+                  dangerouslySetInnerHTML={{ __html: briefExplanation }}
+                ></p>
+              </Item>
+            </div>
+          ),
+        )}
+        <div className="loading-list"></div>
+        <div className="spinner">
+          <img src={Spinner} alt="로딩" width="70px" />
+        </div>
+      </Container>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -109,8 +173,36 @@ export const Container = styled.ul`
   row-gap: 40px;
   max-width: 970px;
 
+  /* &.loading {
+    opacity: 0.5;
+    position: relative;
+  } */
+
   .link {
     cursor: pointer;
+  }
+
+  .loading-list {
+    opacity: 0.1;
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .spinner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   @media (max-width: 1000px) {
