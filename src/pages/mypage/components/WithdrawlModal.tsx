@@ -21,7 +21,8 @@ const WithdrawlModal = () => {
         setUserInfo({ email: "", name: "", gender: "", age: 0, phone: "" });
         removeCookie("accessToken", { path: "/" });
         closeModal();
-        navigate("/");
+        window.location.href = "/";
+        // navigate("/");
       }
     },
     onError: (error) => {
