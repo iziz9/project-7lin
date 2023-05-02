@@ -20,6 +20,7 @@ import { setCookie } from "../../utils/cookie";
 import KakaoBtn from "./components/KakaoBtn";
 import NaverBtn from "./components/NaverBtn";
 import GoogleBtn from "./components/GoogleBtn";
+import Spinner from "/spinner.svg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -172,6 +173,14 @@ const Login = () => {
             <GoogleBtn />
           </SocialLogins>
         </div>
+        {loginMutation.isLoading ? (
+          <>
+            <div className="loading-wrapper"></div>
+            <div className="spinner">
+              <img src={Spinner} alt="로딩" width="70px" />
+            </div>
+          </>
+        ) : null}
       </LoginContainer>
       <Modal />
     </>
@@ -216,6 +225,31 @@ const LoginContainer = styled.div`
   }
   .warning {
     border: 1px solid #dc3545;
+  }
+
+  .loading-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
+  }
+
+  .spinner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   @media (max-width: 850px) {

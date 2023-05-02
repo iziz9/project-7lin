@@ -68,7 +68,8 @@ const Header = () => {
           return alert("로그아웃 실패: " + data);
         setUserInfo({ email: "", name: "", gender: "", age: 0, phone: "" });
         removeCookie("accessToken", { path: "/" });
-        navigate("/");
+        window.location.href = "/";
+        // navigate("/");
       } catch (error) {
         alert("로그아웃 실패: " + error);
       }

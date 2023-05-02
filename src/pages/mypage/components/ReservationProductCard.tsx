@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AddReservationRequest,
   Period3,
@@ -17,6 +17,7 @@ import { useModal } from "../../../hooks/useModal";
 import Modal from "../../../commons/Modal";
 import ReservationDetailModal from "./ReservationDetailModal";
 import { useNavigate } from "react-router-dom";
+import Spinner from "/spinner.svg";
 
 interface Props {
   tab: number;
@@ -27,8 +28,10 @@ interface Props {
 const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [detailClicked, setDetailClicked] = useState<boolean>(false);
 
   const cancelReservationMutaiton = useMutation(deleteReservation, {
+    mutationKey: "cancelReservation",
     onSuccess: (res: any) => {
       if (res.message === "성공") {
         alert("예약 취소 성공");
@@ -42,15 +45,30 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
     },
   });
 
-  const { data: detailData, refetch: detailRefetch } = useQuery(
+  const {
+    data: detailData,
+    isSuccess,
+    isLoading,
+    isFetching,
+  } = useQuery(
     ["memberReservationDetail", product.reservationId],
     () => getMemberReservationDetail(product.reservationId),
     {
-      onSuccess(data) {},
+      onSuccess(data) {
+        const ReservationDetailModalData = {
+          title: "예약내역 상세",
+          content: (
+            <ReservationDetailModal isMember={true} detailData={data?.data} />
+          ),
+        };
+        openModal(ReservationDetailModalData);
+      },
       onError(error) {
         alert("예약상세 정보 가져오기 실패: " + error);
       },
-      enabled: false,
+      enabled: detailClicked,
+      staleTime: 1000 * 60 * 30,
+      cacheTime: 1000 * 60 * 30,
     },
   );
 
@@ -71,8 +89,8 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
 
   const { openModal } = useModal();
 
-  const handleResevationDetail = async () => {
-    const { data: detailData, isError, isSuccess } = await detailRefetch();
+  const handleResevationDetail = () => {
+    setDetailClicked(true);
     if (isSuccess) {
       const ReservationDetailModalData = {
         title: "예약내역 상세",
@@ -156,6 +174,17 @@ const ReservationProductCard = ({ tab, handleTab, product }: Props) => {
           </div>
         </div>
         <div className="button-wrapper">{buttonElement}</div>
+        {cancelReservationMutaiton.isLoading ||
+        reservationAgainMutation.isLoading ||
+        isLoading ||
+        isFetching ? (
+          <>
+            <div className="loading-wrapper"></div>
+            <div className="spinner">
+              <img src={Spinner} alt="로딩" width="70px" />
+            </div>
+          </>
+        ) : null}
       </div>
       {/* <Modal /> */}
     </Container>
@@ -168,6 +197,7 @@ const Container = styled.div`
     border-bottom: 1px solid var(--color-grayscale20);
     /* border-top: 1px solid var(--color-grayscale20); */
     /* border-radius: 8px; */
+    position: relative;
     padding: 20px 0;
     display: flex;
     .left {
@@ -212,6 +242,38 @@ const Container = styled.div`
       flex-grow: 1;
       gap: 8px;
     }
+  }
+
+  .loading-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
+  }
+
+  /* .loading-list {
+    display: flex;
+    flex-direction: column;
+    opacity: 0.5;
+    position: relative;
+  } */
+
+  .spinner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   @media (max-width: 850px) {

@@ -12,6 +12,7 @@ import { useMutation } from "react-query";
 import { phoneCheck, updateMemberInfo } from "../../../apis/auth";
 import { useModal } from "../../../hooks/useModal";
 import useUserInfoQuery from "../../../hooks/useUserInfoQuery";
+import Spinner from "/spinner.svg";
 
 const ChangeInfoModal = () => {
   const validationSchema = Yup.object().shape({
@@ -75,16 +76,6 @@ const ChangeInfoModal = () => {
   const { closeModal } = useModal();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
-  const { userInfoData, refetch: userInfoRefetch } = useUserInfoQuery({
-    onSuccess(res) {
-      setUserInfo(res.data);
-    },
-    onError(error) {
-      alert("회원정보 조회 실패: " + error);
-    },
-    enabled: false,
-  });
-
   const updateMembreInfoMutation = useMutation(updateMemberInfo, {
     onSuccess: async (res: any) => {
       if (res.message === "회원정보 수정에 성공했습니다") {
@@ -96,6 +87,21 @@ const ChangeInfoModal = () => {
     onError: (error) => {
       alert("회원정보 수정 실패: " + error);
     },
+  });
+
+  const {
+    userInfoData,
+    refetch: userInfoRefetch,
+    isFetching,
+    isLoading,
+  } = useUserInfoQuery({
+    onSuccess(res) {
+      setUserInfo(res.data);
+    },
+    onError(error) {
+      alert("회원정보 조회 실패: " + error);
+    },
+    enabled: false,
   });
 
   const [isCheckPhoneDuplicate, setIsCheckPhoneDuplicate] =
@@ -230,6 +236,14 @@ const ChangeInfoModal = () => {
           <BasicBtn type="submit">변경하기</BasicBtn>
         </div>
       </form>
+      {updateMembreInfoMutation.isLoading || isFetching || isLoading ? (
+        <>
+          <div className="loading-wrapper"></div>
+          <div className="spinner">
+            <img src={Spinner} alt="로딩" width="70px" />
+          </div>
+        </>
+      ) : null}
     </Container>
   );
 };
@@ -280,6 +294,31 @@ const Container = styled.div`
 
   .warning {
     border: 1px solid #dc3545;
+  }
+
+  .loading-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
+  }
+
+  .spinner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   .invalid {

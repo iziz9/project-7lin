@@ -4,6 +4,7 @@ import { BasicBtn } from "../../../commons/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import useDeleteWishlistMutation from "../../../hooks/useDeleteWishlistMutation";
+import Spinner from "/spinner.svg";
 
 interface Props {
   product: WishListProduct;
@@ -48,6 +49,16 @@ const WishListProductCard = ({ product }: Props) => {
           </BasicBtn>
         </div>
       </div>
+      {deleteWishListMutation.isLoading ? (
+        <>
+          <div className="loading-wrapper">
+            {/* <div className="loading-list">{listElement}</div> */}
+          </div>
+          <div className="spinner">
+            <img src={Spinner} alt="로딩" width="70px" />
+          </div>
+        </>
+      ) : null}
     </Container>
   );
 };
@@ -106,6 +117,31 @@ const Container = styled.div`
       flex-grow: 1;
       gap: 8px;
     }
+  }
+
+  .loading-wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-color: black;
+  }
+
+  .spinner {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* margin: auto; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* left: 100px; */
   }
 
   @media (max-width: 850px) {
