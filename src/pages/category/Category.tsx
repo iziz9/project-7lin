@@ -35,14 +35,19 @@ const subMenu = {
 };
 
 const Category = () => {
-  // 반응형
+  // 반응형 구현. 미디어쿼리 훅 사용
   const isMobile = useMediaQuery({ query: "(max-width:850px)" });
 
-  // request용 메인 카테고리 데이터(페이지 시작 시 한 번만 호출)
+  // 카테고리 깊이
   const categoryLevel = useLocation().pathname.split("/");
+
+  // 어떤 카테고리인지 판별하기 위해 현재 주소의 카테고리를 읽어오기
   const [nowCategory, setNowCategory] = useState(
     useLocation().pathname.split("/"),
   );
+
+  // throttle 구현
+  const [throttle, setThrottle] = useState(false);
 
   // 카테고리(전역)
   const [category, setCategory] = useRecoilState(categoryState);
@@ -141,14 +146,23 @@ const Category = () => {
     let arr = [];
 
     const pageClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-      getProductsData(
-        Number(event.currentTarget.id),
-        category.categories.middleCategory,
-        sort.sort,
-        null,
-        null,
-      );
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (throttle) {
+        console.log("요청이 너무 빠릅니다.");
+        return;
+      } else {
+        setThrottle(true);
+        getProductsData(
+          Number(event.currentTarget.id),
+          category.categories.middleCategory,
+          sort.sort,
+          null,
+          null,
+        );
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(async () => {
+          setThrottle(false);
+        }, 300);
+      }
     };
 
     for (let i = 1; i <= page.totalPages; i++) {
